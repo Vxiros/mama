@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Μαθήματα παραγωγής: Ήχος, Studio, Ρυθμός, Δομή</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,700&family=Commissioner:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF2F4; --surface:#FFFFFF; --ink:#0D2A3A; --muted:#4D6470; --line:#C9D5DB;
+  --accent:#C9771A; --accent-soft:#F6E3C8; --wave:#1B83B0; --good:#2E8B57; --warn:#C9771A; --bad:#C0392B;
+  --panel:#0B2E40; --panel-2:#123B50; --panel-ink:#E3EDF2; --panel-muted:#8FAAB8; --led:#F2A93B; --cyan:#5CC3EA;
+  --serif:"Literata", Georgia, "Times New Roman", serif;
+  --sans:"Commissioner", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#071C27; --surface:#0D2938; --ink:#E2EBEF; --muted:#93A9B4; --line:#1F4356;
+    --accent:#F2A93B; --accent-soft:#3A2C17; --wave:#5CC3EA; --good:#5BC48A; --warn:#F2A93B; --bad:#EF6B5B;
+    --panel:#04151E; --panel-2:#0B2A3A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#071C27; --surface:#0D2938; --ink:#E2EBEF; --muted:#93A9B4; --line:#1F4356;
+  --accent:#F2A93B; --accent-soft:#3A2C17; --wave:#5CC3EA; --good:#5BC48A; --warn:#F2A93B; --bad:#EF6B5B;
+  --panel:#04151E; --panel-2:#0B2A3A; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,svg,canvas{max-width:100%}
+a{color:var(--wave)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--led);outline-offset:2px}
+
+/* Header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top-inner{max-width:880px;margin:0 auto;padding:10px 16px 0}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;text-align:left;cursor:pointer;line-height:1.25}
+.tab small{display:block;color:var(--muted);font-size:13px}
+.tab b{font-family:var(--serif);font-weight:700;font-size:16px}
+.tab[aria-selected="true"]{background:var(--panel);color:var(--panel-ink);border-color:var(--panel)}
+.tab[aria-selected="true"] small{color:var(--led)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;font-size:14px;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink);text-decoration:none;background:var(--surface);white-space:nowrap}
+.chip:hover{border-color:var(--accent)}
+
+/* Layout */
+main{max-width:880px;margin:0 auto;padding:8px 16px 80px}
+.hero{padding:28px 0 8px}
+.hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,46px);line-height:1.1;margin:0 0 10px;letter-spacing:-.01em}
+.hero p{color:var(--muted);margin:0;max-width:62ch}
+.lesson-title{font-family:var(--serif);font-size:clamp(24px,4.5vw,32px);line-height:1.2;margin:34px 0 4px}
+.lesson-sub{color:var(--muted);margin:0 0 8px}
+section{padding:26px 0 6px;border-top:1px solid var(--line);margin-top:22px}
+section:first-of-type{border-top:none}
+h2{font-family:var(--serif);font-size:24px;line-height:1.25;margin:0 0 10px}
+h3{font-family:var(--serif);font-size:19px;margin:22px 0 6px}
+p{margin:0 0 12px;max-width:68ch}
+ul{padding-left:20px;margin:0 0 12px;max-width:66ch}
+li{margin:4px 0}
+.muted{color:var(--muted)}
+.def{border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin:14px 0;font-size:18px}
+.note{background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:15.5px}
+.note b{display:block;margin-bottom:2px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:12px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h4{margin:0 0 4px;font-size:16.5px}
+.card p{margin:0;font-size:15.5px;color:var(--muted)}
+.table-wrap{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:15.5px;background:var(--surface);border-radius:10px;overflow:hidden}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-weight:600;background:color-mix(in srgb,var(--panel) 8%,var(--surface))}
+
+/* Hardware-style module */
+.mod{background:var(--panel);color:var(--panel-ink);border-radius:16px;padding:16px;margin:18px 0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.mod-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.mod-title{font-family:var(--serif);font-size:17px;display:flex;align-items:center;gap:8px}
+.led{width:9px;height:9px;border-radius:50%;background:#33505f;flex:0 0 auto}
+.led.on{background:var(--led);box-shadow:0 0 10px var(--led)}
+.mod canvas{display:block;width:100%;background:var(--panel-2);border-radius:10px}
+.mod .readout{font-variant-numeric:tabular-nums;font-size:15px;color:var(--panel-muted)}
+.mod .readout b{color:var(--panel-ink);font-size:18px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ctl{display:grid;grid-template-columns:96px 1fr 82px;align-items:center;gap:10px;margin:10px 0;font-size:14.5px}
+.ctl label{color:var(--panel-muted)}
+.ctl output{text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--led);height:28px}
+.btn{border:1px solid rgba(255,255,255,.18);background:var(--panel-2);color:var(--panel-ink);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14.5px;min-height:38px}
+.btn:hover{border-color:var(--led)}
+.btn[aria-pressed="true"]{background:var(--led);color:#1d1406;border-color:var(--led);font-weight:600}
+.btn.play{background:var(--led);color:#1d1406;border-color:var(--led);font-weight:600;min-width:110px}
+.btn.play.on{background:transparent;color:var(--led)}
+.mod p,.mod .small{font-size:14.5px;color:var(--panel-muted);margin:6px 0 0}
+
+/* Song cards */
+.songs{display:grid;gap:10px;margin:12px 0}
+.song{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.sig{font-family:var(--serif);font-weight:700;font-size:22px;min-width:52px;color:var(--accent)}
+.song .meta{flex:1 1 200px}
+.song .meta b{display:block}
+.song .meta span{font-size:14.5px;color:var(--muted)}
+.links{display:flex;gap:6px}
+.lnk{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:14px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line);color:var(--ink);background:var(--bg)}
+.lnk .dot{width:10px;height:10px;border-radius:50%}
+.lnk.yt .dot{background:#E62117}.lnk.sp .dot{background:#1DB954}
+.lnk:hover{border-color:var(--ink)}
+
+/* Harmonics bars */
+.harm{display:flex;align-items:flex-end;gap:5px;height:120px;padding:8px 8px 0;background:var(--panel-2);border-radius:10px;margin-top:10px}
+.harm .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--panel-muted)}
+.harm .bar i{display:block;width:100%;border-radius:4px 4px 0 0;transition:height .2s}
+.harm .bar span{padding:3px 0}
+
+/* dB scale */
+.dbscale{position:relative;height:22px;border-radius:6px;background:linear-gradient(90deg,#3FA36B 0%,#3FA36B 57%,#E1A43A 57%,#E1A43A 85.7%,#D8574A 85.7%);margin:14px 0 6px}
+.dbmark{position:absolute;top:-6px;width:4px;height:34px;background:var(--panel-ink);border-radius:2px;transform:translateX(-2px);transition:left .3s}
+.dbticks{display:flex;justify-content:space-between;font-size:12px;color:var(--panel-muted)}
+.dblist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:12px}
+.dblist .btn{text-align:left;line-height:1.25;padding:7px 10px}
+.dblist .btn b{display:block;font-variant-numeric:tabular-nums}
+
+/* Signal chain */
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.chain .step{flex:1 1 120px;text-align:left;line-height:1.3}
+.chain .step small{display:block;color:var(--panel-muted);font-size:12.5px}
+.chain .step[aria-pressed="true"] small{color:#3a2a0e}
+.arrow{align-self:center;color:var(--led);font-size:18px}
+.info{background:var(--panel-2);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:15px;min-height:48px}
+
+/* Piano */
+.piano{position:relative;height:150px;display:flex;user-select:none;-webkit-user-select:none;touch-action:none;margin-top:10px}
+.wk{flex:1;background:#F4F6F7;border:1px solid #9fb0b8;border-radius:0 0 6px 6px;cursor:pointer;position:relative;display:flex;align-items:flex-end;justify-content:center;font-size:11px;color:#55666e;padding-bottom:5px}
+.wk.down{background:var(--led)}
+.bk{position:absolute;top:0;height:90px;background:#16242b;border-radius:0 0 5px 5px;cursor:pointer;z-index:2}
+.bk.down{background:#b37617}
+.midimsg{font-variant-numeric:tabular-nums;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;margin-top:10px}
+.midimsg div{background:var(--panel-2);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--panel-muted)}
+.midimsg div b{display:block;color:var(--panel-ink);font-size:16px}
+
+/* Metronome */
+.beats{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.beat{width:30px;height:30px;border-radius:50%;background:var(--panel-2);border:2px solid #2a4c5e;transition:background .05s}
+.beat.one{border-color:var(--led)}
+.beat.hit{background:var(--cyan)}
+.beat.one.hit{background:var(--led)}
+.bars16{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:8px}
+.bars16 div{height:22px;background:var(--panel-2);border-radius:3px;position:relative}
+.bars16 div.b4{box-shadow:inset -2px 0 0 #3a6a80}
+.bars16 div.b8{box-shadow:inset -3px 0 0 var(--cyan)}
+.bars16 div.b16{box-shadow:inset -3px 0 0 var(--led)}
+.bars16 div.cur{background:var(--cyan)}
+.change{min-height:24px;font-size:15px;color:var(--led);font-weight:600;margin-top:8px}
+
+/* Genre chart */
+.genres{display:grid;gap:6px;margin-top:6px}
+.genre{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:10px;background:none;border:0;padding:3px 0;cursor:pointer;text-align:left;color:var(--panel-ink);font-size:14px}
+.genre .track{position:relative;height:18px;background:var(--panel-2);border-radius:4px}
+.genre .rng{position:absolute;top:0;bottom:0;background:var(--cyan);border-radius:4px;opacity:.85}
+.genre:hover .rng,.genre.sel .rng{background:var(--led);opacity:1}
+.genre .lbl{position:absolute;right:6px;top:0;font-size:11.5px;line-height:18px;color:var(--panel-muted)}
+.axis{display:grid;grid-template-columns:120px 1fr;gap:10px;font-size:11.5px;color:var(--panel-muted)}
+.axis div:last-child{display:flex;justify-content:space-between}
+
+/* Structure */
+.timeline{display:flex;height:54px;border-radius:8px;overflow:hidden;margin-top:6px;gap:2px}
+.seg{border:0;cursor:pointer;color:#0b2230;font-size:12px;font-weight:600;line-height:1.15;padding:2px;overflow:hidden;transition:flex-grow .25s}
+.seg[aria-pressed="true"]{outline:3px solid var(--panel-ink);outline-offset:-3px}
+.seg span{display:block;font-weight:400;font-size:11px}
+.energy{display:block;width:100%;height:80px}
+.dur{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:10px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){
+  body{font-size:16.5px}
+  .ctl{grid-template-columns:78px 1fr 70px}
+  .genre,.axis{grid-template-columns:92px 1fr}
+  .cmp{grid-template-columns:1fr}
+  .tab b{font-size:15px}
+  .mod{padding:12px;margin:14px 0;border-radius:14px}
+  .mod-head{margin-bottom:6px}
+  .mod p,.mod .small{font-size:13.5px;line-height:1.45}
+  .info{min-height:0;font-size:14px;padding:8px 10px;margin-top:8px}
+  .btn{min-height:34px;padding:5px 10px;font-size:13.5px}
+  .row{margin:8px 0;gap:6px}
+  .ctl{margin:6px 0}
+  .qrow,.dblist{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .qrow::-webkit-scrollbar,.dblist::-webkit-scrollbar{display:none}
+  .qrow .btn,.dblist .btn{flex:0 0 auto}
+  .dblist .btn{max-width:150px;white-space:normal}
+  .harm{height:78px;gap:3px;padding:6px 6px 0;margin-top:8px}
+  .harm .bar{font-size:10px}
+  .piano{height:120px}
+  .bk{height:72px}
+  .arrow{display:none}
+  .chain .step{flex:1 1 calc(50% - 6px)}
+  .beat{width:24px;height:24px}
+  .dbscale{margin:10px 0 4px}
+}
+.end{margin-top:40px;color:var(--muted);font-size:14px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-1" aria-selected="true" aria-controls="lesson-1" data-lesson="1"><small>Μάθημα 1</small><b>Ήχος &amp; Studio</b></button>
+      <button class="tab" role="tab" id="tab-2" aria-selected="false" aria-controls="lesson-2" data-lesson="2"><small>Μάθημα 2</small><b>Ρυθμός &amp; Δομή</b></button>
+    </div>
+    <nav class="chips" id="chips-1" aria-label="Ενότητες μαθήματος 1">
+      <a class="chip" href="#l1-sound">Τι είναι ήχος</a>
+      <a class="chip" href="#l1-lab">Εργαστήριο</a>
+      <a class="chip" href="#l1-freq">Συχνότητα</a>
+      <a class="chip" href="#l1-amp">Ένταση</a>
+      <a class="chip" href="#l1-timbre">Χροιά &amp; κυματομορφές</a>
+      <a class="chip" href="#l1-sum">Σύνοψη</a>
+      <a class="chip" href="#l1-studio">Studio</a>
+      <a class="chip" href="#l1-daw">DAW</a>
+      <a class="chip" href="#l1-card">Κάρτα ήχου</a>
+      <a class="chip" href="#l1-mon">Monitors</a>
+      <a class="chip" href="#l1-midi">MIDI</a>
+      <a class="chip" href="#l1-synth">Synth</a>
+      <a class="chip" href="#l1-mic">Μικρόφωνο</a>
+      <a class="chip" href="#l1-acoustic">Ακουστική</a>
+    </nav>
+    <nav class="chips" id="chips-2" aria-label="Ενότητες μαθήματος 2" hidden>
+      <a class="chip" href="#l2-rhythm">Ρυθμός</a>
+      <a class="chip" href="#l2-tempo">Tempo &amp; μετρονόμος</a>
+      <a class="chip" href="#l2-beat">Χρόνος</a>
+      <a class="chip" href="#l2-bar">Μέτρο</a>
+      <a class="chip" href="#l2-songs">Παραδείγματα</a>
+      <a class="chip" href="#l2-structure">Δομή</a>
+      <a class="chip" href="#l2-phrase">Φράση</a>
+      <a class="chip" href="#l2-typical">Τυπική δομή</a>
+      <a class="chip" href="#l2-edit">Extended / Radio</a>
+      <a class="chip" href="#l2-changes">Αλλαγές</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Παραγωγή ηλεκτρονικής μουσικής</h1>
+    <p>Οι σημειώσεις των δύο πρώτων μαθημάτων, με εργαλεία που ακούς και πειράζεις. Για τα ηχητικά παραδείγματα, χρησιμοποίησε ακουστικά ή monitors σε χαμηλή ένταση.</p>
+  </div>
+
+<!-- ================= LESSON 1 ================= -->
+<div id="lesson-1" role="tabpanel" aria-labelledby="tab-1">
+  <h2 class="lesson-title">Μάθημα 1: Βασικές αρχές ήχου και studio basics</h2>
+  <p class="lesson-sub">Εισαγωγικό μάθημα στην παραγωγή ηλεκτρονικής μουσικής</p>
+
+  <section id="l1-sound">
+    <h2>Τι είναι ήχος;</h2>
+    <p class="def">Ο ήχος είναι μια δόνηση που διαδίδεται μέσα σε ένα μέσο: αέρα, νερό ή στερεό.</p>
+    <p>Η δόνηση δημιουργεί μια διαταραχή της πίεσης. Τα μόρια του μέσου ταλαντώνονται γύρω από τη θέση ηρεμίας τους και <strong>μεταφέρουν ενέργεια από το ένα σημείο στο άλλο</strong>. Με απλά λόγια, όταν κάτι δημιουργεί έναν ήχο, <strong>τα μόρια του αέρα κινούνται μπρος πίσω</strong> από το σημείο που ξεκινά ο ήχος μέχρι τα αυτιά μας.</p>
+    <p>Στον αέρα ο ήχος δημιουργεί <strong>διαμήκη κύματα</strong>: συμπιέσεις και αραιώσεις της πίεσης που ταξιδεύουν. Η επιφάνεια ενός ηχείου πάλλεται εμπρός πίσω, άρα πιέζει και αραιώνει διαδοχικά τον αέρα, και αυτές οι μεταβολές ταξιδεύουν προς τα έξω.</p>
+
+    <div class="mod">
+      <div class="mod-head">
+        <div class="mod-title"><span class="led" id="pLed"></span>Από το ηχείο στο αυτί</div>
+        <button class="btn" id="pToggle" aria-pressed="false">Κίνηση</button>
+      </div>
+      <canvas id="particles" height="210" data-mh="140" aria-label="Κινούμενα μόρια αέρα που συμπιέζονται και αραιώνουν, με την αντίστοιχη καμπύλη πίεσης από κάτω"></canvas>
+      <p>Πάνω: τα μόρια (διαμήκες κύμα), πυκνά στις συμπιέσεις, αραιά στις αραιώσεις. Κάτω: η ίδια πίεση σχεδιασμένη ως καμπύλη (εγκάρσια αναπαράσταση). Η καμπύλη είναι απλώς ο τρόπος που τη ζωγραφίζουμε· στον αέρα ο ήχος κινείται μπρος πίσω.</p>
+    </div>
+
+    <h3>Πώς το αυτί αντιλαμβάνεται τον ήχο</h3>
+    <p>Όπως η επιφάνεια του ηχείου ταλαντώνεται και δημιουργεί αραιώσεις και συμπιέσεις, έτσι και μέσα στο αυτί υπάρχει μια μεμβράνη που τις δέχεται: το <strong>τύμπανο</strong>. Στη συνέχεια, στο εσωτερικό του αυτιού, οι μηχανικές δονήσεις μετατρέπονται σε ηλεκτρικά σήματα που στέλνονται στον εγκέφαλο. Το αυτί είναι ένα «όργανο-μετατροπέας».</p>
+  </section>
+
+  <section id="l1-lab">
+    <h2>Τα 3 βασικά χαρακτηριστικά του ήχου</h2>
+    <div class="grid2">
+      <div class="card"><h4>Συχνότητα (Frequency)</h4><p>Πόσο ψηλά ή χαμηλά ακούγεται: το τονικό ύψος.</p></div>
+      <div class="card"><h4>Ένταση (Amplitude)</h4><p>Πόσο δυνατά ή σιγανά ακούγεται.</p></div>
+      <div class="card"><h4>Χροιά (Timbre)</h4><p>Το «χρώμα» που κάνει δύο ήχους να διαφέρουν.</p></div>
+    </div>
+
+    <div class="mod" id="lab">
+      <div class="mod-head">
+        <div class="mod-title"><span class="led" id="labLed"></span>Εργαστήριο: συχνότητα και ένταση</div>
+        <button class="btn play" id="labPlay">Παίξε</button>
+      </div>
+      <canvas id="labCanvas" height="150" data-mh="96" aria-label="Κυματομορφή του τόνου"></canvas>
+      <div class="ctl"><label for="labFreq">Συχνότητα</label><input type="range" id="labFreq" min="0" max="1000" step="1"><output id="labFreqOut">440 Hz</output></div>
+      <div class="ctl"><label for="labVol">Ένταση</label><input type="range" id="labVol" min="0" max="100" value="50"><output id="labVolOut">−6 dB</output></div>
+      <div class="readout">Νότα κοντά: <b id="labNote">Λα 4</b> &nbsp; Περιοχή: <b id="labRegion">Μεσαία</b></div>
+      <div class="row qrow" aria-label="Γρήγορες συχνότητες">
+        <button class="btn" data-f="40">40 Hz</button>
+        <button class="btn" data-f="100">100 Hz</button>
+        <button class="btn" data-f="440">440 Hz</button>
+        <button class="btn" data-f="2000">2 kHz</button>
+        <button class="btn" data-f="8000">8 kHz</button>
+        <button class="btn" data-f="16000">16 kHz</button>
+      </div>
+      <p>Τα ηχεία κινητού δεν βγάζουν σχεδόν τίποτα κάτω από ~100 Hz. Αν δεν ακούς τα 16 kHz, είναι φυσιολογικό: με την ηλικία χάνονται πρώτα οι υψηλές συχνότητες.</p>
+    </div>
+  </section>
+
+  <section id="l1-freq">
+    <h2>Συχνότητα (Frequency)</h2>
+    <p class="def">Η συχνότητα μετρά πόσες φορές επαναλαμβάνεται ένας πλήρης κύκλος δόνησης (ταλάντωσης) σε ένα δευτερόλεπτο.</p>
+    <p>Μονάδα μέτρησης είναι το <strong>Hertz (Hz)</strong>. 1 Hz = 1 ταλάντωση ανά δευτερόλεπτο, 440 Hz = 440 ταλαντώσεις ανά δευτερόλεπτο.</p>
+    <p>Πρακτικά, η συχνότητα καθορίζει την <strong>τονικότητα ή αλλιώς το ύψος (pitch)</strong> του ήχου. Όσο μεγαλύτερη η συχνότητα, τόσο υψηλότερος ο τόνος· όσο μικρότερη, τόσο χαμηλότερος.</p>
+
+    <h3>Τι ακούει ο άνθρωπος</h3>
+    <ul>
+      <li>Το ανθρώπινο αυτί ακούει περίπου από <strong>20 Hz έως 20 kHz</strong> (20.000 Hz).</li>
+      <li>Με τα χρόνια χάνουμε την ικανότητα να ακούμε τις υψηλές συχνότητες, συνήθως πάνω από 15–16 kHz, λόγω φυσικής φθοράς της ακοής.</li>
+      <li>Το αυτί είναι πιο ευαίσθητο γύρω στα <strong>2000 Hz</strong> (π.χ. κλάμα μωρού, συναγερμός).</li>
+    </ul>
+    <div class="note"><b>Σημείωση παραγωγού</b>Η μέγιστη ευαισθησία απλώνεται περίπου στα 2–5 kHz (με κορυφή κοντά στα 3–4 kHz). Γι' αυτό ένα σκληρό hat ή ένα «φωνακλάδικο» synth σε αυτή την περιοχή κουράζει γρήγορα στη μίξη.</div>
+
+    <h3>Οι τρεις μεγάλες περιοχές</h3>
+    <div class="grid2">
+      <div class="card"><h4>Χαμηλές (μπάσα): 20–250 Hz</h4><p>Βαθύς, χαμηλός τόνος, όπως τύμπανα και μπάσα όργανα.</p></div>
+      <div class="card"><h4>Μεσαίες (μεσαία): 250 Hz–4 kHz</h4><p>Οι συχνότητες της ανθρώπινης φωνής και των περισσότερων οργάνων.</p></div>
+      <div class="card"><h4>Υψηλές (πρίμα): 4–20 kHz</h4><p>Λαμπερός ή αιχμηρός ήχος, όπως τα hats.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Περιοχή</th><th>Εύρος συχνοτήτων</th><th>Πώς ακούγονται</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Υπόηχοι</td><td>&lt; 20 Hz</td><td>Δεν ακούγονται, αλλά «νιώθονται»</td><td></td></tr>
+          <tr><td>Μπάσα</td><td>20–150 Hz</td><td>Σώμα του ήχου</td><td><button class="btn tone" data-f="60" style="background:var(--panel);">▶ 60 Hz</button></td></tr>
+          <tr><td>Μεσαία</td><td>250–4000 Hz</td><td>Ανθρώπινη φωνή, όργανα</td><td><button class="btn tone" data-f="1000" style="background:var(--panel);">▶ 1 kHz</button></td></tr>
+          <tr><td>Πρίμα</td><td>4000–20000 Hz</td><td>Λεπτομέρεια</td><td><button class="btn tone" data-f="9000" style="background:var(--panel);">▶ 9 kHz</button></td></tr>
+          <tr><td>Υπέρηχοι</td><td>&gt; 20000 Hz</td><td>Δεν ακούγονται</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Κατευθυντικότητα και εμπόδια</h3>
+    <ul>
+      <li>Όσο ανεβαίνουν τα Hz, αυξάνεται η <strong>κατευθυντικότητα</strong>: καταλαβαίνουμε εύκολα από πού έρχεται ο ήχος (π.χ. θρόισμα σε φύλλα).</li>
+      <li>Όσο πέφτουν τα Hz, τόσο πιο εύκολα τα ηχητικά κύματα περνούν τα εμπόδια (π.χ. έξω από ένα κλαμπ ακούγονται κυρίως τα μπάσα).</li>
+    </ul>
+
+    <h3>Νότες και οκτάβες</h3>
+    <p>Κάθε νότα έχει συγκεκριμένη συχνότητα. <strong>Όταν διπλασιάζονται τα Hz, ανεβαίνουμε μία οκτάβα.</strong> Το Λα στα 440 Hz (Λα της 4ης οκτάβας του πιάνου) είναι το κούρδισμα αναφοράς των οργάνων.</p>
+    <div class="mod">
+      <div class="mod-head"><div class="mod-title"><span class="led"></span>Άκου τον διπλασιασμό</div></div>
+      <div class="row">
+        <button class="btn oct" data-f="110">Λα 2: 110 Hz</button>
+        <button class="btn oct" data-f="220">Λα 3: 220 Hz</button>
+        <button class="btn oct" data-f="440">Λα 4: 440 Hz</button>
+        <button class="btn oct" data-f="880">Λα 5: 880 Hz</button>
+        <button class="btn" id="octAll">Παίξε όλες</button>
+      </div>
+      <p>Είναι η «ίδια» νότα σε άλλο ύψος. ×2 προς τα πάνω, ÷2 προς τα κάτω.</p>
+    </div>
+  </section>
+
+  <section id="l1-amp">
+    <h2>Ένταση (Amplitude)</h2>
+    <p class="def">Η ένταση είναι η υποκειμενική αίσθηση της ισχύος του ήχου: πόσο δυνατά ή σιγανά ακούγεται.</p>
+    <ul>
+      <li>Συνδέεται με το μέγεθος της αλλαγής στην πίεση του αέρα. Όσο μεγαλύτερη η μεταβολή της πίεσης, τόσο πιο δυνατός ο ήχος.</li>
+      <li>Σχετίζεται άμεσα με το <strong>πλάτος (amplitude)</strong> του κύματος, δηλαδή πόσο πολύ αυξομειώνεται η πίεση. Μεγάλο πλάτος σημαίνει μεγαλύτερη ένταση, μικρό πλάτος μικρότερη.</li>
+    </ul>
+    <p class="muted">Στο <a href="#l1-lab">εργαστήριο</a> πάνω, το slider «Ένταση» αλλάζει ακριβώς το ύψος της καμπύλης.</p>
+
+    <h3>Φυσικό μέγεθος και υποκειμενική αίσθηση</h3>
+    <p>Δύο άτομα μπορεί να αντιλαμβάνονται την ίδια ένταση διαφορετικά. Η <strong>ένταση (Intensity)</strong> είναι φυσικό μέγεθος, ενώ η <strong>«δυναμική» (Loudness)</strong> είναι υποκειμενική και εξαρτάται από το αυτί του ακροατή, τη συχνότητα του ήχου και το περιβάλλον (αντηχήσεις, απόσταση κ.λπ.).</p>
+
+    <h3>Decibels (dB)</h3>
+    <p>Η ένταση μετριέται σε <strong>decibels (dB)</strong>, μια <strong>λογαριθμική</strong> κλίμακα. Αύξηση κατά 10 dB σημαίνει δεκαπλάσια ένταση: ένας ήχος στα 20 dB είναι 10 φορές πιο έντονος από έναν στα 10 dB.</p>
+
+    <div class="mod">
+      <div class="mod-head"><div class="mod-title"><span class="led on"></span>Κλίμακα dB</div><div class="readout"><b id="dbVal">60 dB</b></div></div>
+      <div class="dbscale" aria-hidden="true"><div class="dbmark" id="dbMark"></div></div>
+      <div class="dbticks"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span><span>120</span><span>140</span></div>
+      <div class="info" id="dbInfo">Συνηθισμένη συνομιλία: ασφαλές επίπεδο.</div>
+      <div class="dblist" id="dbList"></div>
+      <div class="ctl" style="margin-top:16px"><label for="dbDiff">Διαφορά</label><input type="range" id="dbDiff" min="0" max="30" value="10"><output id="dbDiffOut">+10 dB</output></div>
+      <p id="dbDiffTxt"></p>
+    </div>
+
+    <ul>
+      <li><strong>0 dB</strong>: το κατώτατο όριο ακοής.</li>
+      <li><strong>30 dB</strong>: ψίθυροι ή πολύ αθόρυβοι ήχοι.</li>
+      <li><strong>60–70 dB</strong>: συνηθισμένη συνομιλία.</li>
+      <li><strong>85 dB</strong>: επικίνδυνο επίπεδο για παρατεταμένη έκθεση.</li>
+      <li><strong>120 dB</strong>: πόνος ή ζημιά στην ακοή (π.χ. συναυλίες).</li>
+    </ul>
+    <h3>Απόσταση και ηχεία</h3>
+    <ul>
+      <li>Η ένταση μειώνεται όσο απομακρυνόμαστε από την πηγή, γιατί η ενέργεια του κύματος απλώνεται σε όλο και μεγαλύτερη επιφάνεια.</li>
+      <li>Αν διπλασιάσουμε ηχεία ίδιας έντασης, κερδίζουμε <strong>+3 dB</strong>.</li>
+    </ul>
+    <div class="note"><b>Σημείωση παραγωγού</b>Το «10 φορές» αφορά την ακουστική ισχύ. Το αυτί αντιλαμβάνεται +10 dB περίπου ως «διπλάσια δυνατά». Γι' αυτό τα +3 dB (διπλή ισχύς) ακούγονται ως μια αισθητή αλλά όχι τεράστια αύξηση.</div>
+  </section>
+
+  <section id="l1-timbre">
+    <h2>Χροιά (Timbre)</h2>
+    <p class="def">Η χροιά κάνει δύο ήχους διαφορετικούς, ακόμη κι αν έχουν την ίδια συχνότητα και ένταση.</p>
+    <p>Ένας πραγματικός ήχος σπάνια είναι μία μόνο συχνότητα. Αποτελείται από <strong>θεμελιώδη + αρμονικές</strong>.</p>
+    <ul>
+      <li>Η <strong>θεμελιώδης</strong> (fundamental) καθορίζει κυρίως το ύψος (pitch) της νότας.</li>
+      <li>Οι <strong>αρμονικές</strong> (harmonics) δίνουν μεγάλο μέρος της «ταυτότητας» και του χρώματος. Διαφορετική αναλογία αρμονικών σημαίνει διαφορετική χροιά.</li>
+      <li>Οι αρμονικές είναι πρόσθετες συχνότητες, <strong>πολλαπλάσια</strong> της θεμελιώδους. Αν η θεμελιώδης είναι 300 Hz, οι αρμονικές είναι 600, 900, 1200 Hz κ.ο.κ. Δεν αλλάζουν το ύψος, αλλάζουν το «χρώμα».</li>
+    </ul>
+    <div class="grid2">
+      <div class="card"><h4>Περιττές: 3η, 5η, 7η…</h4><p>Περιττά πολλαπλάσια. Δίνουν κοφτό, ψηφιακό, «τετράγωνο» ήχο.</p></div>
+      <div class="card"><h4>Ζυγές: 2η, 4η, 6η…</h4><p>Ζυγά πολλαπλάσια. Προσθέτουν ζεστασιά και «αρμονία», γλυκαίνουν τον ήχο.</p></div>
+    </div>
+
+    <h3>Κυματομορφές (Waveforms)</h3>
+    <p>Οι βασικοί τύποι κυματομορφών ενός synthesizer. Διάλεξε μία και δες ποιες αρμονικές περιέχει (πορτοκαλί οι περιττές, γαλάζιες οι ζυγές).</p>
+
+    <div class="mod">
+      <div class="mod-head">
+        <div class="mod-title"><span class="led" id="wLed"></span>Oscillator</div>
+        <button class="btn play" id="wPlay">Παίξε</button>
+      </div>
+      <div class="row" role="group" aria-label="Κυματομορφή">
+        <button class="btn wtype" data-t="sine" aria-pressed="true">Sine</button>
+        <button class="btn wtype" data-t="triangle" aria-pressed="false">Triangle</button>
+        <button class="btn wtype" data-t="sawtooth" aria-pressed="false">Sawtooth</button>
+        <button class="btn wtype" data-t="square" aria-pressed="false">Square</button>
+      </div>
+      <canvas id="wCanvas" height="130" data-mh="84" aria-label="Σχήμα κυματομορφής"></canvas>
+      <div class="harm" id="harm" aria-label="Αρμονικές"></div>
+      <div class="ctl"><label for="wMix">Μίξη με sine</label><input type="range" id="wMix" min="0" max="100" value="0"><output id="wMixOut">0%</output></div>
+      <div class="row">
+        <span class="small" style="color:var(--panel-muted)">Θεμελιώδης:</span>
+        <button class="btn wf" data-f="55" aria-pressed="false">55 Hz</button>
+        <button class="btn wf" data-f="110" aria-pressed="true">110 Hz</button>
+        <button class="btn wf" data-f="220" aria-pressed="false">220 Hz</button>
+      </div>
+      <div class="info" id="wInfo"></div>
+    </div>
+    <p>Οι κυματομορφές μπορούν να <strong>αναμειχθούν</strong> για να δημιουργήσουν πιο σύνθετους ήχους. Δοκίμασε το slider «Μίξη με sine» πάνω: στρογγυλεύει την κορυφή της κυματομορφής και μειώνει τις υψηλές αρμονικές.</p>
+  </section>
+
+  <section id="l1-sum">
+    <h2>Συνοψίζοντας</h2>
+    <div class="grid2">
+      <div class="card"><h4>Συχνότητα</h4><p>Επηρεάζει το τονικό ύψος του ήχου.</p></div>
+      <div class="card"><h4>Ένταση</h4><p>Καθορίζει πόσο δυνατός είναι ένας ήχος.</p></div>
+      <div class="card"><h4>Χροιά</h4><p>Καθορίζει το ηχόχρωμα του ήχου.</p></div>
+    </div>
+  </section>
+
+  <section id="l1-studio">
+    <h2>Βασικός εξοπλισμός σε ένα studio</h2>
+    <p>DAW, κάρτα ήχου, studio monitors, MIDI controller, synthesizer, μικρόφωνο και acoustic treatment. Δες πώς ταξιδεύει ο ήχος ανάμεσά τους (πάτα κάθε βήμα):</p>
+    <div class="mod">
+      <div class="mod-head"><div class="mod-title"><span class="led on"></span>Η διαδρομή του ήχου</div></div>
+      <div class="chain" id="chain">
+        <button class="btn step" data-i="0" aria-pressed="true">Μικρόφωνο / synth<small>αναλογικό σήμα</small></button><span class="arrow" aria-hidden="true">›</span>
+        <button class="btn step" data-i="1" aria-pressed="false">Κάρτα ήχου<small>A/D μετατροπή</small></button><span class="arrow" aria-hidden="true">›</span>
+        <button class="btn step" data-i="2" aria-pressed="false">DAW<small>ψηφιακή επεξεργασία</small></button><span class="arrow" aria-hidden="true">›</span>
+        <button class="btn step" data-i="3" aria-pressed="false">Κάρτα ήχου<small>D/A μετατροπή</small></button><span class="arrow" aria-hidden="true">›</span>
+        <button class="btn step" data-i="4" aria-pressed="false">Monitors<small>ξανά ήχος στον αέρα</small></button>
+      </div>
+      <div class="info" id="chainInfo"></div>
+    </div>
+    <p class="muted">Στην απλή ακρόαση η διαδρομή είναι υπολογιστής (DAW) → κάρτα ήχου → ηχεία.</p>
+  </section>
+
+  <section id="l1-daw">
+    <h2>DAW (Digital Audio Workstation)</h2>
+    <p class="def">Λογισμικό στον υπολογιστή που χρησιμοποιείται για την παραγωγή και την επεξεργασία μουσικής.</p>
+    <p>Παραδείγματα: <strong>Ableton Live, Logic Pro, Cubase, FL Studio, Pro Tools</strong>.</p>
+    <div class="grid2">
+      <div class="card"><h4>Παραγωγή ήχου και επεξεργασία</h4><p>Μέσω των ενσωματωμένων synthesizers.</p></div>
+      <div class="card"><h4>Ηχογράφηση</h4><p>Ζωντανός ήχος από μικρόφωνα, όργανα, synthesizers και άλλες πηγές.</p></div>
+      <div class="card"><h4>Προσθήκη εφέ</h4><p>Reverb, delay, compression και άλλα.</p></div>
+    </div>
+    <p>Ένα project στο Ableton (Arrangement View) είναι οριζόντια κανάλια (tracks), ένα για κάθε στοιχείο (kick, hats, bass, synth…), με clips πάνω σε μια χρονογραμμή μετρημένη σε μέτρα. Κάτω βρίσκονται τα όργανα και τα εφέ του επιλεγμένου καναλιού, δεξιά ο mixer.</p>
+  </section>
+
+  <section id="l1-card">
+    <h2>Κάρτα ήχου (Audio interface)</h2>
+    <p class="def">Συσκευή που επιτρέπει την είσοδο και έξοδο ήχου μεταξύ υπολογιστή και εξωτερικών συσκευών σε υψηλή ποιότητα.</p>
+    <p>Οι εξωτερικές συσκευές μπορεί να είναι ηχεία, μικρόφωνα, μουσικά όργανα, ακουστικά. Ουσιαστικά η κάρτα ήχου είναι ένας <strong>μετατροπέας</strong> αναλογικού σε ψηφιακό και αντίστροφα.</p>
+    <div class="grid2">
+      <div class="card"><h4>A/D: αναλογικό σε ψηφιακό</h4><p>Όταν ηχογραφούμε (μικρόφωνο, όργανο), μετατρέπει το αναλογικό σήμα σε ψηφιακή μορφή που επεξεργάζεται το DAW.</p></div>
+      <div class="card"><h4>D/A: ψηφιακό σε αναλογικό</h4><p>Για την αναπαραγωγή, μετατρέπει το ψηφιακό σήμα πίσω σε αναλογικό ήχο προς τα ηχεία.</p></div>
+    </div>
+    <p>Σε σύγκριση με τις ενσωματωμένες κάρτες των υπολογιστών, προσφέρουν ανώτερη ποιότητα γιατί έχουν καλύτερους μετατροπείς A/D και D/A. Παραδείγματα: Focusrite Scarlett, Behringer U-Phoria, PreSonus Revelator, RME Babyface.</p>
+    <h3>Τι προσφέρει μια καλή κάρτα ήχου</h3>
+    <ul>
+      <li>Καθαρό ήχο χωρίς θόρυβο ή παραμορφώσεις.</li>
+      <li>Χαμηλό <strong>latency</strong> (καθυστέρηση).</li>
+      <li>Ποιοτικούς <strong>προενισχυτές (preamps)</strong> για φωνή και όργανα. Ο προενισχυτής ενισχύει ένα ασθενές σήμα ώστε να μπορεί να επεξεργαστεί.</li>
+      <li>Αναβαθμισμένους converters (A/D, D/A) για καθαρότερο ήχο.</li>
+    </ul>
+  </section>
+
+  <section id="l1-mon">
+    <h2>Studio monitors (ηχεία studio)</h2>
+    <p class="def">Ειδικά ηχεία σχεδιασμένα για ακρίβεια, όχι απλώς για όμορφο ή δυνατό ήχο.</p>
+    <p>Ο ρόλος τους είναι να δείχνουν πώς ακριβώς ακούγεται μια μίξη, χωρίς να κρύβουν ή να προσθέτουν τίποτα. Δεν κολακεύουν τη μουσική: <strong>δείχνουν τα λάθη, τις συχνότητες που λείπουν ή περισσεύουν</strong>.</p>
+
+    <div class="mod">
+      <div class="mod-head">
+        <div class="mod-title"><span class="led on"></span>Απόκριση συχνοτήτων</div>
+        <div class="row" style="margin:0">
+          <button class="btn resp" data-r="flat" aria-pressed="true">Studio monitor</button>
+          <button class="btn resp" data-r="cons" aria-pressed="false">Καταναλωτικό</button>
+        </div>
+      </div>
+      <svg viewBox="0 0 600 190" role="img" aria-label="Καμπύλη απόκρισης συχνοτήτων" style="width:100%;display:block;background:var(--panel-2);border-radius:10px">
+        <g stroke="#2a4c5e" stroke-width="1">
+          <line x1="40" y1="95" x2="580" y2="95"/>
+          <line x1="40" y1="20" x2="40" y2="160"/>
+        </g>
+        <g fill="#8FAAB8" font-size="12" font-family="Commissioner, sans-serif">
+          <text x="40" y="180">20 Hz</text><text x="158" y="180">100</text><text x="300" y="180">1k</text><text x="440" y="180">5k</text><text x="545" y="180">20k</text>
+          <text x="46" y="32">+6 dB</text><text x="46" y="155">−6 dB</text>
+        </g>
+        <path id="respPath" d="M40 95 L580 95" fill="none" stroke="#F2A93B" stroke-width="3.5" stroke-linecap="round" style="transition:d .4s"/>
+      </svg>
+      <div class="info" id="respInfo">Flat response: όλες οι συχνότητες αναπαράγονται ισορροπημένα και ουδέτερα, ώστε ο ήχος να μην είναι «πειραγμένος».</div>
+    </div>
+
+    <h3>Active και passive</h3>
+    <div class="grid2">
+      <div class="card"><h4>Active (ενεργά)</h4><p>Ενσωματωμένοι ενισχυτές, δεν χρειάζονται εξωτερικό ενισχυτή. Τα πιο συνηθισμένα στα σύγχρονα studio.</p></div>
+      <div class="card"><h4>Passive (παθητικά)</h4><p>Απαιτούν εξωτερικό ενισχυτή για να λειτουργήσουν.</p></div>
+    </div>
+    <h3>Woofer και tweeter</h3>
+    <p>Τα monitors έχουν συνήθως ένα <strong>woofer</strong> για τις χαμηλές συχνότητες και ένα <strong>tweeter</strong> για τις υψηλές. Μεγαλύτερα woofers αναπαράγουν καλύτερα τα μπάσα.</p>
+
+    <h3>Τοποθέτηση</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;align-items:center">
+      <svg viewBox="0 0 300 260" role="img" aria-label="Ισόπλευρο τρίγωνο ανάμεσα στα δύο monitors και τον ακροατή" style="width:100%;max-width:340px;background:var(--surface);border:1px solid var(--line);border-radius:12px">
+        <line x1="20" y1="22" x2="280" y2="22" stroke="var(--muted)" stroke-width="2"/>
+        <text x="150" y="16" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Commissioner, sans-serif">τοίχος</text>
+        <line x1="72" y1="26" x2="72" y2="52" stroke="var(--accent)" stroke-dasharray="3 3"/>
+        <text x="80" y="42" font-size="11" fill="var(--accent)" font-family="Commissioner, sans-serif">&gt; 30 cm</text>
+        <polygon points="72,70 228,70 150,205" fill="none" stroke="var(--wave)" stroke-width="2.5"/>
+        <g transform="translate(72 70) rotate(30)"><rect x="-14" y="-14" width="28" height="28" rx="4" fill="var(--ink)"/><circle r="6" fill="var(--accent)"/></g>
+        <g transform="translate(228 70) rotate(-30)"><rect x="-14" y="-14" width="28" height="28" rx="4" fill="var(--ink)"/><circle r="6" fill="var(--accent)"/></g>
+        <circle cx="150" cy="215" r="16" fill="var(--wave)"/>
+        <text x="150" y="248" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="Commissioner, sans-serif">θέση ακρόασης</text>
+        <text x="150" y="64" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="Commissioner, sans-serif">ίσες πλευρές</text>
+      </svg>
+      <ul>
+        <li>Τα monitors και τα αυτιά σου σχηματίζουν <strong>ισόπλευρο τρίγωνο</strong>.</li>
+        <li>Τα ηχεία στρέφονται προς το κεφάλι σου.</li>
+        <li>Τα <strong>tweeters στο ύψος των αυτιών</strong>.</li>
+        <li>Ιδανικά μακριά από τοίχους (<strong>&gt; 30 εκατοστά</strong>).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="l1-midi">
+    <h2>MIDI controller</h2>
+    <p class="def">MIDI: Musical Instrument Digital Interface. Οι MIDI controllers δεν παράγουν ήχο· στέλνουν εντολές.</p>
+    <p>Το MIDI είναι ένα πρωτόκολλο με το οποίο οι συσκευές επικοινωνούν μέσω εντολών. Οι εντολές δεν περιέχουν ήχο, αλλά πληροφορίες: ποια νότα παίζεται, με ποια ένταση (velocity), για πόση διάρκεια και άλλες παραμέτρους. Τον ήχο τον φτιάχνει το όργανο που τις δέχεται (π.χ. ένα synth στο DAW).</p>
+
+    <div class="mod">
+      <div class="mod-head"><div class="mod-title"><span class="led" id="midiLed"></span>Τι στέλνει ένα πλήκτρο</div></div>
+      <div class="ctl"><label for="vel">Velocity</label><input type="range" id="vel" min="1" max="127" value="100"><output id="velOut">100</output></div>
+      <div class="piano" id="piano" aria-label="Πληκτρολόγιο μίας οκτάβας"></div>
+      <div class="midimsg">
+        <div>Εντολή<b id="mType">–</b></div>
+        <div>Νότα<b id="mNote">–</b></div>
+        <div>Velocity<b id="mVel">–</b></div>
+        <div>Bytes (hex)<b id="mHex">–</b></div>
+      </div>
+      <p>Πάτα και κράτα ένα πλήκτρο: «Note On» όταν πατάς, «Note Off» όταν αφήνεις. Αυτό είναι όλο το μήνυμα, τρία bytes.</p>
+    </div>
+
+    <h3>Τύποι controllers</h3>
+    <div class="grid2">
+      <div class="card"><h4>MIDI keyboards</h4><p>Μοιάζουν με πιάνο (25, 49, 61 ή 88 πλήκτρα). Για synths, pianos, drums και ηχογράφηση μελωδιών και συγχορδιών.</p></div>
+      <div class="card"><h4>Pad controllers</h4><p>Pads ευαίσθητα στην αφή. Κυρίως για beats και drum kits, πολύ χρήσιμα σε hip-hop και trap.</p></div>
+      <div class="card"><h4>Fader &amp; knob controllers</h4><p>Ποτενσιόμετρα (knobs), faders και άλλοι ελεγκτές για παραμέτρους όπως ένταση και εφέ.</p></div>
+      <div class="card"><h4>Hybrid controllers</h4><p>Συνδυασμός keyboard, pads, knobs και faders σε μία συσκευή.</p></div>
+    </div>
+  </section>
+
+  <section id="l1-synth">
+    <h2>Synthesizer</h2>
+    <p class="def">Ηλεκτρονικό μουσικό όργανο που παράγει ήχους μέσω σύνθεσης ηλεκτρονικών σημάτων.</p>
+    <p>Σε αντίθεση με τα παραδοσιακά όργανα που παράγουν ήχο με φυσικό τρόπο (δονήσεις χορδών ή αέρα), το synth χρησιμοποιεί ηλεκτρονικά κυκλώματα για να δημιουργήσει <a href="#l1-timbre">κυματομορφές</a>, τις οποίες διαμορφώνει για να βγάλει ένα τεράστιο εύρος ήχων.</p>
+    <div class="grid2">
+      <div class="card"><h4>Αναλογικό</h4><p>Ηλεκτρονικά κυκλώματα, τάσεις και πυκνωτές. Γνωστά για τη ζεστή, οργανική ηχητική τους ποιότητα.</p></div>
+      <div class="card"><h4>Ψηφιακό</h4><p>Επεξεργαστής και λογισμικό. Μεγάλη ευελιξία και πολύπλοκοι ήχοι με ακρίβεια.</p></div>
+      <div class="card"><h4>Modular</h4><p>Ανεξάρτητα modules που συνδέονται με καλώδια (patch cables), για δικά σου κυκλώματα και πολύ ευέλικτη σύνθεση.</p></div>
+    </div>
+  </section>
+
+  <section id="l1-mic">
+    <h2>Μικρόφωνο</h2>
+    <p>Τα μικρόφωνα studio είναι σχεδιασμένα για ηχογραφήσεις υψηλής ποιότητας: καταγράφουν με ακρίβεια και λεπτομέρεια, καθαρά και χωρίς παραμορφώσεις.</p>
+    <p>Ηχογραφούμε φωνή (vocals), όργανα (πιάνο, κιθάρα, ντραμς…) και ό,τι άλλο θέλουμε να μπει στην παραγωγή: φυσικούς ήχους, τριξίματα, παλαμάκια.</p>
+  </section>
+
+  <section id="l1-acoustic">
+    <h2>Acoustic treatment</h2>
+    <p class="def">Οι παρεμβάσεις στον χώρο ώστε ο ήχος να είναι όσο πιο «αληθινός» γίνεται, χωρίς ανεπιθύμητες ανακλάσεις, βουητά ή ηχώ.</p>
+    <p>Δεν αλλάζει τον ήχο στην πηγή (όπως ένα EQ ή plugin). Αλλάζει το πώς συμπεριφέρεται ο ήχος μέσα στο δωμάτιο. Αν ο χώρος παραμορφώνει τον ήχο:</p>
+    <ul>
+      <li>τα μπάσα μπορεί να ακούγονται υπερβολικά ή να εξαφανίζονται,</li>
+      <li>τα μεσαία και τα πρίμα μπορεί να «αντηχούν» ή να κουράζουν,</li>
+      <li>η μίξη σου «μεταφράζεται» λάθος σε άλλα συστήματα (αυτοκίνητο, κινητό κ.λπ.).</li>
+    </ul>
+    <p>Στόχος είναι ένας πιο ουδέτερος χώρος, ώστε αυτό που ακούς να είναι όσο πιο κοντά γίνεται στην πραγματικότητα.</p>
+
+    <div class="mod">
+      <div class="mod-head"><div class="mod-title"><span class="led on"></span>Το δωμάτιο από ψηλά</div></div>
+      <div class="row">
+        <button class="btn room" data-k="panels" aria-pressed="false">Absorption panels</button>
+        <button class="btn room" data-k="traps" aria-pressed="false">Bass traps</button>
+        <button class="btn room" data-k="diff" aria-pressed="false">Diffuser</button>
+      </div>
+      <svg id="room" viewBox="0 0 320 280" role="img" aria-label="Κάτοψη δωματίου με ηχεία, θέση ακρόασης και ανακλάσεις" style="width:100%;max-width:420px;display:block;margin:0 auto;background:var(--panel-2);border-radius:10px"></svg>
+      <div class="info" id="roomInfo">Χωρίς treatment: πορτοκαλί οι πρώτες ανακλάσεις από τους πλαϊνούς τοίχους, κόκκινο το μπάσο που μαζεύεται στις γωνίες, και ο πίσω τοίχος που στέλνει τον ήχο πίσω σαν ηχώ.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h4>Absorption panels (ηχοαπορροφητικά)</h4><p>Απορροφούν ανακλάσεις από τοίχους και οροφή. Από αφρώδες υλικό, ορυκτοβάμβακα ή ακουστική ίνα. Μπαίνουν στα πλάγια τοιχώματα (πρώτα σημεία ανάκλασης), πάνω από τη θέση ακρόασης, πίσω από τα monitors ή πίσω από σένα.</p></div>
+      <div class="card"><h4>Bass traps (μπασοπαγίδες)</h4><p>Απορροφούν τις χαμηλές συχνότητες που «μαζεύονται» στις γωνίες. Παχύτερες και πυκνότερες από τα πάνελ. Σε όλες τις κάθετες γωνίες (και όπου συναντιούνται τοίχοι και οροφή), ιδανικά από το πάτωμα ως το ταβάνι. Χωρίς bass traps, ένα δωμάτιο δεν θα έχει ποτέ σωστό μπάσο.</p></div>
+      <div class="card"><h4>Diffusers</h4><p>Αντί να απορροφούν, σκορπίζουν τον ήχο προς πολλές κατευθύνσεις. Στον πίσω τοίχο (πίσω από τη θέση ακρόασης) και μερικές φορές στην οροφή.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= LESSON 2 ================= -->
+<div id="lesson-2" role="tabpanel" aria-labelledby="tab-2" hidden>
+  <h2 class="lesson-title">Μάθημα 2: Ρυθμός και δομή ενός track</h2>
+  <p class="lesson-sub">Μαθήματα μουσικής παραγωγής</p>
+
+  <section id="l2-rhythm">
+    <h2>Ρυθμός</h2>
+    <p>Ο ρυθμός υπάρχει παντού: στον χτύπο της καρδιάς μας, στο περπάτημα, στις μέρες και τις εποχές. Η πρώτη αντίληψη του ανθρώπου για τη μουσική ήταν ρυθμική.</p>
+    <p>Ο εγκέφαλος έχει φυσική τάση να αντιλαμβάνεται τον ρυθμό. Γι' αυτό κουνάμε ασυναίσθητα το κεφάλι ή το πόδι όταν ακούμε μουσική. Λειτουργεί σαν <strong>μετρονόμος</strong>: αναζητά ρυθμικά μοτίβα και προβλέπει τον επόμενο παλμό.</p>
+    <p class="def">Ρυθμός είναι η χρονική τοποθέτηση των στοιχείων ενός μουσικού κομματιού: drums, μελωδίες, παύσεις, εφέ.</p>
+    <p>Ο ρυθμός οργανώνει τον ήχο και δίνει αίσθηση κίνησης. Μπορεί να είναι <strong>σταθερός</strong> (όπως στη house) ή <strong>ελεύθερος</strong> (όπως στην ambient).</p>
+  </section>
+
+  <section id="l2-tempo">
+    <h2>Tempo (BPM)</h2>
+    <p class="def">Το tempo δείχνει πόσο γρήγορος ή αργός είναι ο ρυθμός ενός τραγουδιού. BPM σημαίνει Beats Per Minute: πόσοι χτύποι υπάρχουν ανά λεπτό.</p>
+    <ul>
+      <li>Κάθε κομμάτι έχει γραφτεί σε συγκεκριμένα BPM.</li>
+      <li>Μερικά είδη μουσικής έχουν καθορισμένο εύρος BPM, ενώ σε ορισμένα κομμάτια τα BPM αλλάζουν (π.χ. κλασική μουσική).</li>
+      <li>Στην ηλεκτρονική (και όχι μόνο) το tempo καθορίζει την ενέργεια του dancefloor. Οι τιμές δεν είναι απόλυτες, καθώς υπάρχουν και υποείδη.</li>
+    </ul>
+
+    <div class="mod" id="metro">
+      <div class="mod-head">
+        <div class="mod-title"><span class="led" id="mLed"></span>Μετρονόμος</div>
+        <button class="btn play" id="mPlay">Ξεκίνα</button>
+      </div>
+      <div class="readout"><b id="bpmBig">124</b> BPM &nbsp; <span id="sigBig">4/4</span></div>
+      <div class="ctl"><label for="bpm">Tempo</label><input type="range" id="bpm" min="60" max="180" value="124"><output id="bpmOut">124</output></div>
+
+      <div class="small" style="color:var(--panel-muted);margin-top:6px">Πάτα ένα είδος για να ακούσεις το tempo του:</div>
+      <div class="genres" id="genres"></div>
+      <div class="axis"><div></div><div><span>70</span><span>90</span><span>110</span><span>130</span><span>150</span><span>160</span></div></div>
+
+      <div class="small" style="color:var(--panel-muted);margin-top:14px">Μέτρο:</div>
+      <div class="row" id="sigs" role="group" aria-label="Μέτρο"></div>
+      <div class="beats" id="beats" aria-hidden="true"></div>
+      <div class="readout">Χρόνος <b id="cBeat">–</b> &nbsp; Μέτρο <b id="cBar">–</b> / 16 &nbsp; Φράση <b id="cPhrase">–</b></div>
+      <div class="bars16" id="bars16" aria-hidden="true"></div>
+      <div class="change" id="change" aria-live="polite"></div>
+      <div class="info" id="sigInfo"></div>
+    </div>
+  </section>
+
+  <section id="l2-beat">
+    <h2>Χρόνος (beat)</h2>
+    <p class="def">Ο χρόνος ή beat είναι η βασική μονάδα μέτρησης του ρυθμού.</p>
+    <p>Κάθε beat είναι το σημείο που μετράμε, και το beat καθορίζει τον παλμό του κομματιού. Στον μετρονόμο πάνω, κάθε κύκλος που ανάβει είναι ένα beat.</p>
+  </section>
+
+  <section id="l2-bar">
+    <h2>Μέτρο (bar)</h2>
+    <ul>
+      <li>Το μέτρο δείχνει πώς οργανώνονται οι χρόνοι μέσα στη μουσική.</li>
+      <li>Τα μέτρα χωρίζουν το track σε patterns.</li>
+      <li>Μετράει πόσα beats υπάρχουν πριν ακουστεί το επόμενο pattern.</li>
+      <li>Γράφεται σαν κλάσμα: 4/4, 3/4, 7/8, 9/8…</li>
+    </ul>
+    <div class="grid2">
+      <div class="card"><h4>Ο πάνω αριθμός</h4><p>Πόσα beats έχει κάθε μέτρο. 4/4 = 4 beats ανά μέτρο, 3/4 = 3 beats ανά μέτρο.</p></div>
+      <div class="card"><h4>Ο κάτω αριθμός</h4><p>Ποια αξία νότας αντιστοιχεί σε ένα beat: 4 = τέταρτο, 8 = όγδοο.</p></div>
+    </div>
+    <h3>4/4: το πιο «καθολικό» μέτρο</h3>
+    <p>Τα περισσότερα tracks χορευτικής μουσικής είναι σε 4/4:</p>
+    <ul>
+      <li>εύκολο στο dancefloor,</li>
+      <li>εύκολο στο mixing,</li>
+      <li>ξεκάθαρο kick (four-on-the-floor: ένα kick σε κάθε beat),</li>
+      <li>ο εγκέφαλος το «πιάνει» αμέσως.</li>
+    </ul>
+    <h3>Άλλα μέτρα</h3>
+    <ul>
+      <li><strong>2/4</strong>: στρατιωτικοί ρυθμοί, εμβατήρια.</li>
+      <li><strong>3/4</strong>: βαλς, slow jazz.</li>
+      <li>Τα πιο «περίεργα» μέτρα (5/4, 7/8, 9/8) δημιουργούν <strong>ανισορροπία</strong>: ο εγκέφαλος προσπαθεί συνεχώς να ξαναβρεί το «1» του μέτρου. Δοκίμασέ τα στον <a href="#metro">μετρονόμο</a>.</li>
+    </ul>
+  </section>
+
+  <section id="l2-songs">
+    <h2>Παραδείγματα από το μάθημα</h2>
+    <div class="songs" id="songs"></div>
+    <div class="note"><b>Σημείωση παραγωγού</b>Το «Money» συνήθως γράφεται σε 7/4 (το κύριο riff), με το σόλο κιθάρας να περνά σε 4/4. Η αίσθηση των 7 χρόνων είναι ίδια με αυτή που περιγράφει η διαφάνεια.</div>
+  </section>
+
+  <section id="l2-structure">
+    <h2>Δομή ενός track</h2>
+    <p class="def">Η δομή είναι ο τρόπος με τον οποίο οργανώνονται τα διάφορα μέρη ενός κομματιού μέσα στον χρόνο.</p>
+    <p>Στην ηλεκτρονική μουσική (house, techno, trance…) η δομή είναι πολύ σημαντική γιατί:</p>
+    <div class="grid2">
+      <div class="card"><h4>Επηρεάζει τον χορό</h4><p>Πώς κινείται και χορεύει ο κόσμος.</p></div>
+      <div class="card"><h4>Χτίζει ένταση</h4><p>Ανεβάζει και κατεβάζει την ενέργεια.</p></div>
+      <div class="card"><h4>Διευκολύνει το mixing</h4><p>Ο DJ ξέρει πού είναι κάθε αλλαγή.</p></div>
+      <div class="card"><h4>Δίνει ταυτότητα</h4><p>Κάνει το κομμάτι αναγνωρίσιμο.</p></div>
+    </div>
+  </section>
+
+  <section id="l2-phrase">
+    <h2>Τι είναι η φράση</h2>
+    <p>Μια φράση αποτελείται συνήθως από <strong>4 μέτρα</strong>. Ένα μικρό section είναι <strong>8 μέτρα</strong> και ένα μεγάλο <strong>16 μέτρα</strong>.</p>
+    <p>Οι αλλαγές στα στοιχεία ενός κομματιού γίνονται κάθε 8 ή 16 μέτρα. Για σωστό mixing, οι DJs μετράνε το κομμάτι σε φράσεις. Στον <a href="#metro">μετρονόμο</a>, η σειρά από 16 κουτάκια δείχνει ακριβώς αυτό: κάθε 4, 8 και 16 μέτρα σημειώνεται το όριο.</p>
+  </section>
+
+  <section id="l2-typical">
+    <h2>Τυπική δομή house/techno</h2>
+    <ol style="max-width:60ch">
+      <li>Intro (8–32 bars)</li>
+      <li>Build-up (8–16 bars)</li>
+      <li>Drop (16–32 bars)</li>
+      <li>Breakdown (8–16 bars)</li>
+      <li>Second build-up (8–16 bars)</li>
+      <li>Second drop (16–32 bars)</li>
+      <li>Outro (8–32 bars)</li>
+    </ol>
+
+    <div class="mod">
+      <div class="mod-head">
+        <div class="mod-title"><span class="led on"></span>Χτίσε ένα track</div>
+        <div class="row" style="margin:0" role="group" aria-label="Έκδοση">
+          <button class="btn ver" data-v="ext" aria-pressed="true">Extended mix</button>
+          <button class="btn ver" data-v="radio" aria-pressed="false">Radio edit</button>
+        </div>
+      </div>
+      <svg class="energy" id="energy" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-label="Καμπύλη ενέργειας"></svg>
+      <div class="timeline" id="timeline"></div>
+      <div class="info" id="segInfo"></div>
+      <div class="ctl" id="segCtl"><label for="segBars">Μήκος</label><input type="range" id="segBars" step="8"><output id="segBarsOut"></output></div>
+      <div class="ctl"><label for="tBpm">Tempo</label><input type="range" id="tBpm" min="110" max="150" value="126"><output id="tBpmOut">126 BPM</output></div>
+      <div class="dur readout"><span>Σύνολο: <b id="tBars">–</b> μέτρα</span><span>Διάρκεια: <b id="tDur">–</b></span></div>
+      <p>Πάτα ένα κομμάτι της δομής για να δεις τι γίνεται εκεί και να αλλάξεις το μήκος του. Η διάρκεια υπολογίζεται: μέτρα × 4 beats ÷ BPM.</p>
+    </div>
+
+    <h3>Πόσο διαρκεί ένα house ή techno κομμάτι;</h3>
+    <p>Συνήθως <strong>4 έως 7 λεπτά</strong>. Τα mainstream είναι πιο μικρά, τα underground πιο μεγάλα.</p>
+  </section>
+
+  <section id="l2-edit">
+    <h2>Extended mix και radio edit</h2>
+    <div class="cmp">
+      <div class="card"><h4>Extended mix</h4><p>Φτιαγμένο για τους DJs. Μεγάλο intro και outro, περισσότερη ανάπτυξη.</p></div>
+      <div class="card"><h4>Radio edit</h4><p>Για ραδιόφωνο και streaming. Χωρίς intro και outro, πάει κατευθείαν στο κύριο θέμα.</p></div>
+    </div>
+    <p class="muted">Πάτα «Radio edit» στο εργαλείο πάνω για να δεις τη διαφορά στη δομή και στη διάρκεια.</p>
+  </section>
+
+  <section id="l2-changes">
+    <h2>Κάθε πότε αλλάζουν τα στοιχεία;</h2>
+    <div class="grid2">
+      <div class="card"><h4>Κάθε 4 μέτρα</h4><p>Πολύ μικρές αλλαγές (ένα fill, ένα εφέ).</p></div>
+      <div class="card"><h4>Κάθε 8 μέτρα</h4><p>Πιο εμφανείς αλλαγές (μπαίνει ή φεύγει ένα στοιχείο).</p></div>
+      <div class="card"><h4>Κάθε 16 μέτρα</h4><p>Ακόμη πιο εμφανείς αλλαγές, π.χ. από build-up σε drop.</p></div>
+    </div>
+    <p>Βάλε τον μετρονόμο να παίζει και παρακολούθησε τα μηνύματα κάτω από τα 16 κουτάκια: ανάβουν ακριβώς σε αυτά τα σημεία.</p>
+  </section>
+</div>
+
+  <p class="end">Credits to Lencasea</p>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Tabs ---------- */
+function showLesson(n,scroll){
+  $$('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.lesson===n?'true':'false'));
+  $('#lesson-1').hidden=n!=='1'; $('#lesson-2').hidden=n!=='2';
+  $('#chips-1').hidden=n!=='1'; $('#chips-2').hidden=n!=='2';
+  if(scroll) window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+  if(n==='1') requestAnimationFrame(()=>{sizeAll();});
+  if(n==='2') requestAnimationFrame(()=>{renderStructure();});
+}
+$$('.tab').forEach(t=>t.addEventListener('click',()=>showLesson(t.dataset.lesson,true)));
+$$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+  const id=a.getAttribute('href').slice(1); const el=document.getElementById(id); if(!el) return;
+  const inL2=!!el.closest('#lesson-2');
+  const cur=$('#lesson-2').hidden?'1':'2';
+  if((inL2?'2':'1')!==cur){ e.preventDefault(); showLesson(inL2?'2':'1',false); setTimeout(()=>el.scrollIntoView({behavior:reduce?'auto':'smooth'}),30); }
+}));
+
+/* ---------- Audio ---------- */
+let AC=null, master=null;
+function ac(){
+  if(!AC){
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    master=AC.createGain(); master.gain.value=0.9;
+    const comp=AC.createDynamicsCompressor(); comp.threshold.value=-6;
+    master.connect(comp); comp.connect(AC.destination);
+  }
+  if(AC.state==='suspended') AC.resume();
+  return AC;
+}
+function beep(freq,dur,type,vol,when){
+  const c=ac(); const t=c.currentTime+(when||0);
+  const o=c.createOscillator(), g=c.createGain();
+  o.type=type||'sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol||0.2,t+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+(dur||0.6));
+  o.connect(g); g.connect(master); o.start(t); o.stop(t+(dur||0.6)+0.05);
+}
+
+/* ---------- Canvas helpers ---------- */
+function fit(cv){
+  const r=cv.getBoundingClientRect(); if(!r.width) return null;
+  const d=window.devicePixelRatio||1; const mob=window.matchMedia('(max-width:560px)').matches; const h=parseInt(mob&&cv.dataset.mh?cv.dataset.mh:cv.getAttribute('height'));
+  cv.width=Math.round(r.width*d); cv.height=Math.round(h*d); cv.style.height=h+'px';
+  const ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0); return {ctx,w:r.width,h};
+}
+const W={
+  sine:p=>Math.sin(2*Math.PI*p),
+  triangle:p=>1-4*Math.abs(((p+0.25)%1)-0.5),
+  square:p=>p%1<0.5?1:-1,
+  sawtooth:p=>2*(((p+0.5)%1))-1
+};
+function drawWave(cv,fn,cycles,amp,color){
+  const f=fit(cv); if(!f) return; const {ctx,w,h}=f;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='#2a4c5e'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(0,h/2); ctx.lineTo(w,h/2); ctx.stroke();
+  ctx.strokeStyle=color||'#F2A93B'; ctx.lineWidth=2.5; ctx.lineJoin='round'; ctx.beginPath();
+  const N=Math.max(600,w*2);
+  for(let i=0;i<=N;i++){ const x=i/N*w; const p=i/N*cycles; const y=h/2-fn(p)*amp*(h/2-10); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+  ctx.stroke();
+}
+
+/* ---------- Particles ---------- */
+const pc=$('#particles'); let pf=null, pRun=!reduce, pT=0, dots=[];
+function initDots(w,h){ dots=[]; const band=h*0.58, rows=h<180?5:7, step=(band-16)/rows; const cols=Math.floor(w/6); for(let i=0;i<cols;i++) for(let j=0;j<rows;j++) dots.push({x:40+i*((w-60)/cols),y:10+j*step+Math.random()*step*0.6}); }
+function drawParticles(){
+  if(!pf) return; const {ctx,w,h}=pf; ctx.clearRect(0,0,w,h);
+  const lam=w/4.2, A=h<180?7:9, band=h*0.58, cy=h*0.8, ca=h*0.13;
+  ctx.fillStyle='#8FAAB8'; ctx.fillRect(8,6,20,band-6);
+  const cone=Math.sin(-2*Math.PI*pT)*A*0.6;
+  ctx.fillStyle='#F2A93B'; ctx.fillRect(28+cone,band*0.22,5,band*0.56);
+  ctx.fillStyle='#E3EDF2';
+  for(const d of dots){ const dx=A*Math.sin(2*Math.PI*((d.x-40)/lam - pT)); ctx.beginPath(); ctx.arc(d.x-dx,d.y,1.6,0,6.283); ctx.fill(); }
+  ctx.strokeStyle='#2a4c5e'; ctx.beginPath(); ctx.moveTo(40,cy); ctx.lineTo(w-10,cy); ctx.stroke();
+  ctx.strokeStyle='#5CC3EA'; ctx.lineWidth=2.5; ctx.beginPath();
+  for(let x=40;x<=w-10;x+=2){ const y=cy+ca*Math.cos(2*Math.PI*((x-40)/lam - pT)); x===40?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+  ctx.stroke(); ctx.lineWidth=1;
+  ctx.fillStyle='#8FAAB8'; ctx.font='11px Commissioner, sans-serif';
+  ctx.fillText('ηχείο',4,band+12); ctx.fillText('αυτί →',w-48,band+12); ctx.fillText('πίεση',4,cy+4);
+}
+function loopP(){ if(pRun){ pT+=0.006; drawParticles(); requestAnimationFrame(loopP);} }
+function setP(on){ pRun=on; $('#pToggle').setAttribute('aria-pressed',on); $('#pToggle').textContent=on?'Παύση':'Κίνηση'; $('#pLed').classList.toggle('on',on); if(on) loopP(); }
+$('#pToggle').addEventListener('click',()=>setP(!pRun));
+
+/* ---------- Lab oscillator ---------- */
+const lab={f:440,v:50,on:false,o:null,g:null};
+const fToS=f=>1000*Math.log(f/20)/Math.log(1000), sToF=s=>20*Math.pow(1000,s/1000);
+const NOTES=['Ντο','Ντο#','Ρε','Ρε#','Μι','Φα','Φα#','Σολ','Σολ#','Λα','Λα#','Σι'];
+function noteName(f){ const m=Math.round(69+12*Math.log2(f/440)); return NOTES[((m%12)+12)%12]+' '+(Math.floor(m/12)-1); }
+function region(f){ return f<20?'Υπόηχοι':f<250?'Μπάσα':f<4000?'Μεσαία':f<=20000?'Πρίμα':'Υπέρηχοι'; }
+const labGain=v=>0.28*Math.pow(v/100,2);
+function labUpdate(){
+  $('#labFreqOut').textContent=lab.f>=1000?(lab.f/1000).toFixed(lab.f>=10000?1:2)+' kHz':Math.round(lab.f)+' Hz';
+  $('#labVolOut').textContent=lab.v===0?'−∞ dB':(20*Math.log10(lab.v/100)).toFixed(0).replace('-','−')+' dB';
+  $('#labNote').textContent=noteName(lab.f); $('#labRegion').textContent=region(lab.f);
+  if(lab.on&&lab.o){ lab.o.frequency.setTargetAtTime(lab.f,AC.currentTime,0.02); lab.g.gain.setTargetAtTime(labGain(lab.v),AC.currentTime,0.03); }
+  const cycles=1+9*Math.log(lab.f/20)/Math.log(1000);
+  drawWave($('#labCanvas'),W.sine,cycles,Math.max(0.02,lab.v/100),'#F2A93B');
+}
+function labStart(){ const c=ac(); lab.o=c.createOscillator(); lab.g=c.createGain(); lab.o.frequency.value=lab.f; lab.g.gain.value=0; lab.o.connect(lab.g); lab.g.connect(master); lab.o.start(); lab.g.gain.setTargetAtTime(labGain(lab.v),c.currentTime,0.03); lab.on=true; }
+function labStop(){ if(!lab.on) return; const t=AC.currentTime; lab.g.gain.setTargetAtTime(0,t,0.03); lab.o.stop(t+0.2); lab.on=false; lab.o=null; }
+$('#labFreq').value=fToS(440);
+$('#labFreq').addEventListener('input',e=>{lab.f=sToF(+e.target.value); labUpdate();});
+$('#labVol').addEventListener('input',e=>{lab.v=+e.target.value; labUpdate();});
+$('#labPlay').addEventListener('click',()=>{ if(lab.on){labStop();} else {labStart();} const b=$('#labPlay'); b.classList.toggle('on',lab.on); b.textContent=lab.on?'Σταμάτα':'Παίξε'; $('#labLed').classList.toggle('on',lab.on); });
+$$('#lab .row .btn').forEach(b=>b.addEventListener('click',()=>{ lab.f=+b.dataset.f; $('#labFreq').value=fToS(lab.f); labUpdate(); if(!lab.on) $('#labPlay').click(); }));
+$$('.tone').forEach(b=>b.addEventListener('click',()=>beep(+b.dataset.f,1.2,'sine',0.25)));
+$$('.oct').forEach(b=>b.addEventListener('click',()=>beep(+b.dataset.f,0.9,'triangle',0.25)));
+$('#octAll').addEventListener('click',()=>[110,220,440,880].forEach((f,i)=>beep(f,0.7,'triangle',0.22,i*0.6)));
+
+/* ---------- dB ---------- */
+const DB=[[0,'Κατώτατο όριο ακοής'],[10,'Ανάσα, ρολόι'],[20,'Θρόισμα φύλλων'],[30,'Ψίθυρος'],[40,'Ελαφριά βροχή'],[50,'Ήσυχο γραφείο, ψυγείο'],[60,'Συνηθισμένη συνομιλία'],[80,'Κίνηση πόλης, ηλεκτρική σκούπα'],[85,'Όριο κινδύνου για πολλή ώρα'],[90,'Μουσική σε ακουστικά'],[100,'Μηχανάκι, δράπανο'],[110,'Rock συναυλία'],[120,'Βροντή: πόνος, ζημιά'],[140,'Απογείωση αεροπλάνου']];
+function dbSet(v,label){
+  $('#dbMark').style.left=(v/140*100)+'%'; $('#dbVal').textContent=v+' dB';
+  const z=v<80?'ασφαλές επίπεδο.':v<120?'προσοχή: σε παρατεταμένη έκθεση (από 85 dB) κινδυνεύει η ακοή.':'επίπεδο πόνου και άμεσης ζημιάς.';
+  $('#dbInfo').textContent=label+': '+z;
+}
+DB.forEach(([v,l])=>{ const b=document.createElement('button'); b.className='btn'; b.innerHTML='<b>'+v+' dB</b>'+l; b.addEventListener('click',()=>dbSet(v,l)); $('#dbList').appendChild(b); });
+dbSet(60,'Συνηθισμένη συνομιλία');
+function dbDiff(){ const d=+$('#dbDiff').value; const x=Math.pow(10,d/10); $('#dbDiffOut').textContent='+'+d+' dB';
+  const xs=x<10?x.toFixed(1).replace('.',','):Math.round(x).toLocaleString('el-GR');
+  let extra=d===3?' Όσο κερδίζεις διπλασιάζοντας τα ηχεία.':d===10?' Γι\u2019 αυτό τα 20 dB είναι 10 φορές πιο έντονα από τα 10 dB.':'';
+  $('#dbDiffTxt').textContent='+'+d+' dB σημαίνει περίπου '+xs+' φορές μεγαλύτερη ακουστική ισχύ.'+extra; }
+$('#dbDiff').addEventListener('input',dbDiff); dbDiff();
+
+/* ---------- Waveforms / harmonics ---------- */
+const wv={t:'sine',f:110,mix:0,on:false,o1:null,o2:null,g1:null,g2:null};
+const HN=12;
+function harmAmps(t){ const a=[]; for(let n=1;n<=HN;n++){ let v=0;
+  if(t==='sine') v=n===1?1:0; else if(t==='triangle') v=n%2?1/(n*n):0; else if(t==='square') v=n%2?1/n:0; else v=1/n; a.push(v);} return a; }
+const INFO={
+  sine:'Ημιτονοειδής: η πιο απλή μορφή. Ένας καθαρός τόνος με μία μόνο συχνότητα, χωρίς αρμονικές. Ομαλή, συνεχόμενη καμπύλη.',
+  triangle:'Τριγωνική: παρόμοια με τη sine, με λίγες ασθενείς περιττές αρμονικές. Ο ήχος παραμένει «απαλός».',
+  sawtooth:'Οδοντωτή: πλήρης σε αρμονικές, περιττές και ζυγές. «Έντονος» και «τραχύς» ήχος, η βάση για leads, pads και bass.',
+  square:'Τετραγωνική: «σκληρός» και «αιχμηρός» ήχος, πλούσιος σε περιττές αρμονικές. Ακούγεται πιο ψηφιακός.'
+};
+function wRender(){
+  const m=wv.mix/100, A=harmAmps(wv.t), S=harmAmps('sine');
+  const H=A.map((v,i)=>(1-m)*v+m*S[i]); const mx=Math.max(...H)||1;
+  $('#harm').innerHTML=H.map((v,i)=>{const n=i+1; const col=n===1?'#E3EDF2':n%2?'#F2A93B':'#5CC3EA';
+    return '<div class="bar" title="'+n+'η αρμονική: '+n*wv.f+' Hz"><i style="height:'+(v/mx*82)+'%;background:'+col+'"></i><span>'+n+'</span></div>';}).join('');
+  drawWave($('#wCanvas'),p=>(1-m)*W[wv.t](p)+m*W.sine(p),3,0.85,'#5CC3EA');
+  $('#wMixOut').textContent=wv.mix+'%';
+  $('#wInfo').textContent=INFO[wv.t]+' Θεμελιώδης '+wv.f+' Hz, 2η '+2*wv.f+' Hz, 3η '+3*wv.f+' Hz…';
+  if(wv.on){ const t=AC.currentTime; wv.o1.type=wv.t; wv.o1.frequency.setTargetAtTime(wv.f,t,0.01); wv.o2.frequency.setTargetAtTime(wv.f,t,0.01);
+    wv.g1.gain.setTargetAtTime(0.16*(1-m),t,0.03); wv.g2.gain.setTargetAtTime(0.22*m,t,0.03); }
+}
+function wStart(){ const c=ac(); wv.o1=c.createOscillator(); wv.o2=c.createOscillator(); wv.g1=c.createGain(); wv.g2=c.createGain();
+  wv.o2.type='sine'; wv.g1.gain.value=0; wv.g2.gain.value=0; wv.o1.connect(wv.g1); wv.o2.connect(wv.g2); wv.g1.connect(master); wv.g2.connect(master);
+  wv.o1.start(); wv.o2.start(); wv.on=true; wRender(); }
+function wStop(){ const t=AC.currentTime; wv.g1.gain.setTargetAtTime(0,t,0.03); wv.g2.gain.setTargetAtTime(0,t,0.03); wv.o1.stop(t+0.2); wv.o2.stop(t+0.2); wv.on=false; }
+$('#wPlay').addEventListener('click',()=>{ wv.on?wStop():wStart(); const b=$('#wPlay'); b.classList.toggle('on',wv.on); b.textContent=wv.on?'Σταμάτα':'Παίξε'; $('#wLed').classList.toggle('on',wv.on); });
+$$('.wtype').forEach(b=>b.addEventListener('click',()=>{ $$('.wtype').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); wv.t=b.dataset.t; wRender(); }));
+$$('.wf').forEach(b=>b.addEventListener('click',()=>{ $$('.wf').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); wv.f=+b.dataset.f; wRender(); }));
+$('#wMix').addEventListener('input',e=>{wv.mix=+e.target.value; wRender();});
+
+/* ---------- Signal chain ---------- */
+const CH=['Ο ήχος στον αέρα (φωνή, όργανο) ή το σήμα ενός hardware synth είναι αναλογικό: μια συνεχής μεταβολή τάσης.',
+ 'A/D: ο μετατροπέας της κάρτας ήχου μετρά το αναλογικό σήμα χιλιάδες φορές το δευτερόλεπτο και το κάνει αριθμούς. Εδώ βοηθά ένας καλός preamp.',
+ 'Στο DAW ο ήχος είναι πια δεδομένα: τον ηχογραφείς, τον κόβεις, βάζεις εφέ, τον μιξάρεις.',
+ 'D/A: για να ακούσεις, η κάρτα μετατρέπει τους αριθμούς πίσω σε αναλογικό σήμα. Χαμηλό latency σημαίνει ότι ακούς αμέσως αυτό που παίζεις.',
+ 'Τα monitors κάνουν το ηλεκτρικό σήμα ξανά κίνηση αέρα, και ο κύκλος κλείνει στο αυτί σου.'];
+function chainSet(i){ $$('#chain .step').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i?'true':'false')); $('#chainInfo').textContent=CH[i]; }
+$$('#chain .step').forEach(b=>b.addEventListener('click',()=>chainSet(+b.dataset.i))); chainSet(0);
+
+/* ---------- Monitor response ---------- */
+const lx=f=>40+540*Math.log10(f/20)/3, ly=db=>95-db*12;
+function respPath(kind){ const pts=[]; for(let i=0;i<=60;i++){ const f=20*Math.pow(1000,i/60); let d=0;
+  if(kind==='cons'){ d=5.2*Math.exp(-Math.pow(Math.log10(f/60),2)/0.18)+4.6*Math.exp(-Math.pow(Math.log10(f/9000),2)/0.06)-1.2*Math.exp(-Math.pow(Math.log10(f/900),2)/0.15); }
+  else { d=(f<40?-(1-Math.log10(f/20)/Math.log10(2))*2:0); }
+  pts.push((i?'L':'M')+lx(f).toFixed(1)+' '+ly(d).toFixed(1)); } return pts.join(' '); }
+$$('.resp').forEach(b=>b.addEventListener('click',()=>{ $$('.resp').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true');
+  $('#respPath').setAttribute('d',respPath(b.dataset.r));
+  $('#respInfo').textContent=b.dataset.r==='flat'?'Flat response: όλες οι συχνότητες αναπαράγονται ισορροπημένα και ουδέτερα, ώστε ο ήχος να μην είναι «πειραγμένος».':'Τα περισσότερα καταναλωτικά ηχεία τονίζουν μπάσα και πρίμα για να ακούγονται πιο ευχάριστα. Αν μιξάρεις σε αυτά, θα κόψεις μπάσο που στην πραγματικότητα λείπει.'; }));
+$('#respPath').setAttribute('d',respPath('flat'));
+
+/* ---------- MIDI keyboard ---------- */
+const piano=$('#piano'); const KEYS=[];
+const whites=[0,2,4,5,7,9,11,12], blacks=[[1,0],[3,1],[6,3],[8,4],[10,5]];
+whites.forEach((s,i)=>{ const k=document.createElement('div'); k.className='wk'; k.dataset.s=s; k.textContent=s===0?'Ντο4':s===12?'Ντο5':''; piano.appendChild(k); KEYS.push(k); });
+blacks.forEach(([s,after])=>{ const k=document.createElement('div'); k.className='bk'; k.dataset.s=s; const ww=100/whites.length; k.style.left='calc('+((after+1)*ww)+'% - '+(ww*0.3)+'%)'; k.style.width=(ww*0.6)+'%'; piano.appendChild(k); KEYS.push(k); });
+const hex=n=>n.toString(16).toUpperCase().padStart(2,'0');
+const held=new Map();
+function noteOn(k,id){ const note=60+(+k.dataset.s), vel=+$('#vel').value, f=440*Math.pow(2,(note-69)/12);
+  const c=ac(), o=c.createOscillator(), g=c.createGain(), lp=c.createBiquadFilter(); o.type='sawtooth'; o.frequency.value=f; lp.type='lowpass'; lp.frequency.value=800+vel*25;
+  g.gain.setValueAtTime(0,c.currentTime); g.gain.linearRampToValueAtTime(0.25*vel/127,c.currentTime+0.01);
+  o.connect(lp); lp.connect(g); g.connect(master); o.start(); held.set(id,{o,g,k,note}); k.classList.add('down'); $('#midiLed').classList.add('on');
+  $('#mType').textContent='Note On'; $('#mNote').textContent=note+' ('+noteName(f)+')'; $('#mVel').textContent=vel; $('#mHex').textContent='90 '+hex(note)+' '+hex(vel); }
+function noteOff(id){ const h=held.get(id); if(!h) return; const t=AC.currentTime; h.g.gain.cancelScheduledValues(t); h.g.gain.setTargetAtTime(0,t,0.05); h.o.stop(t+0.4);
+  h.k.classList.remove('down'); held.delete(id); if(!held.size) $('#midiLed').classList.remove('on');
+  $('#mType').textContent='Note Off'; $('#mVel').textContent='0'; $('#mHex').textContent='80 '+hex(h.note)+' 00'; }
+piano.addEventListener('pointerdown',e=>{ const k=e.target.closest('.wk,.bk'); if(!k) return; e.preventDefault(); piano.setPointerCapture?.(e.pointerId); noteOn(k,e.pointerId); });
+['pointerup','pointercancel','pointerleave'].forEach(ev=>piano.addEventListener(ev,e=>noteOff(e.pointerId)));
+$('#vel').addEventListener('input',e=>$('#velOut').textContent=e.target.value);
+
+/* ---------- Room ---------- */
+const room={panels:false,traps:false,diff:false};
+function drawRoom(){
+  const s=[];
+  s.push('<rect x="20" y="20" width="280" height="240" fill="none" stroke="#8FAAB8" stroke-width="3"/>');
+  s.push('<text x="160" y="14" text-anchor="middle" font-size="11" fill="#8FAAB8" font-family="Commissioner,sans-serif">μπροστινός τοίχος</text>');
+  s.push('<text x="160" y="275" text-anchor="middle" font-size="11" fill="#8FAAB8" font-family="Commissioner,sans-serif">πίσω τοίχος</text>');
+  if(!room.traps){ [[24,24],[296,24],[24,256],[296,256]].forEach(([x,y])=>s.push('<circle cx="'+x+'" cy="'+y+'" r="20" fill="#D8574A" opacity=".45"/>')); }
+  else { s.push('<polygon points="20,20 52,20 20,52" fill="#5CC3EA"/><polygon points="300,20 268,20 300,52" fill="#5CC3EA"/><polygon points="20,260 52,260 20,228" fill="#5CC3EA"/><polygon points="300,260 268,260 300,228" fill="#5CC3EA"/>'); }
+  const L=[110,60],R=[210,60],P=[160,170],lw=[20,115],rw=[300,115];
+  if(room.panels){ s.push('<rect x="20" y="92" width="9" height="46" fill="#5CC3EA"/><rect x="291" y="92" width="9" height="46" fill="#5CC3EA"/>');
+    s.push('<path d="M'+L+' L'+lw+'" stroke="#F2A93B" stroke-width="2" stroke-dasharray="4 4" opacity=".5" fill="none"/><path d="M'+R+' L'+rw+'" stroke="#F2A93B" stroke-width="2" stroke-dasharray="4 4" opacity=".5" fill="none"/>'); }
+  else { s.push('<path d="M'+L+' L'+lw+' L'+P+'" stroke="#F2A93B" stroke-width="2.5" fill="none"/><path d="M'+R+' L'+rw+' L'+P+'" stroke="#F2A93B" stroke-width="2.5" fill="none"/>'); }
+  if(room.diff){ s.push('<rect x="115" y="249" width="90" height="11" fill="#5CC3EA"/>');
+    [[-50,-30],[-25,-40],[0,-45],[25,-40],[50,-30]].forEach(([dx,dy])=>s.push('<line x1="160" y1="249" x2="'+(160+dx)+'" y2="'+(249+dy)+'" stroke="#F2A93B" stroke-width="1.5" opacity=".7"/>')); }
+  else { s.push('<path d="M160 186 L160 258" stroke="#F2A93B" stroke-width="2.5" stroke-dasharray="2 5"/><path d="M152 200 L160 186 L168 200" stroke="#F2A93B" stroke-width="2.5" fill="none"/>'); }
+  s.push('<g transform="translate(110 60) rotate(30)"><rect x="-13" y="-13" width="26" height="26" rx="4" fill="#E3EDF2"/></g><g transform="translate(210 60) rotate(-30)"><rect x="-13" y="-13" width="26" height="26" rx="4" fill="#E3EDF2"/></g>');
+  s.push('<circle cx="160" cy="170" r="14" fill="#5CC3EA"/><text x="160" y="200" text-anchor="middle" font-size="11" fill="#E3EDF2" font-family="Commissioner,sans-serif" dy="-2"></text>');
+  $('#room').innerHTML=s.join('');
+  const msg=[]; msg.push(room.panels?'Τα πάνελ στα πρώτα σημεία ανάκλασης «τρώνε» τις ανακλάσεις των πλαϊνών τοίχων.':'Πορτοκαλί: οι πρώτες ανακλάσεις από τους πλαϊνούς τοίχους φτάνουν στο αυτί λίγο μετά τον απευθείας ήχο και θολώνουν την εικόνα.');
+  msg.push(room.traps?'Οι bass traps στις γωνίες απορροφούν το μπάσο που μαζευόταν εκεί.':'Κόκκινο: χαμηλές συχνότητες που συσσωρεύονται στις γωνίες.');
+  msg.push(room.diff?'Ο diffuser σκορπίζει τον ήχο του πίσω τοίχου προς πολλές κατευθύνσεις.':'Ο πίσω τοίχος στέλνει τον ήχο ίσια πίσω σου, σαν ηχώ.');
+  $('#roomInfo').textContent=msg.join(' ');
+}
+$$('.room').forEach(b=>b.addEventListener('click',()=>{ room[b.dataset.k]=!room[b.dataset.k]; b.setAttribute('aria-pressed',room[b.dataset.k]); drawRoom(); }));
+drawRoom();
+
+/* ---------- Links ---------- */
+function linksHTML(q){ const e=encodeURIComponent(q);
+  return '<div class="links"><a class="lnk yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+e+'"><span class="dot"></span>YouTube</a><a class="lnk sp" target="_blank" rel="noopener" href="https://open.spotify.com/search/'+e+'"><span class="dot"></span>Spotify</a></div>'; }
+const SONGS=[
+  ['3/4','Johann Strauss II','The Blue Danube','Βαλς: ένα δυνατό «1» και δύο ελαφριοί χρόνοι.','Johann Strauss The Blue Danube'],
+  ['7/8','Pink Floyd','Money','Επτά χρόνοι: το «1» έρχεται νωρίτερα απ\u2019 ό,τι περιμένεις.','Pink Floyd Money'],
+  ['9/8','Βασίλης Τσιτσάνης','Συννεφιασμένη Κυριακή','Παραδοσιακό ελληνικό ζεϊμπέκικο. Ένα από τα πιο γνωστά.','Τσιτσάνης Συννεφιασμένη Κυριακή'],
+  ['10/4','Radiohead','Everything in Its Right Place','Δέκα χρόνοι ανά μέτρο, σε ήρεμο ηλεκτρονικό ύφος.','Radiohead Everything In Its Right Place']
+];
+$('#songs').innerHTML=SONGS.map(s=>'<div class="song"><div class="sig">'+s[0]+'</div><div class="meta"><b>'+s[1]+': '+s[2]+'</b><span>'+s[3]+'</span></div>'+linksHTML(s[4])+'</div>').join('');
+
+/* ---------- Metronome ---------- */
+const GEN=[['Downtempo',80,110],['House',115,128],['Techno',125,135],['Hard techno',135,150],['Psychedelic',138,150]];
+const AX0=70,AX1=160;
+$('#genres').innerHTML=GEN.map((g,i)=>'<button class="genre" data-i="'+i+'"><span>'+g[0]+'</span><span class="track"><span class="rng" style="left:'+((g[1]-AX0)/(AX1-AX0)*100)+'%;width:'+((g[2]-g[1])/(AX1-AX0)*100)+'%"></span><span class="lbl">'+g[1]+'–'+g[2]+'</span></span></button>').join('');
+const SIGS=[['4/4',4,'Το πιο καθολικό μέτρο. House, techno, σχεδόν όλη η χορευτική μουσική.'],['3/4',3,'Βαλς, slow jazz. Π.χ. Strauss: The Blue Danube.'],['2/4',2,'Στρατιωτικοί ρυθμοί, εμβατήρια.'],['5/4',5,'Περίεργο μέτρο: ο εγκέφαλος ψάχνει συνεχώς το «1».'],['7/8',7,'Π.χ. Pink Floyd: Money. Κάθε χτύπος εδώ είναι ένα όγδοο.'],['9/8',9,'Π.χ. το ελληνικό ζεϊμπέκικο. Κάθε χτύπος είναι ένα όγδοο.'],['10/4',10,'Π.χ. Radiohead: Everything in Its Right Place.']];
+const met={bpm:124,sig:0,on:false,count:0,bar:0,next:0,timer:null};
+$('#sigs').innerHTML=SIGS.map((s,i)=>'<button class="btn sigb" data-i="'+i+'" aria-pressed="'+(i===0)+'">'+s[0]+'</button>').join('');
+function buildBeats(){ const n=SIGS[met.sig][1]; $('#beats').innerHTML=Array.from({length:n},(_,i)=>'<div class="beat'+(i===0?' one':'')+'"></div>').join(''); $('#sigBig').textContent=SIGS[met.sig][0]; $('#sigInfo').textContent=SIGS[met.sig][2]; }
+$('#bars16').innerHTML=Array.from({length:16},(_,i)=>{const n=i+1; return '<div class="'+(n%16===0?'b16':n%8===0?'b8':n%4===0?'b4':'')+'"></div>';}).join('');
+function setBpm(v){ met.bpm=v; $('#bpm').value=v; $('#bpmOut').textContent=v; $('#bpmBig').textContent=v; }
+$('#bpm').addEventListener('input',e=>setBpm(+e.target.value));
+$$('.genre').forEach(b=>b.addEventListener('click',()=>{ $$('.genre').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); const g=GEN[+b.dataset.i]; setBpm(Math.round((g[1]+g[2])/2)); if(met.sig!==0) selSig(0); if(!met.on) mToggle(); }));
+function selSig(i){ met.sig=i; $$('.sigb').forEach(x=>x.setAttribute('aria-pressed',x.dataset.i==i?'true':'false')); met.count=0; met.bar=0; buildBeats(); }
+$$('.sigb').forEach(b=>b.addEventListener('click',()=>selSig(+b.dataset.i)));
+function click(beatIdx,t){ const c=AC, o=c.createOscillator(), g=c.createGain(); const one=beatIdx===0;
+  o.frequency.value=one?1760:1100; o.type='sine'; g.gain.setValueAtTime(one?0.5:0.28,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.05); o.connect(g); g.connect(master); o.start(t); o.stop(t+0.06);
+  if(SIGS[met.sig][0]==='4/4'){ const k=c.createOscillator(), kg=c.createGain(); k.frequency.setValueAtTime(140,t); k.frequency.exponentialRampToValueAtTime(45,t+0.12); kg.gain.setValueAtTime(0.6,t); kg.gain.exponentialRampToValueAtTime(0.0001,t+0.25); k.connect(kg); kg.connect(master); k.start(t); k.stop(t+0.26); } }
+function ui(beatIdx,bar){ const bs=$$('#beats .beat'); bs.forEach((b,i)=>b.classList.toggle('hit',i===beatIdx));
+  $('#cBeat').textContent=beatIdx+1; const inPhrase=(bar%16)+1; $('#cBar').textContent=inPhrase; $('#cPhrase').textContent=Math.floor(bar/16)+1;
+  $$('#bars16 div').forEach((d,i)=>d.classList.toggle('cur',i===inPhrase-1));
+  if(beatIdx===0){ const n=bar; let m=''; if(n>0){ if(n%16===0) m='Νέα ενότητα (16 μέτρα): π.χ. από build-up σε drop'; else if(n%8===0) m='Εμφανής αλλαγή (8 μέτρα): μπαίνει ή φεύγει στοιχείο'; else if(n%4===0) m='Μικρή αλλαγή (4 μέτρα): τέλος φράσης'; }
+    if(m) $('#change').textContent=m; else if(n%4===1) $('#change').textContent=''; } }
+function sched(){ const look=0.12; while(met.next<AC.currentTime+look){ const n=SIGS[met.sig][1]; const bi=met.count%n; const bar=met.bar;
+    click(bi,met.next); const delay=Math.max(0,(met.next-AC.currentTime)*1000); setTimeout(()=>{ if(met.on) ui(bi,bar); },delay);
+    met.count++; if(met.count%n===0) met.bar++; met.next+=60/met.bpm; } }
+function mToggle(){ if(met.on){ met.on=false; clearInterval(met.timer); $$('#beats .beat').forEach(b=>b.classList.remove('hit')); }
+  else { ac(); met.on=true; met.count=0; met.bar=0; met.next=AC.currentTime+0.06; $('#change').textContent=''; met.timer=setInterval(sched,25); sched(); }
+  const b=$('#mPlay'); b.classList.toggle('on',met.on); b.textContent=met.on?'Σταμάτα':'Ξεκίνα'; $('#mLed').classList.toggle('on',met.on); }
+$('#mPlay').addEventListener('click',mToggle);
+buildBeats();
+
+/* ---------- Structure ---------- */
+const SEC={
+  intro:{n:'Intro',min:8,max:32,c:'#8FB8C9',e:[.22,.38],d:'Απλό, καθαρό beat. Στόχος να διευκολύνει τον DJ να μπει στο mix. Μικρές προσθήκες ήχων κάθε 8 μέτρα.'},
+  build:{n:'Build-up',min:8,max:16,c:'#E9C46A',e:[.42,.82],d:'Δημιουργία έντασης και προσδοκίας για το drop.'},
+  drop:{n:'Drop',min:16,max:32,c:'#F2A93B',e:[.95,.92],d:'Το κύριο μέρος του κομματιού. Δυνατό bassline και groove.'},
+  brk:{n:'Breakdown',min:8,max:16,c:'#5CC3EA',e:[.4,.3],d:'Το ήρεμο μέρος. Μειώνεται η ενέργεια και προετοιμάζεται το δεύτερο build-up.'},
+  build2:{n:'Build-up 2',min:8,max:16,c:'#E9C46A',e:[.38,.88],d:'Δεύτερο χτίσιμο έντασης, συνήθως πιο έντονο από το πρώτο.'},
+  drop2:{n:'Drop 2',min:16,max:32,c:'#F28C28',e:[1,.95],d:'Το δεύτερο κύριο μέρος, συχνά με κάποια παραλλαγή ή επιπλέον στοιχείο.'},
+  outro:{n:'Outro',min:8,max:32,c:'#8FB8C9',e:[.6,.18],d:'Σταδιακή αφαίρεση στοιχείων. Γίνεται πάλι απλό σαν το intro, για να γίνει mixing με το επόμενο κομμάτι.'}
+};
+const ORDER={ext:['intro','build','drop','brk','build2','drop2','outro'],radio:['build','drop','brk','build2','drop2']};
+const bars={intro:16,build:8,drop:32,brk:16,build2:8,drop2:32,outro:16};
+let ver='ext', selSec='drop';
+function renderStructure(){
+  const ord=ORDER[ver]; if(!ord.includes(selSec)) selSec='drop';
+  const total=ord.reduce((a,k)=>a+bars[k],0);
+  $('#timeline').innerHTML=ord.map(k=>'<button class="seg" data-k="'+k+'" aria-pressed="'+(k===selSec)+'" style="flex:'+bars[k]+' 1 0;background:'+SEC[k].c+'">'+SEC[k].n+'<span>'+bars[k]+'</span></button>').join('');
+  $$('.seg').forEach(b=>b.addEventListener('click',()=>{selSec=b.dataset.k; renderStructure();}));
+  let x=0; const pts=[]; ord.forEach(k=>{ const w=bars[k]/total*1000; pts.push([x,SEC[k].e[0]],[x+w,SEC[k].e[1]]); x+=w; });
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+(76-p[1]*68).toFixed(1)).join(' ');
+  $('#energy').innerHTML='<path d="'+path+' L1000 80 L0 80 Z" fill="#F2A93B" opacity=".18"/><path d="'+path+'" fill="none" stroke="#F2A93B" stroke-width="3" vector-effect="non-scaling-stroke"/>';
+  const s=SEC[selSec]; $('#segInfo').innerHTML='<b>'+s.n+'</b> ('+s.min+'–'+s.max+' μέτρα): '+s.d;
+  const r=$('#segBars'); r.min=s.min; r.max=s.max; r.value=bars[selSec]; $('#segBarsOut').textContent=bars[selSec]+' μέτρα';
+  const bpm=+$('#tBpm').value; const sec=total*4*60/bpm; const m=Math.floor(sec/60), ss=Math.round(sec%60);
+  $('#tBars').textContent=total; $('#tDur').textContent=m+':'+String(ss).padStart(2,'0')+' λεπτά';
+}
+$('#segBars').addEventListener('input',e=>{ bars[selSec]=+e.target.value; renderStructure(); });
+$('#tBpm').addEventListener('input',e=>{ $('#tBpmOut').textContent=e.target.value+' BPM'; renderStructure(); });
+$$('.ver').forEach(b=>b.addEventListener('click',()=>{ $$('.ver').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); ver=b.dataset.v; renderStructure(); }));
+
+/* ---------- Init / resize ---------- */
+function sizeAll(){ pf=fit(pc); if(pf){ initDots(pf.w,pf.h); drawParticles(); } labUpdate(); wRender(); }
+let rt; window.addEventListener('resize',()=>{clearTimeout(rt); rt=setTimeout(()=>{ if(!$('#lesson-1').hidden) sizeAll(); },150);});
+sizeAll(); renderStructure(); setP(!reduce);
+if(document.fonts) document.fonts.ready.then(()=>{ if(!$('#lesson-1').hidden) sizeAll(); });
+})();
+</script>
+</body>
+</html>
