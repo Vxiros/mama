@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digging &amp; Buying Music</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0F4; --panel:#FFFFFF; --ink:#18202E; --quiet:#5D6676; --rule:#D5DAE2;
+  --mark:#FFE45C; --mark-ink:#18202E;
+  --disco:#B8862A; --house:#1F8A70; --electro:#5B47D6; --techno:#46506A; --trance:#1F7FBF; --dnb:#C23B2A; --more:#8A5A9E;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121722; --panel:#1B2230; --ink:#E9EDF4; --quiet:#9AA3B4; --rule:#2C3546;
+    --mark:#E8C93A; --mark-ink:#121722;
+    --disco:#E0AE4C; --house:#3DC29C; --electro:#9585FF; --techno:#9CA8C4; --trance:#4FB0EE; --dnb:#F06A55; --more:#C79BDB;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121722; --panel:#1B2230; --ink:#E9EDF4; --quiet:#9AA3B4; --rule:#2C3546;
+  --mark:#E8C93A; --mark-ink:#121722;
+  --disco:#E0AE4C; --house:#3DC29C; --electro:#9585FF; --techno:#9CA8C4; --trance:#4FB0EE; --dnb:#F06A55; --more:#C79BDB;
+  color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Commissioner","Noto Sans","Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--trance);outline-offset:2px;border-radius:6px}
+.gr-t{color:var(--quiet);font-weight:600}
+
+/* hero */
+header.hero{padding-top:40px;padding-bottom:20px}
+h1{font-weight:900;font-size:clamp(34px,8vw,58px);line-height:1;letter-spacing:-.03em;margin:0 0 8px}
+.h1gr{font-size:clamp(17px,3.6vw,21px);font-weight:700;color:var(--quiet);margin:0 0 14px}
+.lede{color:var(--quiet);max-width:62ch;margin:0 0 26px}
+.ruler{background:var(--panel);border-radius:20px;padding:20px 20px 16px;border:1px solid var(--rule)}
+.rt{font-size:21px;font-weight:900;margin:0;letter-spacing:-.01em}
+.rtgr{font-size:14px;font-weight:600;color:var(--quiet);margin:2px 0 6px}
+.scalenote{font-size:13.5px;color:var(--quiet);margin:0 0 14px}
+
+/* analyzer */
+.anabar{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:0 0 12px}
+.demo{border:1.5px solid var(--rule);background:transparent;border-radius:999px;padding:6px 13px;font-size:14px;font-weight:600;cursor:pointer}
+.demo.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.filebtn{border:1.5px solid var(--ink);background:var(--panel);border-radius:999px;padding:6px 15px;font-size:14px;font-weight:800;cursor:pointer;margin-left:auto;display:flex;align-items:center;gap:7px}
+.filebtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.specbox{position:relative;border-radius:14px;overflow:hidden;background:#05040A;height:270px}
+.specbox canvas{display:block;width:100%;height:100%}
+.specbox.drag{box-shadow:inset 0 0 0 4px var(--trance)}
+.specmsg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#fff;font-weight:700;background:rgba(5,4,10,.75);text-align:center;padding:20px}
+.specmsg.on{display:flex}
+.readout{display:flex;gap:10px 18px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.khz{font-weight:900;font-size:28px;font-variant-numeric:tabular-nums;line-height:1.1;min-width:7ch}
+.khz small{display:block;font-size:12.5px;font-weight:600;color:var(--quiet)}
+.verdict{flex:1 1 280px;border-left:6px solid var(--v,var(--quiet));padding:2px 0 2px 12px;font-size:15px}
+.verdict b{display:block;font-size:16px}
+.verdict i{display:block;font-style:normal;color:var(--quiet);font-size:14px;margin-top:2px}
+.finfo{font-size:13px;color:var(--quiet);margin:10px 0 0}
+
+/* nav */
+nav.genres{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--rule)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav.genres .wrap{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.genres .wrap::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1.5px solid var(--rule);background:var(--panel);border-radius:999px;padding:6px 13px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:7px}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chip.on{border-color:var(--ink)}
+
+/* toolbar + search */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 0}
+.sbox{position:relative;flex:1 1 260px;min-width:0;display:flex}
+.search{flex:1;border:1.5px solid var(--rule);background:var(--panel);border-radius:12px;padding:11px 40px 11px 14px;font-size:16px;color:var(--ink);min-width:0}
+.search::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.sclear{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:var(--rule);color:var(--ink);width:28px;height:28px;border-radius:50%;cursor:pointer;display:none;font-size:13px}
+.sclear.on{display:block}
+.pbtn{border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 15px;font-weight:700;font-size:14.5px;cursor:pointer}
+.results{display:none;background:var(--panel);border:1.5px solid var(--trance);border-radius:16px;margin:12px 0 0;overflow:hidden}
+.results.on{display:block}
+.rhead{padding:10px 14px;font-weight:800;font-size:14.5px;border-bottom:1px solid var(--rule)}
+.rrow{display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--rule)}
+.rrow:first-of-type{border-top:0}
+.rdot{width:10px;height:10px;border-radius:50%;flex:none}
+.rmain{flex:1;min-width:0}
+.rmain b{display:block;font-size:15px;line-height:1.3}
+.rmain span{font-size:13px;color:var(--quiet)}
+.rmain mark{background:color-mix(in srgb,var(--trance) 22%,transparent);color:inherit;border-radius:2px;padding:0 1px}
+.rlinks a{font-size:12px;font-weight:800;color:#fff;text-decoration:none;border-radius:8px;padding:6px 10px;white-space:nowrap}
+.rempty{padding:14px;color:var(--quiet);font-size:14.5px}
+
+/* path stepper */
+.path{margin:30px 0 0}
+.path h2{font-size:22px;font-weight:900;margin:0 0 12px;letter-spacing:-.01em}
+.path ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;counter-reset:p}
+.path li{counter-increment:p}
+.path a{display:flex;flex-direction:column;gap:2px;height:100%;text-decoration:none;background:var(--panel);border:1px solid var(--rule);border-top:4px solid var(--c);border-radius:12px;padding:10px 10px 11px;transition:transform .12s}
+.path a:hover{transform:translateY(-2px)}
+.path a::before{content:counter(p);font-weight:900;font-size:13px;color:var(--c)}
+.path b{font-size:14.5px;line-height:1.2}
+.path span{font-size:12.5px;color:var(--quiet);line-height:1.25}
+
+/* sections */
+section.genre{margin:56px 0 0;scroll-margin-top:70px}
+.ghead{border-left:8px solid var(--c);padding:2px 0 2px 16px;margin-bottom:16px}
+.ghead h2{margin:0;font-size:clamp(28px,6vw,40px);font-weight:900;letter-spacing:-.02em;line-height:1.05}
+.ghead .grsub{font-size:17px;font-weight:700;color:var(--c);margin-top:3px}
+.meta{color:var(--quiet);font-weight:600;font-size:14.5px;margin-top:2px}
+.genre p.lead{margin:0 0 14px;max-width:68ch}
+.tldr{background:color-mix(in srgb,var(--c) 9%,var(--panel));border-radius:14px;padding:13px 16px;margin:0 0 16px;font-size:15px;display:flex;gap:12px;align-items:flex-start}
+.tldr .lang{flex:none;font-size:11.5px;font-weight:900;color:#fff;background:var(--c);border-radius:6px;padding:2px 7px;margin-top:2px}
+details.traits{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:0 18px;margin:0 0 16px}
+details.traits summary{cursor:pointer;font-weight:700;padding:13px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.traits summary::-webkit-details-marker{display:none}
+details.traits summary::after{content:"+";font-weight:800;color:var(--c);font-size:18px;line-height:1}
+details.traits[open] summary::after{content:"–"}
+details.traits ul{margin:0 0 14px;padding-left:20px}
+details.traits li{margin:6px 0}
+h3.sec{font-size:18px;font-weight:800;margin:26px 0 10px}
+h3.sec small{font-size:14px;font-weight:600;color:var(--quiet);margin-left:6px}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 0}
+.tip{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:14px 16px;font-size:15px}
+.tip h3{margin:0 0 4px;font-size:15px;color:var(--c);font-weight:800}
+
+/* platform / tool cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:16px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.cname{font-weight:900;font-size:21px;letter-spacing:-.01em;line-height:1.15}
+.crole{font-size:13px;font-weight:800;color:var(--c);margin-top:2px}
+.price{flex:none;font-size:12px;font-weight:800;border-radius:6px;padding:3px 8px;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.sub{font-size:12px;font-weight:700;border:1.5px solid var(--rule);color:var(--quiet);border-radius:999px;padding:0 8px}
+.note{font-size:14.5px}
+.warn{font-size:13.5px;font-weight:700;color:var(--dnb);display:flex;gap:6px;align-items:center}
+.go{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:14px;font-weight:800;border-radius:10px;padding:9px 12px;color:#fff;background:var(--c)}
+.go svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.6}
+.spacer{margin-top:auto}
+
+/* format cards */
+.fmts{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fm{background:var(--panel);border:1px solid var(--rule);border-top:5px solid var(--fc);border-radius:14px;padding:13px 15px;font-size:14.5px}
+.fm h4{margin:0;font-size:23px;font-weight:900;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.fm h4 small{font-size:12px;font-weight:800;color:#fff;background:var(--fc);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.fm .ty{color:var(--quiet);font-weight:600;font-size:13.5px;margin:2px 0 10px}
+.fm dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0 0 10px;font-size:13.5px;padding:8px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.fm dt{color:var(--quiet);font-weight:600}
+.fm dd{margin:0;font-weight:700}
+.fm p{margin:0}
+.aside{font-size:14px;color:var(--quiet);margin:10px 0 0}
+
+/* boxes, tables, tools */
+.box{background:var(--panel);border:1px solid var(--rule);border-radius:16px;padding:16px 18px}
+.scrollx{overflow-x:auto;background:var(--panel);border:1px solid var(--rule);border-radius:16px}
+table.cmp{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+.cmp th,.cmp td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+.cmp tr:last-child td{border-bottom:0}
+.cmp th{font-size:13px;color:var(--quiet)}
+.cmp td:first-child{font-weight:800}
+.cmp td.num{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row label{font-size:14px;font-weight:700;color:var(--quiet)}
+select.sel{border:1.5px solid var(--rule);background:var(--panel);border-radius:12px;padding:9px 12px;font-size:15px;font-weight:600;color:var(--ink);max-width:100%}
+.out{margin-top:14px;border-left:6px solid var(--v,var(--rule));padding:4px 0 4px 12px;font-size:15px}
+.out b{display:block;font-size:16.5px}
+.out i{display:block;font-style:normal;color:var(--quiet);font-size:14px;margin-top:3px}
+.big{font-weight:900;font-size:34px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+input[type=range]{width:min(260px,100%);accent-color:var(--c,var(--trance))}
+.grades{display:flex;flex-wrap:wrap;gap:7px}
+.gr{border:1.5px solid var(--rule);background:transparent;border-radius:10px;padding:6px 12px;font-weight:800;cursor:pointer;font-size:14.5px}
+.gr.on{background:var(--c);border-color:var(--c);color:#fff}
+.gout{margin-top:12px;font-size:15px;min-height:3em}
+.gout b{font-size:16px}
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+ol.steps li{counter-increment:s;background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:13px 14px 13px 52px;position:relative;font-size:14.5px}
+ol.steps li::before{content:counter(s);position:absolute;left:13px;top:13px;width:27px;height:27px;border-radius:50%;background:var(--c);color:#fff;font-weight:900;font-size:13.5px;display:grid;place-items:center}
+ol.steps b{display:block;font-size:15.5px}
+ol.steps em{display:block;font-style:normal;font-size:13px;color:var(--quiet);font-weight:600}
+.fix{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:14px 0;border-top:1px solid var(--rule)}
+.fix:first-child{border-top:0;padding-top:2px}
+.fix .k{font-weight:900;font-size:22px;font-variant-numeric:tabular-nums;color:var(--c);white-space:nowrap;min-width:6.5ch}
+.fix b{font-size:15.5px}
+.fix p{margin:3px 0 0;font-size:14.5px;max-width:66ch}
+
+/* routine */
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:20px;padding:22px 22px 18px;margin:56px 0 0;scroll-margin-top:70px}
+.panel h2{margin:0;font-size:26px;font-weight:900;letter-spacing:-.02em}
+.pbar{height:6px;border-radius:3px;background:var(--rule);margin:12px 0 4px;overflow:hidden;max-width:320px}
+.pbar div{height:100%;background:var(--house);width:0;transition:width .3s}
+ul.plan{list-style:none;padding:0;margin:8px 0 0}
+ul.plan li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--rule)}
+ul.plan li:first-child{border-top:0}
+ul.plan input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--house);cursor:pointer}
+ul.plan label{cursor:pointer}
+ul.plan li.ok label{color:var(--quiet);text-decoration:line-through;text-decoration-color:var(--house)}
+ul.plan small{display:block;color:var(--quiet);font-size:13px;text-decoration:none}
+.reset{border:1.5px solid var(--rule);background:transparent;border-radius:999px;padding:7px 15px;font-weight:700;cursor:pointer;font-size:14px;margin-top:10px}
+footer{color:var(--quiet);font-size:13.5px;padding:40px 0 60px}
+
+@media (max-width:760px){.path ol{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:620px){
+  .tips{grid-template-columns:1fr}
+  .specbox{height:220px}
+  .filebtn{margin-left:0}
+  .path ol{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+  .path li{flex:0 0 38%;scroll-snap-align:start}
+  .fmts{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+  .fmts .fm{flex:0 0 84%;scroll-snap-align:start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}html{scroll-behavior:auto}}
+@media print{
+  nav.genres,.tools,.results,.anabar,.reset,.filebtn,.go{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .card,.fm,.fix,ol.steps li{break-inside:avoid}
+  section.genre{break-before:page}
+  .tldr,.tldr .lang,.fm h4 small,ol.steps li::before,.specbox,.price{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+  <h1>Digging &amp; Buying Music</h1>
+  <p class="h1gr">Ψάξιμο, αγορά και προετοιμασία μουσικής για DJ</p>
+  <p class="lede">How to find a track and who released it, where to buy it, which file format to choose, how to convert it, how to check its real quality, and how to get it from rekordbox onto a USB for the CDJs. Facts checked against the official sites in October 2026.</p>
+  <div class="ruler" id="checker">
+    <h2 class="rt">Is this file really what it says?</h2>
+    <p class="rtgr">Είναι το αρχείο αυτό που λέει ότι είναι;</p>
+    <p class="scalenote">A spectrogram, like Spek. Try an example, or drop your own track on the picture. The analysis runs on your device; nothing is uploaded.</p>
+    <div class="anabar">
+      <button class="demo on" data-demo="lossless">Real AIFF</button>
+      <button class="demo" data-demo="mp3">Real MP3 320</button>
+      <button class="demo" data-demo="fake">“AIFF” made from an MP3 128</button>
+      <button class="filebtn" id="pick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>Check my file</button>
+      <input type="file" id="file" accept="audio/*,.aif,.aiff,.flac,.wav,.mp3,.m4a" hidden>
+    </div>
+    <div class="specbox" id="specbox"><canvas id="spec" aria-label="Spectrogram"></canvas><div class="specmsg" id="specmsg"></div></div>
+    <div class="readout">
+      <div class="khz" id="khz">–</div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+    <p class="finfo" id="finfo"></p>
+  </div>
+</header>
+
+<nav class="genres" aria-label="Sections"><div class="wrap" id="nav"></div></nav>
+
+<main class="wrap">
+  <div class="tools">
+    <div class="sbox"><input class="search" id="q" type="search" placeholder="Search: platform, format, tool, kHz, CDJ…" aria-label="Search" autocomplete="off"><button class="sclear" id="qclear" aria-label="Clear search">✕</button></div>
+    <button class="pbtn" id="print">Print / PDF</button>
+  </div>
+  <div class="results" id="results" aria-live="polite"></div>
+
+  <section class="path">
+    <h2>The path of a track <span class="gr-t" style="font-size:15px;margin-left:4px">Η διαδρομή ενός κομματιού</span></h2>
+    <ol id="path"></ol>
+  </section>
+
+  <div id="secs"></div>
+
+  <!-- extra blocks, moved into their sections by the script -->
+  <div hidden id="extras">
+    <div id="x-buy">
+      <h3 class="sec">Reading a Discogs listing <small>Πώς διαβάζεις μια αγγελία</small></h3>
+      <div class="box">
+        <p style="margin:0 0 12px;font-size:14.5px">Sellers grade the record and the sleeve separately with the Goldmine scale: “VG+/VG” means VG+ vinyl in a VG sleeve (πρώτα ο δίσκος, μετά το εξώφυλλο). Tap a grade.</p>
+        <div class="grades" id="grades"></div>
+        <div class="gout" id="gout" aria-live="polite"></div>
+        <p class="aside" style="margin-top:6px">Also check the seller’s rating and number of ratings, read the condition comment, and remember that orders from outside the EU usually add VAT and customs fees on arrival (ΦΠΑ και τελωνείο).</p>
+      </div>
+    </div>
+
+    <div id="x-formats">
+      <div class="fmts" id="fmts"></div>
+      <p class="aside">Not for DJing: OGG, Opus and WMA aren’t among the formats Pioneer DJ / AlphaTheta players read.</p>
+      <h3 class="sec">Which format does my player read? <small>Τι διαβάζει το δικό μου;</small></h3>
+      <div class="box">
+        <div class="row"><label for="player">My player</label><select class="sel" id="player"></select></div>
+        <div class="out" id="pout" aria-live="polite"></div>
+        <p class="aside">Source: the format and exFAT tables in the official rekordbox 7 FAQ (as of July 2026).</p>
+      </div>
+      <h3 class="sec">A seven-minute track, side by side <small>Ένα 7λεπτο κομμάτι σε κάθε format</small></h3>
+      <div class="scrollx"><table class="cmp">
+        <thead><tr><th>Format</th><th>File size</th><th>Sound</th><th>Tags &amp; artwork</th><th>Older CDJs</th></tr></thead>
+        <tbody>
+          <tr><td>AIFF 16-bit / 44.1 kHz</td><td class="num">≈ 74 MB</td><td>Lossless</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>WAV 16-bit / 44.1 kHz</td><td class="num">≈ 74 MB</td><td>Lossless</td><td>Unreliable</td><td>Yes</td></tr>
+          <tr><td>AIFF or WAV 24-bit</td><td class="num">≈ 111 MB</td><td>Lossless</td><td>AIFF yes</td><td>Yes, at 44.1/48 kHz</td></tr>
+          <tr><td>FLAC 16-bit</td><td class="num">≈ 35–50 MB</td><td>Lossless</td><td>Yes</td><td>No</td></tr>
+          <tr><td>MP3 320 kbps</td><td class="num">≈ 17 MB</td><td>Lossy</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>AAC 256 kbps</td><td class="num">≈ 13 MB</td><td>Lossy</td><td>Yes</td><td>Yes</td></tr>
+        </tbody></table></div>
+    </div>
+
+    <div id="x-convert">
+      <h3 class="sec">Should I convert this? <small>Αξίζει η μετατροπή;</small></h3>
+      <div class="box">
+        <div class="row"><label for="cfrom">From</label><select class="sel" id="cfrom"></select><label for="cto">to</label><select class="sel" id="cto"></select></div>
+        <div class="out" id="cout" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div id="x-check">
+      <h3 class="sec">The kHz rules, corrected <small>Οι κανόνες για τα kHz, διορθωμένοι</small></h3>
+      <div class="box">
+        <div class="fix"><span class="k">≈ 20 kHz</span><div><b>MP3: aim for about 20 kHz, not 19</b><p>A real MP3 320 reaches about 20 kHz (20–20.5 kHz with the LAME encoder). An MP3 that stops at 19 kHz behaves like a 192 kbps file, and one that stops at 16 kHz is a 128.</p></div></div>
+        <div class="fix"><span class="k">21–22 kHz</span><div><b>AIFF / WAV / FLAC: about 21–22 kHz</b><p>The ceiling is always half the sample rate: <b>22.05 kHz</b> for a 44.1 kHz file (most music) and <b>24 kHz</b> only for a 48 kHz file. A real lossless file stays full up to about 21–22 kHz. One that stops in a flat line at about 20 kHz is very likely an MP3 320 saved as AIFF, so “≥ 20 kHz” is too generous.</p></div></div>
+      </div>
+      <h3 class="sec">Where the colour should stop <small>Πού σταματά το χρώμα</small></h3>
+      <div class="scrollx"><table class="cmp">
+        <thead><tr><th>What the file really is</th><th>Top of the spectrogram</th><th>What it means</th></tr></thead>
+        <tbody id="cuts"></tbody></table></div>
+      <p class="aside">Typical values for the LAME MP3 encoder and common AAC encoders; other encoders can differ by a few hundred Hz. The rule that never changes: a file can’t show anything above half its sample rate.</p>
+    </div>
+
+    <div id="x-rekordbox">
+      <h3 class="sec">From files to a ready USB <small>Από τα αρχεία σε έτοιμο USB</small></h3>
+      <ol class="steps">
+        <li><b>Import</b><em>Εισαγωγή</em>Drag your music folders into Collection.</li>
+        <li><b>Analyse</b><em>Ανάλυση</em>Let rekordbox detect BPM, key and beatgrid. Turn on key detection and set a BPM range that suits your music in the analysis settings.</li>
+        <li><b>Check the grid</b><em>Έλεγχος beatgrid</em>Beat 1 should sit on the first kick. Fix it in grid edit if it doesn’t.</li>
+        <li><b>Set cues</b><em>Σημεία cue</em>Memory cues where you mix in and out, hot cues on the drop and the breakdown.</li>
+        <li><b>Tag</b><em>Ετικέτες</em>Colours, ratings, comments and My Tags for energy, mood or vocal / instrumental.</li>
+        <li><b>Build playlists</b><em>Playlists</em>By set or mood: warm-up, peak, closing. Intelligent playlists fill themselves by BPM, key or genre.</li>
+        <li><b>Export</b><em>Εξαγωγή στο USB</em>Plug in the USB and drag your playlists onto it in Export mode.</li>
+        <li><b>Test and back up</b><em>Δοκιμή και backup</em>Load a few tracks from the stick, then export the same playlists to a second stick.</li>
+      </ol>
+    </div>
+
+    <div id="x-usb">
+      <h3 class="sec">How much fits on my stick? <small>Πόσα κομμάτια χωράνε;</small></h3>
+      <div class="box">
+        <div class="row">
+          <label for="ucap">Stick</label><select class="sel" id="ucap"><option value="16">16 GB</option><option value="32" selected>32 GB</option><option value="64">64 GB</option><option value="128">128 GB</option></select>
+          <label for="ufmt">Format</label><select class="sel" id="ufmt"><option value="10.584">AIFF / WAV 16-bit</option><option value="15.876">AIFF / WAV 24-bit</option><option value="6.4">FLAC 16-bit</option><option value="2.4">MP3 320</option></select>
+        </div>
+        <div class="row" style="margin-top:12px"><label for="ulen">Average track: <span id="ulenv">7</span> min</label><input type="range" id="ulen" min="3" max="12" step="1" value="7"></div>
+        <div class="out" style="--v:var(--techno)"><div class="big" id="uout">–</div><span id="uout2" style="color:var(--quiet);font-size:14px"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="panel" id="routine">
+    <h2>Your digging routine</h2>
+    <p class="gr-t" style="margin:2px 0 0;font-size:15px">Η ρουτίνα σου για κάθε νέο κομμάτι</p>
+    <div class="pbar"><div id="pbar"></div></div>
+    <div id="ptext" style="font-size:13px;color:var(--quiet)"></div>
+    <ul class="plan" id="planlist"></ul>
+    <button class="reset" id="planreset">Start a new track</button>
+  </section>
+</main>
+<footer class="wrap">Facts checked in October 2026 against rekordbox.com (FAQ, plans, release notes), Bandcamp Help, Beatport Support, spek.cc, soniqtools.com and mediahuman.com. Prices and supported gear change, so check the official page before you buy. The buttons open each site in a new tab; routine ticks are saved on this device.</footer>
+
+<script>
+const S=[
+{id:"find",name:"Find & identify",gr:"Βρες και αναγνώρισε το κομμάτι",c:"--trance",meta:"Google, YouTube, Spotify, Shazam",
+ step:["Find","Βρες"],
+ lead:"Digging starts before you spend anything. First pin down exactly what you heard: the artist, the version (original, extended or a remix), the label and the distributor. That tells you where the track is sold and which file to buy.",
+ tldr:"Πριν αγοράσεις, βρες την ακριβή εκδοχή (Original, Extended ή Remix), τον καλλιτέχνη, το label και τον distributor. Αυτά σου λένε πού πουλιέται το κομμάτι.",
+ sum:"What to find out",
+ traits:["<b>Exact version:</b> “Original Mix”, “Extended Mix”, “Radio Edit” and each remix are separate files with separate prices.","<b>Artist and remixer:</b> spelling and credits can differ between stores, so search both names.","<b>Label and catalogue number:</b> shown on Discogs and on store pages. Together they identify the exact release.","<b>Distributor:</b> the company that delivers the label’s music to stores and streaming services (η εταιρεία διανομής).","<b>Release type:</b> digital only, vinyl only, or both. Older and rarer records may exist only on vinyl."],
+ items:[
+  {n:"Google search",role:"Identify",pill:"Free",url:"https://www.google.com/",note:"Search the artist and title in quotes, then add one word: <i>label</i>, <i>Discogs</i>, <i>Bandcamp</i> or <i>Beatport</i>. The results usually show the label page, the store pages and the release date. Add <i>site:discogs.com</i> to search Discogs only."},
+  {n:"YouTube",role:"Discover",pill:"Free",url:"https://www.youtube.com/",note:"Auto-generated “Topic” uploads name the distributor in the description (“Provided to YouTube by…”) and show a ℗ line with the label. Under DJ sets, the comments and pinned tracklists are full of track IDs."},
+  {n:"Spotify",role:"Discover",pill:"Free / Premium",url:"https://open.spotify.com/",note:"At the bottom of every release page, the ℗ line shows the label and the year. Use Release Radar and artist radio to discover. With Premium you can stream it inside rekordbox, but Spotify tracks can’t be exported to a USB for the CDJs."},
+  {n:"Shazam",role:"Identify",pill:"Free",url:"https://www.shazam.com/",note:"Catch a track in a club, a video or a mix. Then confirm the exact version on Discogs or a store before buying."}],
+ tips:[["For the digger","Follow the label, not just the track. When you love a record, open the label’s page on Discogs, Bandcamp or Beatport and go through its catalogue."],["Watch out","The same title can exist as several remixes and re-releases. Match the version, length and label before you pay."]]},
+
+{id:"buy",name:"Buy",gr:"Αγορά",c:"--house",meta:"Beatport, Traxsource, Bandcamp, Discogs, Soulseek",
+ step:["Buy","Αγόρασε"],
+ lead:"Buy the files you play out. Stores built for DJs sell lossless files (WAV, AIFF) exactly as the label delivered them. Catalogues and prices differ, so the same track can be cheaper, or only available, on one store.",
+ tldr:"Αγόρασε lossless (AIFF ή WAV) από Beatport, Traxsource ή Bandcamp, και βινύλια ή CD από το Discogs. Το Soulseek είναι κοινότητα ανταλλαγής, όχι κατάστημα: έλεγχε πάντα την ποιότητα.",
+ sum:"How they differ",
+ traits:["<b>Beatport:</b> the biggest electronic catalogue, genre and DJ charts, plus streaming for DJs.","<b>Traxsource:</b> house and its sub-genres, curated by DJs.","<b>Bandcamp:</b> buy direct from artists and labels; every format is included in the price.","<b>Discogs:</b> a marketplace for vinyl and CDs, and the largest database of releases.","<b>Soulseek:</b> a sharing community, not a store. Useful for out-of-print music."],
+ items:[
+  {n:"Beatport",role:"Buy, stream",pill:"Paid",url:"https://www.beatport.com/",f:["MP3 320","WAV","AIFF"],note:"The largest store for electronic music. Buy single tracks or full releases, and upgrade an MP3 you already own to WAV or AIFF by paying only the difference (My Library → Collection → Upgrade). Beatport Streaming works inside rekordbox, and Beatsource is now part of Beatport."},
+  {n:"Traxsource",role:"Buy",pill:"Paid",url:"https://www.traxsource.com/",f:["MP3 320","WAV","AIFF"],note:"A specialist store for house (deep, soulful, afro, tech house, nu-disco and more), online since 2004. Its curators pick the best releases every week, and the DJ charts are a great digging tool."},
+  {n:"Bandcamp",role:"Buy direct",pill:"Paid",url:"https://bandcamp.com/",f:["AIFF","WAV","FLAC","ALAC","MP3 320","MP3 V0","AAC","Ogg"],note:"Buy from artists and labels directly. One purchase gives you every format, so choose AIFF or WAV in the download dropdown (the default is MP3 V0). Lossless downloads keep the bit depth and sample rate the artist uploaded. Follow labels to get new releases by email."},
+  {n:"Discogs",role:"Vinyl, CD, database",pill:"Marketplace",url:"https://www.discogs.com/",f:["Vinyl","CD"],note:"Buy physical records from sellers around the world, and use the database to check credits, labels, catalogue numbers and every pressing of a release. Add records to your Wantlist and Discogs tells you when a copy goes on sale."},
+  {n:"Soulseek",role:"Share",pill:"Free, P2P",url:"https://www.slsknet.org/",warn:"Check legality and quality",f:["Whatever users share"],note:"A peer-to-peer network where music lovers share their folders and chat. Good for rare and out-of-print records. Use the official SoulseekQt or the free Nicotine+ client, and share some music yourself: many users block people who share nothing. Quality varies, so check every file with a spectrogram. Downloading copyrighted music without permission can be illegal, so buy what you play when it’s for sale."}],
+ tips:[["Buy the right mix","Pick the Extended or Original Mix: radio edits are too short to mix in and out of."],["Compare before you pay","The same release can cost differently on Beatport, Traxsource and Bandcamp, and Bandcamp includes every format in one price."]]},
+
+{id:"formats",name:"File formats",gr:"Τύποι αρχείων",c:"--electro",meta:"AIFF, WAV, FLAC, ALAC, MP3, AAC",
+ step:["Format","Διάλεξε format"],
+ lead:"Lossless formats keep every bit the studio delivered. Lossy formats throw detail away to make files smaller. For club systems play lossless when you can, and never go below MP3 320.",
+ tldr:"Lossless = κρατάει όλη την πληροφορία (AIFF, WAV, FLAC). Lossy = συμπιεσμένο με απώλειες (MP3, AAC). Για club: AIFF στα 44.1 kHz, και ποτέ κάτω από MP3 320.",
+ sum:"Bit depth and sample rate, in plain words",
+ traits:["<b>16-bit / 44.1 kHz</b> is CD quality: 1,411 kbps, about 10.6 MB per minute as WAV or AIFF.","<b>24-bit</b> files are 50% bigger. They give producers more headroom; on a club system you’ll rarely hear a difference from 16-bit.","<b>48 kHz</b> is common in studios and video. Both 44.1 and 48 kHz play on every Pioneer DJ / AlphaTheta player.","<b>88.2 / 96 kHz</b> files only load on the newest players (CDJ-3000X, CDJ-3000, CDJ-2000NXS2, CDJ-TOUR1, OPUS-QUAD, XDJ-AZ). Buy 44.1 or 48 kHz."],
+ items:[],
+ tips:[["The pick","AIFF, 16 or 24-bit, 44.1 kHz: lossless, keeps tags and artwork, and plays on every CDJ."],["Watch out","WAV files from stores often arrive without tags or artwork, and your library fills up with file names instead of titles."]]},
+
+{id:"convert",name:"Convert",gr:"Μετατροπή αρχείων",c:"--disco",meta:"MediaHuman Audio Converter",
+ step:["Convert","Μετάτρεψε"],
+ lead:"Converting changes the container, not the quality. Going from one lossless format to another (FLAC → AIFF, WAV → AIFF) is perfect and reversible. Going from lossy to lossless (MP3 → AIFF) only makes a bigger file that still sounds like an MP3.",
+ tldr:"Η μετατροπή αλλάζει το «κουτί», όχι την ποιότητα. FLAC → AIFF είναι τέλειο. MP3 → AIFF δεν κερδίζει τίποτα: απλώς μεγαλώνει το αρχείο.",
+ sum:"Good reasons to convert",
+ traits:["<b>FLAC → AIFF</b> for older CDJs that can’t read FLAC.","<b>WAV → AIFF</b> to keep tags and artwork inside the file.","<b>ALAC → AIFF</b> for players that don’t read ALAC.","<b>Never MP3 → AIFF or WAV:</b> the file gets about four times bigger, sounds exactly like the MP3, and will fool you later."],
+ items:[
+  {n:"MediaHuman Audio Converter",role:"Convert",pill:"Free",url:"https://www.mediahuman.com/audio-converter/",f:["Mac","Windows"],note:"Drag files in, pick a format, press Start. It converts whole folders in one go, keeps the folder structure and the tags, and handles MP3, AAC, WAV, FLAC, AIFF, ALAC, OGG and more. Set the sample rate and bit depth to match the original so nothing is resampled."}],
+ tips:[["Convert first, cue later","rekordbox treats a file with a new extension as a different track: grids and cue points don’t carry over. Convert before you prepare your tracks."],["Keep the originals","Keep the files you bought in an archive folder and convert copies. If something goes wrong, you can start again."]]},
+
+{id:"check",name:"Check the quality",gr:"Έλεγχος ποιότητας",c:"--dnb",meta:"Spek, soniqtools.com",
+ step:["Check","Έλεγξε"],
+ lead:"The bitrate a file reports can lie. An MP3 128 re-saved as 320, or an MP3 saved as AIFF, still carries its original cut. A spectrogram shows it in seconds: look where the colour stops at the top. The checker at the top of this page works the same way.",
+ tldr:"Άνοιξε το αρχείο σε spectrogram και κοίτα πού σταματάει το χρώμα στο πάνω μέρος. MP3 320 ≈ 20 kHz, πραγματικό lossless ≈ 21–22 kHz. Μια επίπεδη γραμμή στα 16 kHz σημαίνει MP3 128.",
+ sum:"How to read a spectrogram",
+ traits:["<b>Time runs left to right, frequency bottom to top.</b> Brighter colour means more energy.","<b>Look at the top edge.</b> A hard, flat horizontal line is the lowpass filter of a lossy encoder.","<b>Real lossless</b> stays dense up to about 21–22 kHz and fades naturally.","<b>Check more than one moment.</b> A quiet intro may have no highs at all.","<b>Some producers filter the highs on purpose,</b> so a soft roll-off alone isn’t proof. A razor-sharp line is.","<b>Holes and blocks</b> above about 16 kHz are typical of low-bitrate MP3s, even after conversion."],
+ items:[
+  {n:"Spek",role:"Check",pill:"Free",url:"https://www.spek.cc/",f:["Mac","Windows","Linux"],note:"Drag a file onto the window and you get its spectrogram, plus the codec, sample rate and bitrate. Free, open source and fast: the tool most DJs use."},
+  {n:"soniqtools.com",role:"Check online",pill:"Free",url:"https://soniqtools.com/spectrogram/",f:["In the browser"],note:"A Spek-style Spectrogram Viewer in your browser, with adjustable FFT and colours. Your files never leave your device."}],
+ tips:[["Train your eye","Encode a lossless track to MP3 320 yourself and compare both spectrograms. Five minutes and you’ll know the look."],["Check before you prep","Check new files before they enter your library, not the night before the gig."]]},
+
+{id:"rekordbox",name:"Prepare in rekordbox",gr:"Προετοιμασία στο rekordbox",c:"--more",meta:"rekordbox 7 by AlphaTheta (Pioneer DJ)",
+ step:["Prepare","Ετοίμασε"],
+ lead:"rekordbox turns a folder of files into a DJ library. It analyses BPM, key and beatgrid, draws the waveforms, stores your cue points and playlists, and exports everything to a USB that any Pioneer DJ / AlphaTheta player reads.",
+ tldr:"Εδώ αναλύεις BPM, key και beatgrid, βάζεις cues, φτιάχνεις playlists και κάνεις export στο USB. Το δωρεάν πλάνο αρκεί για να παίξεις σε CDJ.",
+ sum:"Plans and prices (October 2026)",
+ traits:["<b>Free:</b> manage your music and prepare USBs in Export mode. Enough for playing on CDJs.","<b>Core</b> ($10 a month paid yearly, $12 monthly) and <b>Creative</b> ($15 / $18): Performance mode with any controller, plus creative tools.","<b>Professional</b> ($30 / $36): cloud library with 5 TB of Dropbox and advanced analysis such as vocal detection.","<b>30-day free trial</b> of the paid features, once per account. Many Pioneer DJ controllers and mixers unlock Performance mode for free."],
+ items:[
+  {n:"rekordbox",role:"Prepare",pill:"Free / paid",url:"https://rekordbox.com/en/download/",f:["Mac","Windows","iOS","Android"],note:"Imports MP3, AAC, WAV, AIFF, FLAC and ALAC. Beatport, SoundCloud, Spotify, Apple Music and TIDAL can stream inside the app, but streamed tracks can’t go on a USB stick like your own files. For a USB set, buy the file."}],
+ tips:[["Don’t move your files","After importing, leave the music folder where it is. Moved or renamed files show up as missing; fix them with Relocate."],["Half or double tempo?","If a 122 BPM house track shows 61 or 244, narrow the BPM range in the analysis settings and analyse again."]]},
+
+{id:"usb",name:"USB for the CDJs",gr:"USB για τα CDJ",c:"--techno",meta:"32 GB, USB 3.0, Type-A, FAT32",
+ step:["Export","Πέρασε στο USB"],
+ lead:"A good stick is cheap insurance. A 32 GB USB 3.0 stick with a Type-A plug is a safe default: it holds hundreds of lossless tracks, formats to FAT32 on any computer and works in every Pioneer DJ / AlphaTheta player.",
+ tldr:"USB 3.0, Type-A, 32 GB, με format σε FAT32 (παίζει σε όλα τα CDJ). Και πάντα ένα δεύτερο, ίδιο USB για backup.",
+ sum:"Format the stick (this erases everything)",
+ traits:["<b>Mac:</b> Disk Utility → View → Show All Devices → select the stick itself → Erase → Format <i>MS-DOS (FAT)</i>, Scheme <i>Master Boot Record</i>.","<b>Windows:</b> File Explorer → right-click the stick → Format → File system <i>FAT32</i> → Start. Windows offers FAT32 only up to 32 GB; bigger sticks need a third-party tool.","<b>exFAT</b> works only on newer gear: CDJ-3000X, CDJ-3000, CDJ-1500X, OPUS-QUAD, OMNIS-DUO, XDJ-AZ, XDJ-AN, XDJ-XZ and XDJ-RX3.","<b>NTFS</b> isn’t read by the players."],
+ items:[
+  {n:"32 GB",role:"Capacity",pill:"≈ 400 AIFFs",note:"Room for roughly 400 seven-minute AIFFs or 1,800 MP3 320s. It’s also the biggest size Windows formats to FAT32 on its own, which is one reason it’s the classic DJ size."},
+  {n:"USB 3.0, Type-A",role:"Connector",pill:"Fast export",note:"Type-A is the classic rectangular plug every CDJ takes. USB 3.0 makes exporting from your laptop much faster and still works in USB 2.0 ports. A stick with both USB-A and USB-C plugs saves a dongle on newer laptops."}],
+ tips:[["Before the gig","Plug the stick into another laptop or a player and load a few tracks. Fix problems at home, not in the booth. Carry a second stick with the same export."],["Eject properly","Always eject from the computer before pulling the stick out. Pulling it mid-write can corrupt the library on it."]]}
+];
+
+const FMT=[
+ {n:"AIFF",t:"Lossless, uncompressed",c:"--house",v:"Best pick",size:"≈ 10.6 MB / min",tags:"Yes, with artwork",cdj:"Every model",note:"Apple’s uncompressed format. Identical sound to WAV, but it stores tags and artwork reliably, so your rekordbox library stays clean."},
+ {n:"WAV",t:"Lossless, uncompressed",c:"--trance",v:"Good",size:"≈ 10.6 MB / min",tags:"Unreliable",cdj:"Every model",note:"Same audio as AIFF and plays everywhere. Store WAVs often come without tags or artwork; convert to AIFF if you want a tidy library."},
+ {n:"FLAC",t:"Lossless, compressed",c:"--electro",v:"Archive",size:"≈ 5–7 MB / min",tags:"Yes, with artwork",cdj:"Newer models",note:"About half the size of AIFF with identical sound. Plays on the CDJ-3000, CDJ-2000NXS2 and newer, but not on the CDJ-2000NXS, CDJ-900NXS or XDJ-RX2. Convert to AIFF for older gear."},
+ {n:"ALAC",t:"Lossless, compressed (Apple)",c:"--more",v:"Apple only",size:"≈ 5–7 MB / min",tags:"Yes, with artwork",cdj:"Fewer models",note:"Apple’s version of FLAC. Same idea, but fewer players read it (not the XDJ-RX3 or XDJ-XZ, nor any older model). Prefer FLAC or AIFF."},
+ {n:"MP3",t:"Lossy, 320 kbps",c:"--disco",v:"Minimum",size:"2.4 MB / min",tags:"Yes, with artwork",cdj:"Every model",note:"Small and plays everywhere. Fine on small systems, but it can sound thinner on a big rig. Only 320 kbps: avoid 128–256 kbps files."},
+ {n:"AAC",t:"Lossy, usually 256 kbps (.m4a)",c:"--techno",v:"Still lossy",size:"≈ 1.9 MB / min",tags:"Yes",cdj:"Every model",note:"Apple Music and iTunes purchases. Sounds better than an MP3 of the same bitrate, but it’s still lossy. Buy lossless if you’ll play it out."}
+];
+
+const CUTS=[["MP3 128 kbps","≈ 16 kHz","Not for club use. If it claims to be 320 or lossless, it’s fake."],["MP3 192 kbps","≈ 19 kHz","Below club standard."],["MP3 256 kbps or V0","≈ 19.5 kHz","Decent, but not lossless."],["MP3 320 kbps","≈ 20–20.5 kHz","The best an MP3 can look."],["AAC 256 kbps","≈ 19–20 kHz","Typical of Apple Music and iTunes files."],["Lossless, 44.1 kHz","up to 22.05 kHz","Half of 44.1 kHz. Most music."],["Lossless, 48 kHz","up to 24 kHz","Only 48 kHz files can reach 24 kHz."]];
+
+const GRADES=[["M","Mint","Perfect, usually still sealed. Rarely used for second-hand records.","Top price"],["NM / M−","Near Mint","Looks and plays like new; hardly played. The highest grade most used records get.","Full value"],["VG+","Very Good Plus","Light signs of play, maybe faint scuffs, but they don’t affect the sound. The sweet spot for DJs.","≈ 50% of NM"],["VG","Very Good","Visible marks and some surface noise in quiet passages. Still playable, but not for a club.","≈ 25% of NM"],["G+ / G","Good","Heavily played with clear noise, but it plays through without skipping. Only for very rare records.","≈ 10–15% of NM"],["F / P","Fair / Poor","Damaged, may skip. Avoid unless it’s the only copy you can find.","≈ 0–5% of NM"]];
+
+const PLAYERS=[
+ ["CDJ-3000X","A",1],["CDJ-3000","A",1],["CDJ-2000NXS2","A",0],["CDJ-TOUR1","A",0],["OPUS-QUAD","A",1],["XDJ-AZ","A",1],
+ ["CDJ-1500X","B",1],["XDJ-1000MK2","B",0],["OMNIS-DUO","B",1],["XDJ-AN","B",1],
+ ["XDJ-RX3","C",1],["XDJ-XZ","C",1],
+ ["CDJ-2000NXS","D",0],["CDJ-900NXS","D",0],["XDJ-1000","D",0],["XDJ-700","D",0],["XDJ-RX2","D",0],
+ ["Laptop with a controller","L",1]];
+const PG={A:["All formats, even hi-res","Reads AIFF, WAV, FLAC and ALAC up to 96 kHz, plus MP3 and AAC.","--house"],
+ B:["All formats at 44.1 / 48 kHz","Reads AIFF, WAV, FLAC, ALAC, MP3 and AAC at 44.1 or 48 kHz. 88.2 / 96 kHz files won’t load.","--trance"],
+ C:["No ALAC, no hi-res","Reads AIFF, WAV, FLAC, MP3 and AAC at 44.1 or 48 kHz. ALAC and 88.2 / 96 kHz files won’t load.","--electro"],
+ D:["No FLAC, no ALAC","Reads only AIFF, WAV, MP3 and AAC at 44.1 or 48 kHz. FLAC and ALAC won’t load: convert them to AIFF.","--disco"],
+ L:["Whatever rekordbox reads","rekordbox plays MP3, AAC, WAV, AIFF, FLAC and ALAC from your laptop, but bring a USB too in case you need to play on CDJs.","--more"]};
+
+const CONV=["MP3","AAC","WAV","AIFF","FLAC","ALAC"], LOSSY={MP3:1,AAC:1};
+
+const PL=[["Hear it, then Shazam it or note the time in the set.","Άκου το και κάνε Shazam"],["Identify the exact version, label and distributor (Google, Discogs, YouTube “Topic”, Spotify ℗ line).","Βρες εκδοχή, label, distributor"],["Preview and compare prices on Beatport, Traxsource and Bandcamp.","Σύγκρινε τιμές"],["Buy the lossless file: AIFF, or WAV / FLAC if that’s all there is.","Αγόρασε lossless"],["Check it in Spek or soniqtools.com: the colour should reach about 21–22 kHz.","Έλεγξε στο spectrogram"],["Convert to AIFF if needed with MediaHuman, keeping the sample rate and bit depth.","Μετάτρεψε αν χρειάζεται"],["Import into rekordbox, analyse, check the grid, set cues and tag it.","Ανάλυση και cues στο rekordbox"],["Add it to a playlist and export to your FAT32 USB.","Playlist και export"],["Export the same playlist to your backup stick.","Backup σε δεύτερο USB"]];
+
+/* helpers */
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const strip=h=>String(h).replace(/<[^>]+>/g,"").replace(/&amp;/g,"&");
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k)||"null")||d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const arrow='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+
+/* path + nav + sections */
+const nav=$("nav"), host=$("secs");
+S.forEach(s=>{
+  $("path").insertAdjacentHTML("beforeend",`<li><a href="#${s.id}" style="--c:var(${s.c})"><b>${esc(s.step[0])}</b><span>${esc(s.step[1])}</span></a></li>`);
+  nav.insertAdjacentHTML("beforeend",`<a class="chip" href="#${s.id}" data-id="${s.id}"><i style="background:var(${s.c})"></i>${esc(s.name)}</a>`);
+  const sec=document.createElement("section");sec.className="genre";sec.id=s.id;sec.style.setProperty("--c",`var(${s.c})`);
+  sec.innerHTML=`<div class="ghead"><h2>${esc(s.name)}</h2><div class="grsub">${esc(s.gr)}</div><div class="meta">${esc(s.meta)}</div></div>
+    <p class="lead">${s.lead}</p>
+    <div class="tldr"><span class="lang">ΕΛ</span><div>${esc(s.tldr)}</div></div>
+    <details class="traits"><summary>${esc(s.sum)}</summary><ul>${s.traits.map(x=>`<li>${x}</li>`).join("")}</ul></details>
+    ${s.items.length?`<div class="cards">${s.items.map(it=>`<article class="card">
+      <div class="chead"><div><div class="cname">${esc(it.n)}</div><div class="crole">${esc(it.role)}</div></div>${it.pill?`<span class="price">${esc(it.pill)}</span>`:""}</div>
+      ${it.f?`<div class="chips">${it.f.map(f=>`<span class="sub">${esc(f)}</span>`).join("")}</div>`:""}
+      <div class="note">${it.note}</div>
+      ${it.warn?`<div class="warn">⚠ ${esc(it.warn)}</div>`:""}
+      ${it.url?`<a class="go" href="${esc(it.url)}" target="_blank" rel="noopener">Open ${esc(it.n.replace(/ search$/,""))}${arrow}</a>`:`<span class="spacer"></span>`}
+    </article>`).join("")}</div>`:""}
+    <div class="xslot"></div>
+    <div class="tips">${s.tips.map(([h,t])=>`<div class="tip"><h3>${esc(h)}</h3>${t}</div>`).join("")}</div>`;
+  host.appendChild(sec);
+  const x=$("x-"+s.id); if(x) sec.querySelector(".xslot").appendChild(x);
+});
+nav.insertAdjacentHTML("beforeend",`<a class="chip" href="#routine" data-id="routine">Routine</a>`);
+if("IntersectionObserver" in window){const chips=[...nav.querySelectorAll(".chip")];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){chips.forEach(c=>{const on=c.dataset.id===e.target.id;c.classList.toggle("on",on);if(on){const w=nav;w.scrollTo({left:c.offsetLeft-w.clientWidth/2+c.offsetWidth/2,behavior:"smooth"});}});}}),{rootMargin:"-30% 0px -60% 0px"});
+  [...S.map(s=>$(s.id)),$("routine")].forEach(el=>io.observe(el));}
+
+$("fmts").innerHTML=FMT.map(f=>`<div class="fm" style="--fc:var(${f.c})">
+  <h4>${esc(f.n)}<small>${esc(f.v)}</small></h4><div class="ty">${esc(f.t)}</div>
+  <dl><dt>Size</dt><dd>${esc(f.size)}</dd><dt>Tags</dt><dd>${esc(f.tags)}</dd><dt>CDJs</dt><dd>${esc(f.cdj)}</dd></dl>
+  <p>${f.note}</p></div>`).join("");
+$("cuts").innerHTML=CUTS.map(r=>`<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join("");
+$("print").addEventListener("click",()=>{document.querySelectorAll("details").forEach(d=>d.open=true);try{window.print()}catch(e){}});
+window.addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
+
+/* Discogs grades */
+const gwrap=$("grades"), gout=$("gout");
+GRADES.forEach((g,i)=>gwrap.insertAdjacentHTML("beforeend",`<button class="gr" data-i="${i}" aria-pressed="false">${esc(g[0])}</button>`));
+function pickGrade(i){gwrap.querySelectorAll(".gr").forEach(b=>{const on=+b.dataset.i===i;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)});const g=GRADES[i];gout.innerHTML=`<b>${esc(g[0])}: ${esc(g[1])}</b> <span style="color:var(--quiet)">(${esc(g[3])})</span><br>${esc(g[2])}`;}
+gwrap.addEventListener("click",e=>{const b=e.target.closest(".gr");if(b)pickGrade(+b.dataset.i)});
+pickGrade(2);
+
+/* player chooser */
+const psel=$("player");
+PLAYERS.forEach((p,i)=>psel.insertAdjacentHTML("beforeend",`<option value="${i}">${esc(p[0])}</option>`));
+function showPlayer(){const [name,g,ex]=PLAYERS[+psel.value],[h,t,c]=PG[g];
+  $("pout").style.setProperty("--v",`var(${c})`);
+  $("pout").innerHTML=`<b>${esc(h)}</b>${esc(t)}<br><span style="font-size:14px"><strong>Best pick:</strong> AIFF at 44.1 or 48 kHz. <strong>USB:</strong> ${g==="L"?"FAT32, for the CDJs you might meet":ex?"FAT32, or exFAT (this model supports it)":"FAT32 only (no exFAT on this model)"}.</span>`;}
+psel.addEventListener("change",showPlayer);psel.value="12";showPlayer();
+
+/* converter */
+const cf=$("cfrom"),ct=$("cto");
+CONV.forEach(c=>{cf.insertAdjacentHTML("beforeend",`<option>${c}</option>`);ct.insertAdjacentHTML("beforeend",`<option>${c}</option>`)});
+cf.value="FLAC";ct.value="AIFF";
+function showConv(){const a=cf.value,b=ct.value,o=$("cout");let v,h,t,g;
+  if(a===b){v="--quiet";h="Nothing to convert";t="It’s already in that format.";g="Είναι ήδη σε αυτό το format.";}
+  else if(LOSSY[a]&&!LOSSY[b]){v="--dnb";h="No gain, don’t do it";t=`A ${a} saved as ${b} is several times bigger but sounds exactly like the ${a}, and a spectrogram will still show the lossy cut. Keep the original, or buy the lossless file.`;g="Κανένα κέρδος: μεγαλύτερο αρχείο, ίδιος ήχος.";}
+  else if(LOSSY[a]&&LOSSY[b]){v="--dnb";h="Avoid";t="Every lossy re-encode throws away a little more. Play the original file instead.";g="Αποφύγε το: χάνεις κι άλλη ποιότητα.";}
+  else if(!LOSSY[a]&&LOSSY[b]){v="--disco";h="You lose quality";t=`Fine for a phone or a quick share, never for your gig library. Keep the ${a}.`;g="Χάνεις ποιότητα. Μόνο για κινητό.";}
+  else{v="--house";h="Perfect, identical audio";t=`Lossless to lossless keeps every bit.${b==="WAV"?" Note that WAV tags are unreliable: AIFF is the safer target.":b==="FLAC"||b==="ALAC"?` Check that your players read ${b}.`:""} Match the sample rate and bit depth, and convert before you set cue points.`;g="Τέλειο: ο ήχος μένει ίδιος.";}
+  o.style.setProperty("--v",`var(${v})`);o.innerHTML=`<b>${esc(h)}</b>${esc(t)}<i>${esc(g)}</i>`;}
+cf.addEventListener("change",showConv);ct.addEventListener("change",showConv);showConv();
+
+/* USB calculator */
+function showUsb(){const cap=+$("ucap").value,mb=+$("ufmt").value,len=+$("ulen").value;$("ulenv").textContent=len;
+  const n=Math.floor(cap*1000*0.96/(mb*len)),hrs=n*len/60;
+  $("uout").textContent=`≈ ${n.toLocaleString("en-GB")} tracks`;
+  $("uout2").textContent=`About ${Math.round(hrs).toLocaleString("en-GB")} hours of music (περίπου ${Math.round(hrs)} ώρες). Real sticks hold a little less than the label says, so this already leaves some room.`;}
+["ucap","ufmt","ulen"].forEach(id=>$(id).addEventListener("input",showUsb));showUsb();
+
+/* search */
+const norm=x=>strip(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const ALL=[];
+S.forEach(s=>s.items.forEach(it=>ALL.push({c:s.c,sec:s.id,secn:s.name,n:it.n,sub:it.role+(it.f?" · "+it.f.join(", "):""),url:it.url,hay:norm([it.n,it.role,it.pill,(it.f||[]).join(" "),it.note,s.name].join(" "))})));
+FMT.forEach(f=>ALL.push({c:f.c,sec:"formats",secn:"File formats",n:f.n,sub:f.t+" · "+f.size,hay:norm([f.n,f.t,f.note,f.cdj,"format"].join(" "))}));
+CUTS.forEach(r=>ALL.push({c:"--dnb",sec:"check",secn:"Check the quality",n:r[0]+": "+r[1],sub:r[2],hay:norm(r.join(" ")+" khz cutoff spectrogram")}));
+PLAYERS.forEach(p=>ALL.push({c:"--electro",sec:"formats",secn:"File formats",n:p[0],sub:PG[p[1]][1],hay:norm(p[0]+" "+PG[p[1]][1]+" cdj player")}));
+S.forEach(s=>ALL.push({c:s.c,sec:s.id,secn:s.name,n:s.name,sub:s.gr,hay:norm([s.name,s.gr,s.meta,s.lead,s.tldr,s.traits.join(" ")].join(" "))}));
+const qIn=$("q"),qClr=$("qclear"),res=$("results");
+function hl(text,terms){const raw=strip(text),low=norm(raw);for(const w of terms){const i=low.indexOf(w);if(i>=0)return esc(raw.slice(0,i))+"<mark>"+esc(raw.slice(i,i+w.length))+"</mark>"+esc(raw.slice(i+w.length));}return esc(raw);}
+function search(){
+  const v=qIn.value.trim();qClr.classList.toggle("on",!!v);
+  if(v.length<2){res.classList.remove("on");res.innerHTML="";return;}
+  const terms=norm(v).split(/\s+/).filter(Boolean);
+  const hits=ALL.filter(x=>terms.every(w=>x.hay.includes(w))).sort((a,b)=>(terms.some(w=>norm(b.n).includes(w))?1:0)-(terms.some(w=>norm(a.n).includes(w))?1:0));
+  res.classList.add("on");
+  if(!hits.length){res.innerHTML=`<div class="rempty">Nothing found for “${esc(v)}”. Try a platform, a format, a tool or a player model.</div>`;return;}
+  res.innerHTML=`<div class="rhead">${hits.length} ${hits.length===1?"result":"results"}</div>`+hits.slice(0,30).map(x=>`<div class="rrow"><i class="rdot" style="background:var(${x.c})"></i><div class="rmain"><b>${hl(x.n,terms)}</b><span>${esc(x.sub)} · <a href="#${x.sec}">${esc(x.secn)}</a></span></div>${x.url?`<div class="rlinks"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="background:var(${x.c})">Open</a></div>`:""}</div>`).join("");
+}
+qIn.addEventListener("input",search);
+qIn.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qIn.blur();}});
+qClr.addEventListener("click",()=>{qIn.value="";search();qIn.focus();});
+
+/* routine */
+let plan=store.get("dig-routine",{});
+const pl=$("planlist");
+function drawPlan(){pl.innerHTML=PL.map(([t,g],i)=>`<li class="${plan[i]?"ok":""}"><input type="checkbox" id="p${i}" ${plan[i]?"checked":""}><label for="p${i}"><strong>${i+1}.</strong> ${esc(t)}<small>${esc(g)}</small></label></li>`).join("");
+  const n=Object.keys(plan).length;$("pbar").style.width=(100*n/PL.length)+"%";$("ptext").textContent=n===PL.length?"Done: the track is ready to play.":`${n} of ${PL.length} steps done`;}
+drawPlan();
+pl.addEventListener("change",e=>{const i=e.target.id.slice(1);if(e.target.checked)plan[i]=1;else delete plan[i];store.set("dig-routine",plan);drawPlan();});
+$("planreset").addEventListener("click",()=>{plan={};store.set("dig-routine",plan);drawPlan();});
+
+/* ===== spectrogram checker ===== */
+const cv=$("spec"),box=$("specbox"),msg=$("specmsg"),GW=640,GH=256;
+let cur=null;
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const STOPS=[[0,[5,4,10]],[.18,[40,11,84]],[.38,[120,28,109]],[.58,[200,48,64]],[.76,[244,130,40]],[.9,[252,205,80]],[1,[252,255,190]]];
+function cmap(t){t=Math.max(0,Math.min(1,t));for(let i=1;i<STOPS.length;i++){if(t<=STOPS[i][0]){const[a,ca]=STOPS[i-1],[b,cb]=STOPS[i],f=(t-a)/(b-a);return[ca[0]+(cb[0]-ca[0])*f,ca[1]+(cb[1]-ca[1])*f,ca[2]+(cb[2]-ca[2])*f];}}return STOPS[STOPS.length-1][1];}
+function verdict(cut,nyq,full){
+  if(full||cut>=21)return["--house","Full range: consistent with a real lossless file.","The colour reaches the top, as a real AIFF, WAV or FLAC should.","Πραγματικό lossless."];
+  if(cut>=19.6)return["--trance","MP3 320 / V0 level.","Fine as an MP3. If the file claims to be lossless, it’s a converted MP3.","Επίπεδο MP3 320. Αν λέει lossless, είναι ψεύτικο."];
+  if(cut>=18.3)return["--disco","About 192–256 kbps.","Below club standard. Look for a better copy.","Κάτω από το επίπεδο για club."];
+  if(cut>=15)return["--dnb","About 128 kbps.","Don’t play this out. If it claims 320 or lossless, it’s fake.","Περίπου 128 kbps: μην το παίξεις."];
+  return["--dnb","Very low quality, or a heavily filtered track.","Check a few other moments, then look for a better copy.","Πολύ χαμηλή ποιότητα."];
+}
+function draw(){
+  if(!cur)return;const d=Math.min(window.devicePixelRatio||1,2),r=box.getBoundingClientRect();
+  cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);
+  const g=cv.getContext("2d"),W=cv.width,H=cv.height;
+  const off=document.createElement("canvas");off.width=GW;off.height=GH;const oc=off.getContext("2d"),im=oc.createImageData(GW,GH);
+  const{grid,top}=cur,lo=top-100;
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){const c=cmap((grid[y*GW+x]-lo)/100),p=(y*GW+x)*4;im.data[p]=c[0];im.data[p+1]=c[1];im.data[p+2]=c[2];im.data[p+3]=255;}
+  oc.putImageData(im,0,0);g.imageSmoothingEnabled=true;g.drawImage(off,0,0,W,H);
+  const yOf=k=>H*(1-k/cur.nyq);g.font=`600 ${11*d}px Commissioner, system-ui, sans-serif`;g.textBaseline="middle";
+  for(let k=5;k<cur.nyq;k+=5){const y=yOf(k);g.fillStyle="rgba(255,255,255,.75)";g.fillText(k+" kHz",6*d,y);g.fillStyle="rgba(255,255,255,.18)";g.fillRect(48*d,y,W,1);}
+  [[16,"MP3 128"],[20,"MP3 320"]].forEach(([k,l])=>{if(k>=cur.nyq)return;const y=yOf(k);g.setLineDash([5*d,5*d]);g.strokeStyle="rgba(255,255,255,.55)";g.lineWidth=d;g.beginPath();g.moveTo(48*d,y);g.lineTo(W,y);g.stroke();g.setLineDash([]);g.fillStyle="rgba(255,255,255,.85)";g.textAlign="right";g.fillText(l+" stops here",W-8*d,y-8*d);g.textAlign="left";});
+  if(!cur.full){const y=yOf(cur.cut);g.fillStyle="#ffffff";g.fillRect(0,y-1.5*d,W,3*d);}
+}
+function show(c){
+  cur=c;msg.classList.remove("on");draw();
+  const[v,h,t,gk]=verdict(c.cut,c.nyq,c.full);
+  $("khz").innerHTML=c.full?`${c.nyq.toFixed(2).replace(/0$/,"")} kHz<small>reaches the top</small>`:`≈ ${c.cut.toFixed(1)} kHz<small>colour stops here</small>`;
+  const vd=$("verdict");vd.style.setProperty("--v",`var(${v})`);vd.innerHTML=`<b>${esc(h)}</b>${esc(t)}<i>${esc(gk)}</i>`;
+  $("finfo").textContent=c.info||"";
+}
+function rnd(seed){let s=seed>>>0;return()=>((s=Math.imul(s^s>>>15,1|s)+0x6D2B79F5|0,(s^s>>>7)>>>0)/4294967296);}
+function demo(kind){
+  const nyq=22.05,cut=kind==="lossless"?nyq:kind==="mp3"?20.1:16,R=rnd(kind.length*977+3),grid=new Float32Array(GW*GH);
+  for(let x=0;x<GW;x++){const kick=x%40<3,hat=x%20<2,brk=x>380&&x<470;
+    for(let y=0;y<GH;y++){const f=nyq*(1-(y+.5)/GH);let L;
+      if(f>cut){L=kind==="fake"?-118+R()*6:-150;}
+      else{L=-22-2.9*f+(R()-.5)*10+5*Math.sin(x/27+f/1.7)+(brk?-10:0);
+        if(kick&&f<3)L+=18;if(hat&&f>7&&!brk)L+=9;if(f<.4)L+=8;
+        if(kind==="lossless"&&f>nyq-.4)L-=8*(f-(nyq-.4))/.4;
+        if(kind==="fake"&&f>13.5&&R()<.4)L-=28;}
+      grid[y*GW+x]=L;}}
+  const info={lossless:"Example: a real lossless track at 44.1 kHz. Dense right up to the top, with a natural fade.",mp3:"Example: a real MP3 320. Everything above about 20 kHz is gone.",fake:"Example: an MP3 128 re-saved as AIFF. The label says lossless, the hard line at 16 kHz and the holes below it say otherwise."}[kind];
+  show({grid,top:-12,nyq,cut,full:kind==="lossless",info});
+}
+document.querySelectorAll(".demo").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".demo").forEach(x=>x.classList.toggle("on",x===b));demo(b.dataset.demo);}));
+
+/* real file analysis */
+const N=2048,LOG=11,rev=new Uint32Array(N),cosT=new Float64Array(N/2),sinT=new Float64Array(N/2),win=new Float64Array(N);
+for(let i=0;i<N;i++){let r=0;for(let b=0;b<LOG;b++)r|=((i>>b)&1)<<(LOG-1-b);rev[i]=r;win[i]=.5-.5*Math.cos(2*Math.PI*i/(N-1));}
+for(let i=0;i<N/2;i++){cosT[i]=Math.cos(2*Math.PI*i/N);sinT[i]=-Math.sin(2*Math.PI*i/N);}
+function fft(re,im){for(let i=0;i<N;i++){const j=rev[i];if(j>i){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let s=2;s<=N;s<<=1){const h=s>>1,st=N/s;for(let i=0;i<N;i+=s)for(let k=0;k<h;k++){const c=cosT[k*st],n=sinT[k*st],a=i+k,b=a+h,tr=re[b]*c-im[b]*n,ti=re[b]*n+im[b]*c;re[b]=re[a]-tr;im[b]=im[a]-ti;re[a]+=tr;im[a]+=ti;}}}
+function busy(t){msg.textContent=t;msg.classList.add("on");}
+async function analyse(file){
+  document.querySelectorAll(".demo").forEach(x=>x.classList.remove("on"));
+  busy("Reading "+file.name+"…");
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC){busy("This browser can’t analyse audio. Use Spek or soniqtools.com instead.");return;}
+  let ab,ctx;
+  try{const buf=await file.arrayBuffer();ctx=new AC();busy("Decoding…");
+    ab=await new Promise((res,rej)=>{const p=ctx.decodeAudioData(buf,res,rej);if(p&&p.then)p.then(res,rej);});}
+  catch(e){busy("This browser couldn’t read “"+file.name+"”. Some browsers can’t open AIFF: try Safari, or use Spek or soniqtools.com.");return;}
+  finally{try{ctx&&ctx.close()}catch(e){}}
+  busy("Drawing the spectrogram…");await new Promise(r=>setTimeout(r,20));
+  const sr=ab.sampleRate,nyq=sr/2000,len=ab.length,ch=[ab.getChannelData(0)];if(ab.numberOfChannels>1)ch.push(ab.getChannelData(1));
+  if(len<N){busy("This file is too short to analyse.");return;}
+  const half=N/2,avg=new Float64Array(half),grid=new Float32Array(GW*GH),re=new Float64Array(N),im=new Float64Array(N),pw=new Float64Array(half);
+  const per=half/GH;let top=-200;
+  for(let x=0;x<GW;x++){const o=Math.floor(x*(len-N)/(GW-1));
+    for(let i=0;i<N;i++){let v=ch[0][o+i];if(ch.length>1)v=(v+ch[1][o+i])/2;re[i]=v*win[i];im[i]=0;}
+    fft(re,im);for(let k=0;k<half;k++){pw[k]=re[k]*re[k]+im[k]*im[k];avg[k]+=pw[k];}
+    for(let y=0;y<GH;y++){const k0=Math.floor((GH-1-y)*per),k1=Math.max(k0+1,Math.floor((GH-y)*per));let s=0;for(let k=k0;k<k1;k++)s+=pw[k];
+      const db=10*Math.log10(s/(k1-k0)+1e-20);grid[y*GW+x]=db;if(db>top)top=db;}
+    if(x%80===79)await new Promise(r=>setTimeout(r,0));}
+  /* find the cliff: biggest drop over ~500 Hz above 12 kHz */
+  const bin=sr/N,sm=new Float64Array(half);
+  for(let k=0;k<half;k++){let s=0,c=0;for(let j=Math.max(0,k-3);j<=Math.min(half-1,k+3);j++){s+=10*Math.log10(avg[j]/GW+1e-20);c++;}sm[k]=s/c;}
+  const w=Math.max(4,Math.round(500/bin));let best=0,bk=-1;
+  for(let k=Math.round(12000/bin);k<half-w;k++){let a=0,b=0;for(let j=1;j<=w;j++){a+=sm[k-j];b+=sm[k+j];}const drop=(a-b)/w;if(drop>best){best=drop;bk=k;}}
+  const full=!(best>=18&&bk>0&&bk*bin<sr/2-400);
+  const cut=full?nyq:bk*bin/1000;
+  const mins=Math.floor(ab.duration/60),secs=Math.round(ab.duration%60);
+  show({grid,top,nyq,cut,full,info:`${file.name} · ${mins}:${String(secs).padStart(2,"0")} · ${ab.numberOfChannels===1?"mono":"stereo"} · analysed at ${sr/1000} kHz by your browser, so the picture can’t go above ${nyq} kHz. This is an estimate: always look at the picture yourself.`});
+}
+$("pick").addEventListener("click",()=>$("file").click());
+$("file").addEventListener("change",e=>{const f=e.target.files[0];if(f)analyse(f);e.target.value="";});
+["dragenter","dragover"].forEach(t=>box.addEventListener(t,e=>{e.preventDefault();box.classList.add("drag");}));
+["dragleave","drop"].forEach(t=>box.addEventListener(t,e=>{e.preventDefault();box.classList.remove("drag");}));
+box.addEventListener("drop",e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)analyse(f);});
+let rt;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(draw,120);});
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",draw);
+demo("lossless");
+
+</script>
+</body>
+</html>
