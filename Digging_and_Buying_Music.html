@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Digging &amp; Buying Music</title>
+<title>Digging &amp; αγορά μουσικής</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;800;900&display=swap" rel="stylesheet">
@@ -114,7 +114,7 @@ section.genre{margin:56px 0 0;scroll-margin-top:70px}
 .ghead .grsub{font-size:17px;font-weight:700;color:var(--c);margin-top:3px}
 .meta{color:var(--quiet);font-weight:600;font-size:14.5px;margin-top:2px}
 .genre p.lead{margin:0 0 14px;max-width:68ch}
-.tldr{background:color-mix(in srgb,var(--c) 9%,var(--panel));border-radius:14px;padding:13px 16px;margin:0 0 16px;font-size:15px;display:flex;gap:12px;align-items:flex-start}
+.tldr{background:color-mix(in srgb,var(--c) 9%,var(--panel));border-radius:14px;padding:12px 16px 13px;margin:0 0 16px;font-size:15px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .tldr .lang{flex:none;font-size:11.5px;font-weight:900;color:#fff;background:var(--c);border-radius:6px;padding:2px 7px;margin-top:2px}
 details.traits{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:0 18px;margin:0 0 16px}
 details.traits summary{cursor:pointer;font-weight:700;padding:13px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
@@ -226,18 +226,18 @@ footer{color:var(--quiet);font-size:13.5px;padding:40px 0 60px}
 </head>
 <body>
 <header class="hero wrap">
-  <h1>Digging &amp; Buying Music</h1>
+  <h1>Digging &amp; αγορά μουσικής</h1>
   <p class="h1gr">Ψάξιμο, αγορά και προετοιμασία μουσικής για DJ</p>
-  <p class="lede">How to find a track and who released it, where to buy it, which file format to choose, how to convert it, how to check its real quality, and how to get it from rekordbox onto a USB for the CDJs. Facts checked against the official sites in October 2026.</p>
+  <p class="lede">Πώς βρίσκεις ένα κομμάτι και ποιος το κυκλοφόρησε, πού το αγοράζεις, ποιο format διαλέγεις, πώς το μετατρέπεις, πώς ελέγχεις την πραγματική του ποιότητα και πώς το περνάς από το rekordbox σε USB για τα CDJ. Τα στοιχεία ελέγχθηκαν στις επίσημες σελίδες τον Οκτώβριο του 2026.</p>
   <div class="ruler" id="checker">
-    <h2 class="rt">Is this file really what it says?</h2>
-    <p class="rtgr">Είναι το αρχείο αυτό που λέει ότι είναι;</p>
-    <p class="scalenote">A spectrogram, like Spek. Try an example, or drop your own track on the picture. The analysis runs on your device; nothing is uploaded.</p>
+    <h2 class="rt">Είναι το αρχείο αυτό που λέει ότι είναι;</h2>
+    <p class="rtgr">Έλεγχος ποιότητας με spectrogram</p>
+    <p class="scalenote">Ένα spectrogram, όπως στο Spek. Δοκίμασε ένα παράδειγμα ή ρίξε δικό σου κομμάτι πάνω στην εικόνα. Η ανάλυση γίνεται στη συσκευή σου· τίποτα δεν ανεβαίνει στο internet.</p>
     <div class="anabar">
-      <button class="demo on" data-demo="lossless">Real AIFF</button>
-      <button class="demo" data-demo="mp3">Real MP3 320</button>
-      <button class="demo" data-demo="fake">“AIFF” made from an MP3 128</button>
-      <button class="filebtn" id="pick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>Check my file</button>
+      <button class="demo on" data-demo="lossless">Αληθινό AIFF</button>
+      <button class="demo" data-demo="mp3">Αληθινό MP3 320</button>
+      <button class="demo" data-demo="fake">«AIFF» από MP3 128</button>
+      <button class="filebtn" id="pick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>Έλεγξε το αρχείο μου</button>
       <input type="file" id="file" accept="audio/*,.aif,.aiff,.flac,.wav,.mp3,.m4a" hidden>
     </div>
     <div class="specbox" id="specbox"><canvas id="spec" aria-label="Spectrogram"></canvas><div class="specmsg" id="specmsg"></div></div>
@@ -249,17 +249,17 @@ footer{color:var(--quiet);font-size:13.5px;padding:40px 0 60px}
   </div>
 </header>
 
-<nav class="genres" aria-label="Sections"><div class="wrap" id="nav"></div></nav>
+<nav class="genres" aria-label="Ενότητες"><div class="wrap" id="nav"></div></nav>
 
 <main class="wrap">
   <div class="tools">
-    <div class="sbox"><input class="search" id="q" type="search" placeholder="Search: platform, format, tool, kHz, CDJ…" aria-label="Search" autocomplete="off"><button class="sclear" id="qclear" aria-label="Clear search">✕</button></div>
-    <button class="pbtn" id="print">Print / PDF</button>
+    <div class="sbox"><input class="search" id="q" type="search" placeholder="Αναζήτηση: πλατφόρμα, format, εργαλείο, kHz, CDJ…" aria-label="Αναζήτηση" autocomplete="off"><button class="sclear" id="qclear" aria-label="Καθαρισμός αναζήτησης">✕</button></div>
+    <button class="pbtn" id="print">Εκτύπωση / PDF</button>
   </div>
   <div class="results" id="results" aria-live="polite"></div>
 
   <section class="path">
-    <h2>The path of a track <span class="gr-t" style="font-size:15px;margin-left:4px">Η διαδρομή ενός κομματιού</span></h2>
+    <h2>Η διαδρομή ενός κομματιού</h2>
     <ol id="path"></ol>
   </section>
 
@@ -268,205 +268,205 @@ footer{color:var(--quiet);font-size:13.5px;padding:40px 0 60px}
   <!-- extra blocks, moved into their sections by the script -->
   <div hidden id="extras">
     <div id="x-buy">
-      <h3 class="sec">Reading a Discogs listing <small>Πώς διαβάζεις μια αγγελία</small></h3>
+      <h3 class="sec">Πώς διαβάζεις μια αγγελία στο Discogs</h3>
       <div class="box">
-        <p style="margin:0 0 12px;font-size:14.5px">Sellers grade the record and the sleeve separately with the Goldmine scale: “VG+/VG” means VG+ vinyl in a VG sleeve (πρώτα ο δίσκος, μετά το εξώφυλλο). Tap a grade.</p>
+        <p style="margin:0 0 12px;font-size:14.5px">Οι πωλητές βαθμολογούν ξεχωριστά τον δίσκο και το εξώφυλλο με την κλίμακα Goldmine: «VG+/VG» σημαίνει δίσκος VG+ σε εξώφυλλο VG. Πάτα σε έναν βαθμό.</p>
         <div class="grades" id="grades"></div>
         <div class="gout" id="gout" aria-live="polite"></div>
-        <p class="aside" style="margin-top:6px">Also check the seller’s rating and number of ratings, read the condition comment, and remember that orders from outside the EU usually add VAT and customs fees on arrival (ΦΠΑ και τελωνείο).</p>
+        <p class="aside" style="margin-top:6px">Έλεγξε επίσης τη βαθμολογία του πωλητή και πόσες αξιολογήσεις έχει, διάβασε το σχόλιο για την κατάσταση του δίσκου, και θυμήσου ότι οι παραγγελίες από χώρες εκτός ΕΕ συνήθως έχουν ΦΠΑ και τελωνείο κατά την παραλαβή.</p>
       </div>
     </div>
 
     <div id="x-formats">
       <div class="fmts" id="fmts"></div>
-      <p class="aside">Not for DJing: OGG, Opus and WMA aren’t among the formats Pioneer DJ / AlphaTheta players read.</p>
-      <h3 class="sec">Which format does my player read? <small>Τι διαβάζει το δικό μου;</small></h3>
+      <p class="aside">Όχι για DJing: τα OGG, Opus και WMA δεν είναι ανάμεσα στα formats που διαβάζουν τα players της Pioneer DJ / AlphaTheta.</p>
+      <h3 class="sec">Τι διαβάζει το player μου;</h3>
       <div class="box">
-        <div class="row"><label for="player">My player</label><select class="sel" id="player"></select></div>
+        <div class="row"><label for="player">Το player μου</label><select class="sel" id="player"></select></div>
         <div class="out" id="pout" aria-live="polite"></div>
-        <p class="aside">Source: the format and exFAT tables in the official rekordbox 7 FAQ (as of July 2026).</p>
+        <p class="aside">Πηγή: οι πίνακες για formats και exFAT στο επίσημο FAQ του rekordbox 7 (Ιούλιος 2026).</p>
       </div>
-      <h3 class="sec">A seven-minute track, side by side <small>Ένα 7λεπτο κομμάτι σε κάθε format</small></h3>
+      <h3 class="sec">Ένα 7λεπτο κομμάτι σε κάθε format</h3>
       <div class="scrollx"><table class="cmp">
-        <thead><tr><th>Format</th><th>File size</th><th>Sound</th><th>Tags &amp; artwork</th><th>Older CDJs</th></tr></thead>
+        <thead><tr><th>Format</th><th>Μέγεθος αρχείου</th><th>Ήχος</th><th>Tags &amp; artwork</th><th>Παλιά CDJ</th></tr></thead>
         <tbody>
-          <tr><td>AIFF 16-bit / 44.1 kHz</td><td class="num">≈ 74 MB</td><td>Lossless</td><td>Yes</td><td>Yes</td></tr>
-          <tr><td>WAV 16-bit / 44.1 kHz</td><td class="num">≈ 74 MB</td><td>Lossless</td><td>Unreliable</td><td>Yes</td></tr>
-          <tr><td>AIFF or WAV 24-bit</td><td class="num">≈ 111 MB</td><td>Lossless</td><td>AIFF yes</td><td>Yes, at 44.1/48 kHz</td></tr>
-          <tr><td>FLAC 16-bit</td><td class="num">≈ 35–50 MB</td><td>Lossless</td><td>Yes</td><td>No</td></tr>
-          <tr><td>MP3 320 kbps</td><td class="num">≈ 17 MB</td><td>Lossy</td><td>Yes</td><td>Yes</td></tr>
-          <tr><td>AAC 256 kbps</td><td class="num">≈ 13 MB</td><td>Lossy</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>AIFF 16-bit / 44.1 kHz</td><td class="num">≈ 74 MB</td><td>Lossless</td><td>Ναι</td><td>Ναι</td></tr>
+          <tr><td>WAV 16-bit / 44.1 kHz</td><td class="num">≈ 74 MB</td><td>Lossless</td><td>Αναξιόπιστα</td><td>Ναι</td></tr>
+          <tr><td>AIFF ή WAV 24-bit</td><td class="num">≈ 111 MB</td><td>Lossless</td><td>Στο AIFF ναι</td><td>Ναι, στα 44.1/48 kHz</td></tr>
+          <tr><td>FLAC 16-bit</td><td class="num">≈ 35–50 MB</td><td>Lossless</td><td>Ναι</td><td>Όχι</td></tr>
+          <tr><td>MP3 320 kbps</td><td class="num">≈ 17 MB</td><td>Lossy</td><td>Ναι</td><td>Ναι</td></tr>
+          <tr><td>AAC 256 kbps</td><td class="num">≈ 13 MB</td><td>Lossy</td><td>Ναι</td><td>Ναι</td></tr>
         </tbody></table></div>
     </div>
 
     <div id="x-convert">
-      <h3 class="sec">Should I convert this? <small>Αξίζει η μετατροπή;</small></h3>
+      <h3 class="sec">Αξίζει η μετατροπή;</h3>
       <div class="box">
-        <div class="row"><label for="cfrom">From</label><select class="sel" id="cfrom"></select><label for="cto">to</label><select class="sel" id="cto"></select></div>
+        <div class="row"><label for="cfrom">Από</label><select class="sel" id="cfrom"></select><label for="cto">σε</label><select class="sel" id="cto"></select></div>
         <div class="out" id="cout" aria-live="polite"></div>
       </div>
     </div>
 
     <div id="x-check">
-      <h3 class="sec">The kHz rules, corrected <small>Οι κανόνες για τα kHz, διορθωμένοι</small></h3>
+      <h3 class="sec">Οι κανόνες για τα kHz, διορθωμένοι</h3>
       <div class="box">
-        <div class="fix"><span class="k">≈ 20 kHz</span><div><b>MP3: aim for about 20 kHz, not 19</b><p>A real MP3 320 reaches about 20 kHz (20–20.5 kHz with the LAME encoder). An MP3 that stops at 19 kHz behaves like a 192 kbps file, and one that stops at 16 kHz is a 128.</p></div></div>
-        <div class="fix"><span class="k">21–22 kHz</span><div><b>AIFF / WAV / FLAC: about 21–22 kHz</b><p>The ceiling is always half the sample rate: <b>22.05 kHz</b> for a 44.1 kHz file (most music) and <b>24 kHz</b> only for a 48 kHz file. A real lossless file stays full up to about 21–22 kHz. One that stops in a flat line at about 20 kHz is very likely an MP3 320 saved as AIFF, so “≥ 20 kHz” is too generous.</p></div></div>
+        <div class="fix"><span class="k">≈ 20 kHz</span><div><b>MP3: στόχος περίπου τα 20 kHz, όχι τα 19</b><p>Ένα αληθινό MP3 320 φτάνει περίπου τα 20 kHz (20–20.5 kHz με τον encoder LAME). Ένα MP3 που σταματά στα 19 kHz συμπεριφέρεται σαν αρχείο 192 kbps, και ένα που σταματά στα 16 kHz είναι 128.</p></div></div>
+        <div class="fix"><span class="k">21–22 kHz</span><div><b>AIFF / WAV / FLAC: περίπου 21–22 kHz</b><p>Το ταβάνι είναι πάντα το μισό του sample rate: <b>22.05 kHz</b> για αρχείο 44.1 kHz (η περισσότερη μουσική) και <b>24 kHz</b> μόνο για αρχείο 48 kHz. Ένα αληθινό lossless αρχείο μένει γεμάτο μέχρι τα 21–22 kHz περίπου. Αν σταματά σε επίπεδη γραμμή γύρω στα 20 kHz, είναι πολύ πιθανό MP3 320 σωσμένο ως AIFF, οπότε το «≥ 20 kHz» είναι πολύ επιεικές.</p></div></div>
       </div>
-      <h3 class="sec">Where the colour should stop <small>Πού σταματά το χρώμα</small></h3>
+      <h3 class="sec">Πού πρέπει να σταματά το χρώμα</h3>
       <div class="scrollx"><table class="cmp">
-        <thead><tr><th>What the file really is</th><th>Top of the spectrogram</th><th>What it means</th></tr></thead>
+        <thead><tr><th>Τι είναι στην πραγματικότητα</th><th>Πάνω όριο στο spectrogram</th><th>Τι σημαίνει</th></tr></thead>
         <tbody id="cuts"></tbody></table></div>
-      <p class="aside">Typical values for the LAME MP3 encoder and common AAC encoders; other encoders can differ by a few hundred Hz. The rule that never changes: a file can’t show anything above half its sample rate.</p>
+      <p class="aside">Τυπικές τιμές για τον encoder MP3 LAME και τους συνηθισμένους encoders AAC· άλλοι encoders μπορεί να διαφέρουν κατά μερικές εκατοντάδες Hz. Ο κανόνας που δεν αλλάζει ποτέ: ένα αρχείο δεν μπορεί να δείξει τίποτα πάνω από το μισό του sample rate.</p>
     </div>
 
     <div id="x-rekordbox">
-      <h3 class="sec">From files to a ready USB <small>Από τα αρχεία σε έτοιμο USB</small></h3>
+      <h3 class="sec">Από τα αρχεία σε έτοιμο USB</h3>
       <ol class="steps">
-        <li><b>Import</b><em>Εισαγωγή</em>Drag your music folders into Collection.</li>
-        <li><b>Analyse</b><em>Ανάλυση</em>Let rekordbox detect BPM, key and beatgrid. Turn on key detection and set a BPM range that suits your music in the analysis settings.</li>
-        <li><b>Check the grid</b><em>Έλεγχος beatgrid</em>Beat 1 should sit on the first kick. Fix it in grid edit if it doesn’t.</li>
-        <li><b>Set cues</b><em>Σημεία cue</em>Memory cues where you mix in and out, hot cues on the drop and the breakdown.</li>
-        <li><b>Tag</b><em>Ετικέτες</em>Colours, ratings, comments and My Tags for energy, mood or vocal / instrumental.</li>
-        <li><b>Build playlists</b><em>Playlists</em>By set or mood: warm-up, peak, closing. Intelligent playlists fill themselves by BPM, key or genre.</li>
-        <li><b>Export</b><em>Εξαγωγή στο USB</em>Plug in the USB and drag your playlists onto it in Export mode.</li>
-        <li><b>Test and back up</b><em>Δοκιμή και backup</em>Load a few tracks from the stick, then export the same playlists to a second stick.</li>
+        <li><b>Εισαγωγή</b><em>Import</em>Σύρε τους φακέλους με τη μουσική σου στο Collection.</li>
+        <li><b>Ανάλυση</b><em>Analyse</em>Άφησε το rekordbox να βρει BPM, key και beatgrid. Στις ρυθμίσεις ανάλυσης ενεργοποίησε το key detection και βάλε εύρος BPM που ταιριάζει στη μουσική σου.</li>
+        <li><b>Έλεγχος beatgrid</b><em>Grid edit</em>Το πρώτο beat πρέπει να πέφτει στο πρώτο kick. Αν όχι, διόρθωσέ το στο grid edit.</li>
+        <li><b>Cue points</b><em>Memory &amp; hot cues</em>Memory cues εκεί που μπαίνεις και βγαίνεις από το mix, hot cues στο drop και στο breakdown.</li>
+        <li><b>Ετικέτες</b><em>Tags</em>Χρώματα, βαθμολογίες, σχόλια και My Tags για ενέργεια, διάθεση ή vocal / instrumental.</li>
+        <li><b>Playlists</b><em>Playlists</em>Ανά set ή διάθεση: warm-up, peak, closing. Τα Intelligent playlists γεμίζουν μόνα τους με βάση BPM, key ή είδος.</li>
+        <li><b>Εξαγωγή</b><em>Export</em>Σύνδεσε το USB και σύρε τα playlists πάνω του σε Export mode.</li>
+        <li><b>Δοκιμή και backup</b><em>Test &amp; back up</em>Φόρτωσε μερικά κομμάτια από το USB και μετά κάνε export τα ίδια playlists σε δεύτερο USB.</li>
       </ol>
     </div>
 
     <div id="x-usb">
-      <h3 class="sec">How much fits on my stick? <small>Πόσα κομμάτια χωράνε;</small></h3>
+      <h3 class="sec">Πόσα κομμάτια χωράνε;</h3>
       <div class="box">
         <div class="row">
-          <label for="ucap">Stick</label><select class="sel" id="ucap"><option value="16">16 GB</option><option value="32" selected>32 GB</option><option value="64">64 GB</option><option value="128">128 GB</option></select>
+          <label for="ucap">USB</label><select class="sel" id="ucap"><option value="16">16 GB</option><option value="32" selected>32 GB</option><option value="64">64 GB</option><option value="128">128 GB</option></select>
           <label for="ufmt">Format</label><select class="sel" id="ufmt"><option value="10.584">AIFF / WAV 16-bit</option><option value="15.876">AIFF / WAV 24-bit</option><option value="6.4">FLAC 16-bit</option><option value="2.4">MP3 320</option></select>
         </div>
-        <div class="row" style="margin-top:12px"><label for="ulen">Average track: <span id="ulenv">7</span> min</label><input type="range" id="ulen" min="3" max="12" step="1" value="7"></div>
+        <div class="row" style="margin-top:12px"><label for="ulen">Μέση διάρκεια κομματιού: <span id="ulenv">7</span> λεπτά</label><input type="range" id="ulen" min="3" max="12" step="1" value="7"></div>
         <div class="out" style="--v:var(--techno)"><div class="big" id="uout">–</div><span id="uout2" style="color:var(--quiet);font-size:14px"></span></div>
       </div>
     </div>
   </div>
 
   <section class="panel" id="routine">
-    <h2>Your digging routine</h2>
-    <p class="gr-t" style="margin:2px 0 0;font-size:15px">Η ρουτίνα σου για κάθε νέο κομμάτι</p>
+    <h2>Η ρουτίνα σου για κάθε νέο κομμάτι</h2>
+    <p class="gr-t" style="margin:2px 0 0;font-size:15px">Τα checkboxes αποθηκεύονται σε αυτή τη συσκευή.</p>
     <div class="pbar"><div id="pbar"></div></div>
     <div id="ptext" style="font-size:13px;color:var(--quiet)"></div>
     <ul class="plan" id="planlist"></ul>
-    <button class="reset" id="planreset">Start a new track</button>
+    <button class="reset" id="planreset">Νέο κομμάτι</button>
   </section>
 </main>
-<footer class="wrap">Facts checked in October 2026 against rekordbox.com (FAQ, plans, release notes), Bandcamp Help, Beatport Support, spek.cc, soniqtools.com and mediahuman.com. Prices and supported gear change, so check the official page before you buy. The buttons open each site in a new tab; routine ticks are saved on this device.</footer>
+<footer class="wrap">Τα στοιχεία ελέγχθηκαν τον Οκτώβριο του 2026 στα rekordbox.com (FAQ, πλάνα, release notes), Bandcamp Help, Beatport Support, spek.cc, soniqtools.com και mediahuman.com. Τιμές και υποστηριζόμενος εξοπλισμός αλλάζουν, οπότε έλεγξε την επίσημη σελίδα πριν αγοράσεις. Τα κουμπιά ανοίγουν κάθε site σε νέα καρτέλα.</footer>
 
 <script>
 const S=[
-{id:"find",name:"Find & identify",gr:"Βρες και αναγνώρισε το κομμάτι",c:"--trance",meta:"Google, YouTube, Spotify, Shazam",
- step:["Find","Βρες"],
- lead:"Digging starts before you spend anything. First pin down exactly what you heard: the artist, the version (original, extended or a remix), the label and the distributor. That tells you where the track is sold and which file to buy.",
- tldr:"Πριν αγοράσεις, βρες την ακριβή εκδοχή (Original, Extended ή Remix), τον καλλιτέχνη, το label και τον distributor. Αυτά σου λένε πού πουλιέται το κομμάτι.",
- sum:"What to find out",
- traits:["<b>Exact version:</b> “Original Mix”, “Extended Mix”, “Radio Edit” and each remix are separate files with separate prices.","<b>Artist and remixer:</b> spelling and credits can differ between stores, so search both names.","<b>Label and catalogue number:</b> shown on Discogs and on store pages. Together they identify the exact release.","<b>Distributor:</b> the company that delivers the label’s music to stores and streaming services (η εταιρεία διανομής).","<b>Release type:</b> digital only, vinyl only, or both. Older and rarer records may exist only on vinyl."],
+{id:"find",name:"Βρες & αναγνώρισε",gr:"Find & identify",c:"--trance",meta:"Google, YouTube, Spotify, Shazam",
+ step:["Βρες","Find"],
+ lead:"Το digging ξεκινά πριν ξοδέψεις οτιδήποτε. Πρώτα βρες ακριβώς τι άκουσες: τον καλλιτέχνη, την εκδοχή (original, extended ή remix), το label και τον distributor. Αυτά σου λένε πού πουλιέται το κομμάτι και ποιο αρχείο να αγοράσεις.",
+ tldr:"Πριν αγοράσεις: σωστή εκδοχή, καλλιτέχνης, label, distributor. Αυτά σου λένε πού πουλιέται το κομμάτι.",
+ sum:"Τι πρέπει να βρεις",
+ traits:["<b>Ακριβής εκδοχή:</b> «Original Mix», «Extended Mix», «Radio Edit» και κάθε remix είναι ξεχωριστά αρχεία με ξεχωριστή τιμή.","<b>Καλλιτέχνης και remixer:</b> η ορθογραφία και τα credits διαφέρουν από store σε store, οπότε ψάξε και τα δύο ονόματα.","<b>Label και catalogue number:</b> φαίνονται στο Discogs και στις σελίδες των stores. Μαζί προσδιορίζουν την ακριβή κυκλοφορία.","<b>Distributor:</b> η εταιρεία διανομής που παραδίδει τη μουσική του label στα stores και στις υπηρεσίες streaming.","<b>Τύπος κυκλοφορίας:</b> μόνο ψηφιακά, μόνο βινύλιο ή και τα δύο. Παλιοί και σπάνιοι δίσκοι μπορεί να υπάρχουν μόνο σε βινύλιο."],
  items:[
-  {n:"Google search",role:"Identify",pill:"Free",url:"https://www.google.com/",note:"Search the artist and title in quotes, then add one word: <i>label</i>, <i>Discogs</i>, <i>Bandcamp</i> or <i>Beatport</i>. The results usually show the label page, the store pages and the release date. Add <i>site:discogs.com</i> to search Discogs only."},
-  {n:"YouTube",role:"Discover",pill:"Free",url:"https://www.youtube.com/",note:"Auto-generated “Topic” uploads name the distributor in the description (“Provided to YouTube by…”) and show a ℗ line with the label. Under DJ sets, the comments and pinned tracklists are full of track IDs."},
-  {n:"Spotify",role:"Discover",pill:"Free / Premium",url:"https://open.spotify.com/",note:"At the bottom of every release page, the ℗ line shows the label and the year. Use Release Radar and artist radio to discover. With Premium you can stream it inside rekordbox, but Spotify tracks can’t be exported to a USB for the CDJs."},
-  {n:"Shazam",role:"Identify",pill:"Free",url:"https://www.shazam.com/",note:"Catch a track in a club, a video or a mix. Then confirm the exact version on Discogs or a store before buying."}],
- tips:[["For the digger","Follow the label, not just the track. When you love a record, open the label’s page on Discogs, Bandcamp or Beatport and go through its catalogue."],["Watch out","The same title can exist as several remixes and re-releases. Match the version, length and label before you pay."]]},
+  {n:"Google",role:"Αναγνώριση",pill:"Δωρεάν",url:"https://www.google.com/",note:"Ψάξε καλλιτέχνη και τίτλο μέσα σε εισαγωγικά και πρόσθεσε μία λέξη: <i>label</i>, <i>Discogs</i>, <i>Bandcamp</i> ή <i>Beatport</i>. Τα αποτελέσματα συνήθως δείχνουν τη σελίδα του label, τα stores και την ημερομηνία κυκλοφορίας. Με <i>site:discogs.com</i> ψάχνεις μόνο στο Discogs."},
+  {n:"YouTube",role:"Ανακάλυψη",pill:"Δωρεάν",url:"https://www.youtube.com/",note:"Τα αυτόματα uploads των καναλιών «Topic» γράφουν τον distributor στην περιγραφή («Provided to YouTube by…») και μια γραμμή ℗ με το label. Κάτω από τα DJ sets, τα σχόλια και τα pinned tracklists είναι γεμάτα track IDs."},
+  {n:"Spotify",role:"Ανακάλυψη",pill:"Δωρεάν / Premium",url:"https://open.spotify.com/",note:"Στο κάτω μέρος κάθε κυκλοφορίας, η γραμμή ℗ δείχνει το label και τη χρονιά. Για ανακάλυψη, χρησιμοποίησε το Release Radar και το artist radio. Με Premium παίζει μέσα στο rekordbox, αλλά τα κομμάτια του Spotify δεν περνάνε σε USB για τα CDJ."},
+  {n:"Shazam",role:"Αναγνώριση",pill:"Δωρεάν",url:"https://www.shazam.com/",note:"Πιάσε ένα κομμάτι σε club, βίντεο ή mix. Μετά επιβεβαίωσε την ακριβή εκδοχή στο Discogs ή σε ένα store πριν αγοράσεις."}],
+ tips:[["Για τον digger","Ακολούθα το label, όχι μόνο το κομμάτι. Όταν σου αρέσει ένας δίσκος, άνοιξε τη σελίδα του label στο Discogs, στο Bandcamp ή στο Beatport και πέρνα όλο τον κατάλογο."],["Προσοχή","Ο ίδιος τίτλος μπορεί να υπάρχει σε πολλά remixes και επανεκδόσεις. Έλεγξε εκδοχή, διάρκεια και label πριν πληρώσεις."]]},
 
-{id:"buy",name:"Buy",gr:"Αγορά",c:"--house",meta:"Beatport, Traxsource, Bandcamp, Discogs, Soulseek",
- step:["Buy","Αγόρασε"],
- lead:"Buy the files you play out. Stores built for DJs sell lossless files (WAV, AIFF) exactly as the label delivered them. Catalogues and prices differ, so the same track can be cheaper, or only available, on one store.",
- tldr:"Αγόρασε lossless (AIFF ή WAV) από Beatport, Traxsource ή Bandcamp, και βινύλια ή CD από το Discogs. Το Soulseek είναι κοινότητα ανταλλαγής, όχι κατάστημα: έλεγχε πάντα την ποιότητα.",
- sum:"How they differ",
- traits:["<b>Beatport:</b> the biggest electronic catalogue, genre and DJ charts, plus streaming for DJs.","<b>Traxsource:</b> house and its sub-genres, curated by DJs.","<b>Bandcamp:</b> buy direct from artists and labels; every format is included in the price.","<b>Discogs:</b> a marketplace for vinyl and CDs, and the largest database of releases.","<b>Soulseek:</b> a sharing community, not a store. Useful for out-of-print music."],
+{id:"buy",name:"Αγορά",gr:"Buy",c:"--house",meta:"Beatport, Traxsource, Bandcamp, Discogs, Soulseek",
+ step:["Αγόρασε","Buy"],
+ lead:"Αγόρασε τα αρχεία που παίζεις. Τα stores για DJ πουλάνε lossless αρχεία (WAV, AIFF) ακριβώς όπως τα παρέδωσε το label. Οι κατάλογοι και οι τιμές διαφέρουν, οπότε το ίδιο κομμάτι μπορεί να είναι φθηνότερο, ή να υπάρχει μόνο, σε ένα store.",
+ tldr:"Lossless (AIFF ή WAV) από Beatport, Traxsource ή Bandcamp· βινύλια και CD από το Discogs. Το Soulseek είναι κοινότητα ανταλλαγής, όχι κατάστημα.",
+ sum:"Σε τι διαφέρουν",
+ traits:["<b>Beatport:</b> ο μεγαλύτερος κατάλογος ηλεκτρονικής μουσικής, charts ανά είδος και DJ charts, και streaming για DJ.","<b>Traxsource:</b> house και τα υποείδη του, με επιλογές από DJs.","<b>Bandcamp:</b> αγοράζεις απευθείας από καλλιτέχνες και labels· όλα τα formats περιλαμβάνονται στην τιμή.","<b>Discogs:</b> marketplace για βινύλια και CD, και η μεγαλύτερη βάση δεδομένων κυκλοφοριών.","<b>Soulseek:</b> κοινότητα ανταλλαγής, όχι store. Χρήσιμο για μουσική που δεν κυκλοφορεί πια."],
  items:[
-  {n:"Beatport",role:"Buy, stream",pill:"Paid",url:"https://www.beatport.com/",f:["MP3 320","WAV","AIFF"],note:"The largest store for electronic music. Buy single tracks or full releases, and upgrade an MP3 you already own to WAV or AIFF by paying only the difference (My Library → Collection → Upgrade). Beatport Streaming works inside rekordbox, and Beatsource is now part of Beatport."},
-  {n:"Traxsource",role:"Buy",pill:"Paid",url:"https://www.traxsource.com/",f:["MP3 320","WAV","AIFF"],note:"A specialist store for house (deep, soulful, afro, tech house, nu-disco and more), online since 2004. Its curators pick the best releases every week, and the DJ charts are a great digging tool."},
-  {n:"Bandcamp",role:"Buy direct",pill:"Paid",url:"https://bandcamp.com/",f:["AIFF","WAV","FLAC","ALAC","MP3 320","MP3 V0","AAC","Ogg"],note:"Buy from artists and labels directly. One purchase gives you every format, so choose AIFF or WAV in the download dropdown (the default is MP3 V0). Lossless downloads keep the bit depth and sample rate the artist uploaded. Follow labels to get new releases by email."},
-  {n:"Discogs",role:"Vinyl, CD, database",pill:"Marketplace",url:"https://www.discogs.com/",f:["Vinyl","CD"],note:"Buy physical records from sellers around the world, and use the database to check credits, labels, catalogue numbers and every pressing of a release. Add records to your Wantlist and Discogs tells you when a copy goes on sale."},
-  {n:"Soulseek",role:"Share",pill:"Free, P2P",url:"https://www.slsknet.org/",warn:"Check legality and quality",f:["Whatever users share"],note:"A peer-to-peer network where music lovers share their folders and chat. Good for rare and out-of-print records. Use the official SoulseekQt or the free Nicotine+ client, and share some music yourself: many users block people who share nothing. Quality varies, so check every file with a spectrogram. Downloading copyrighted music without permission can be illegal, so buy what you play when it’s for sale."}],
- tips:[["Buy the right mix","Pick the Extended or Original Mix: radio edits are too short to mix in and out of."],["Compare before you pay","The same release can cost differently on Beatport, Traxsource and Bandcamp, and Bandcamp includes every format in one price."]]},
+  {n:"Beatport",role:"Αγορά, streaming",pill:"Επί πληρωμή",url:"https://www.beatport.com/",f:["MP3 320","WAV","AIFF"],note:"Το μεγαλύτερο store ηλεκτρονικής μουσικής. Αγοράζεις μεμονωμένα κομμάτια ή ολόκληρες κυκλοφορίες, και κάνεις upgrade ένα MP3 που ήδη έχεις σε WAV ή AIFF πληρώνοντας μόνο τη διαφορά (My Library → Collection → Upgrade). Το Beatport Streaming δουλεύει μέσα στο rekordbox, και το Beatsource είναι πλέον μέρος του Beatport."},
+  {n:"Traxsource",role:"Αγορά",pill:"Επί πληρωμή",url:"https://www.traxsource.com/",f:["MP3 320","WAV","AIFF"],note:"Εξειδικευμένο store για house (deep, soulful, afro, tech house, nu-disco και άλλα), online από το 2004. Οι curators του διαλέγουν τις καλύτερες κυκλοφορίες κάθε εβδομάδα, και τα DJ charts είναι εξαιρετικό εργαλείο για digging."},
+  {n:"Bandcamp",role:"Απευθείας από τον καλλιτέχνη",pill:"Επί πληρωμή",url:"https://bandcamp.com/",f:["AIFF","WAV","FLAC","ALAC","MP3 320","MP3 V0","AAC","Ogg"],note:"Αγοράζεις απευθείας από καλλιτέχνες και labels. Μία αγορά σού δίνει όλα τα formats, οπότε διάλεξε AIFF ή WAV στο μενού του download (η προεπιλογή είναι MP3 V0). Τα lossless downloads κρατάνε το bit depth και το sample rate που ανέβασε ο καλλιτέχνης. Κάνε follow στα labels για να σου έρχονται οι νέες κυκλοφορίες με email."},
+  {n:"Discogs",role:"Βινύλια, CD, βάση δεδομένων",pill:"Marketplace",url:"https://www.discogs.com/",f:["Βινύλιο","CD"],note:"Αγοράζεις φυσικούς δίσκους από πωλητές σε όλο τον κόσμο, και με τη βάση δεδομένων ελέγχεις credits, labels, catalogue numbers και κάθε κοπή μιας κυκλοφορίας. Πρόσθεσε δίσκους στη Wantlist και το Discogs σε ειδοποιεί όταν κάποιος βγάλει αντίτυπο για πώληση."},
+  {n:"Soulseek",role:"Ανταλλαγή",pill:"Δωρεάν, P2P",url:"https://www.slsknet.org/",warn:"Έλεγξε νομιμότητα και ποιότητα",f:["Ό,τι μοιράζονται οι χρήστες"],note:"Δίκτυο peer-to-peer όπου οι λάτρεις της μουσικής μοιράζονται τους φακέλους τους και συζητάνε. Καλό για σπάνιους δίσκους που δεν κυκλοφορούν πια. Χρησιμοποίησε το επίσημο SoulseekQt ή το δωρεάν Nicotine+, και μοιράσου κι εσύ μουσική: πολλοί χρήστες μπλοκάρουν όσους δεν μοιράζονται τίποτα. Η ποιότητα ποικίλλει, οπότε έλεγχε κάθε αρχείο με spectrogram. Το κατέβασμα μουσικής με πνευματικά δικαιώματα χωρίς άδεια μπορεί να είναι παράνομο, οπότε αγόρασε ό,τι παίζεις όταν πουλιέται."}],
+ tips:[["Διάλεξε το σωστό mix","Πάρε το Extended ή το Original Mix: τα radio edits είναι πολύ σύντομα για να μπεις και να βγεις με mix."],["Σύγκρινε πριν πληρώσεις","Η ίδια κυκλοφορία μπορεί να έχει διαφορετική τιμή σε Beatport, Traxsource και Bandcamp, και το Bandcamp δίνει όλα τα formats σε μία τιμή."]]},
 
-{id:"formats",name:"File formats",gr:"Τύποι αρχείων",c:"--electro",meta:"AIFF, WAV, FLAC, ALAC, MP3, AAC",
- step:["Format","Διάλεξε format"],
- lead:"Lossless formats keep every bit the studio delivered. Lossy formats throw detail away to make files smaller. For club systems play lossless when you can, and never go below MP3 320.",
- tldr:"Lossless = κρατάει όλη την πληροφορία (AIFF, WAV, FLAC). Lossy = συμπιεσμένο με απώλειες (MP3, AAC). Για club: AIFF στα 44.1 kHz, και ποτέ κάτω από MP3 320.",
- sum:"Bit depth and sample rate, in plain words",
- traits:["<b>16-bit / 44.1 kHz</b> is CD quality: 1,411 kbps, about 10.6 MB per minute as WAV or AIFF.","<b>24-bit</b> files are 50% bigger. They give producers more headroom; on a club system you’ll rarely hear a difference from 16-bit.","<b>48 kHz</b> is common in studios and video. Both 44.1 and 48 kHz play on every Pioneer DJ / AlphaTheta player.","<b>88.2 / 96 kHz</b> files only load on the newest players (CDJ-3000X, CDJ-3000, CDJ-2000NXS2, CDJ-TOUR1, OPUS-QUAD, XDJ-AZ). Buy 44.1 or 48 kHz."],
+{id:"formats",name:"Τύποι αρχείων",gr:"File formats",c:"--electro",meta:"AIFF, WAV, FLAC, ALAC, MP3, AAC",
+ step:["Διάλεξε format","Format"],
+ lead:"Τα lossless formats κρατάνε κάθε bit που παρέδωσε το studio. Τα lossy πετάνε λεπτομέρεια για να μικρύνει το αρχείο. Σε ηχοσύστημα club παίζε lossless όποτε μπορείς, και ποτέ κάτω από MP3 320.",
+ tldr:"Lossless: AIFF, WAV, FLAC. Lossy: MP3, AAC. Για club: AIFF στα 44.1 kHz.",
+ sum:"Bit depth και sample rate, απλά",
+ traits:["<b>16-bit / 44.1 kHz</b> είναι ποιότητα CD: 1411 kbps, περίπου 10.6 MB το λεπτό σε WAV ή AIFF.","<b>24-bit:</b> αρχεία 50% μεγαλύτερα. Δίνουν περισσότερο headroom στους παραγωγούς· σε ηχοσύστημα club σπάνια θα ακούσεις διαφορά από τα 16-bit.","<b>48 kHz:</b> συνηθισμένο σε studios και βίντεο. Και τα 44.1 και τα 48 kHz παίζουν σε όλα τα players της Pioneer DJ / AlphaTheta.","<b>88.2 / 96 kHz:</b> φορτώνουν μόνο στα νεότερα players (CDJ-3000X, CDJ-3000, CDJ-2000NXS2, CDJ-TOUR1, OPUS-QUAD, XDJ-AZ). Αγόραζε 44.1 ή 48 kHz."],
  items:[],
- tips:[["The pick","AIFF, 16 or 24-bit, 44.1 kHz: lossless, keeps tags and artwork, and plays on every CDJ."],["Watch out","WAV files from stores often arrive without tags or artwork, and your library fills up with file names instead of titles."]]},
+ tips:[["Η επιλογή μας","AIFF, 16 ή 24-bit, 44.1 kHz: lossless, κρατάει tags και artwork, και παίζει σε κάθε CDJ."],["Προσοχή","Τα WAV από τα stores συχνά έρχονται χωρίς tags και artwork, και η βιβλιοθήκη σου γεμίζει ονόματα αρχείων αντί για τίτλους."]]},
 
-{id:"convert",name:"Convert",gr:"Μετατροπή αρχείων",c:"--disco",meta:"MediaHuman Audio Converter",
- step:["Convert","Μετάτρεψε"],
- lead:"Converting changes the container, not the quality. Going from one lossless format to another (FLAC → AIFF, WAV → AIFF) is perfect and reversible. Going from lossy to lossless (MP3 → AIFF) only makes a bigger file that still sounds like an MP3.",
- tldr:"Η μετατροπή αλλάζει το «κουτί», όχι την ποιότητα. FLAC → AIFF είναι τέλειο. MP3 → AIFF δεν κερδίζει τίποτα: απλώς μεγαλώνει το αρχείο.",
- sum:"Good reasons to convert",
- traits:["<b>FLAC → AIFF</b> for older CDJs that can’t read FLAC.","<b>WAV → AIFF</b> to keep tags and artwork inside the file.","<b>ALAC → AIFF</b> for players that don’t read ALAC.","<b>Never MP3 → AIFF or WAV:</b> the file gets about four times bigger, sounds exactly like the MP3, and will fool you later."],
+{id:"convert",name:"Μετατροπή",gr:"Convert",c:"--disco",meta:"MediaHuman Audio Converter",
+ step:["Μετάτρεψε","Convert"],
+ lead:"Η μετατροπή αλλάζει το «κουτί», όχι την ποιότητα. Από ένα lossless format σε άλλο (FLAC → AIFF, WAV → AIFF) η μετατροπή είναι τέλεια και αναστρέψιμη. Από lossy σε lossless (MP3 → AIFF) απλώς φτιάχνεις ένα μεγαλύτερο αρχείο που ακούγεται ακόμα σαν MP3.",
+ tldr:"FLAC → AIFF: τέλειο. MP3 → AIFF: κανένα κέρδος, μόνο μεγαλύτερο αρχείο.",
+ sum:"Καλοί λόγοι για μετατροπή",
+ traits:["<b>FLAC → AIFF</b> για παλιότερα CDJ που δεν διαβάζουν FLAC.","<b>WAV → AIFF</b> για να μείνουν τα tags και το artwork μέσα στο αρχείο.","<b>ALAC → AIFF</b> για players που δεν διαβάζουν ALAC.","<b>Ποτέ MP3 → AIFF ή WAV:</b> το αρχείο γίνεται περίπου τέσσερις φορές μεγαλύτερο, ακούγεται ακριβώς σαν το MP3 και θα σε ξεγελάσει αργότερα."],
  items:[
-  {n:"MediaHuman Audio Converter",role:"Convert",pill:"Free",url:"https://www.mediahuman.com/audio-converter/",f:["Mac","Windows"],note:"Drag files in, pick a format, press Start. It converts whole folders in one go, keeps the folder structure and the tags, and handles MP3, AAC, WAV, FLAC, AIFF, ALAC, OGG and more. Set the sample rate and bit depth to match the original so nothing is resampled."}],
- tips:[["Convert first, cue later","rekordbox treats a file with a new extension as a different track: grids and cue points don’t carry over. Convert before you prepare your tracks."],["Keep the originals","Keep the files you bought in an archive folder and convert copies. If something goes wrong, you can start again."]]},
+  {n:"MediaHuman Audio Converter",role:"Μετατροπή",pill:"Δωρεάν",url:"https://www.mediahuman.com/audio-converter/",f:["Mac","Windows"],note:"Σύρε τα αρχεία μέσα, διάλεξε format και πάτα Start. Μετατρέπει ολόκληρους φακέλους με τη μία, κρατάει τη δομή των φακέλων και τα tags, και υποστηρίζει MP3, AAC, WAV, FLAC, AIFF, ALAC, OGG και άλλα. Βάλε sample rate και bit depth ίδια με το αρχικό, ώστε να μη γίνει resampling."}],
+ tips:[["Πρώτα μετατροπή, μετά cues","Το rekordbox θεωρεί ένα αρχείο με νέα κατάληξη διαφορετικό κομμάτι: το beatgrid και τα cue points δεν μεταφέρονται. Κάνε τη μετατροπή πριν προετοιμάσεις τα κομμάτια."],["Κράτα τα πρωτότυπα","Φύλαξε τα αρχεία που αγόρασες σε φάκελο αρχείου και μετάτρεπε αντίγραφα. Αν κάτι πάει στραβά, ξεκινάς από την αρχή."]]},
 
-{id:"check",name:"Check the quality",gr:"Έλεγχος ποιότητας",c:"--dnb",meta:"Spek, soniqtools.com",
- step:["Check","Έλεγξε"],
- lead:"The bitrate a file reports can lie. An MP3 128 re-saved as 320, or an MP3 saved as AIFF, still carries its original cut. A spectrogram shows it in seconds: look where the colour stops at the top. The checker at the top of this page works the same way.",
- tldr:"Άνοιξε το αρχείο σε spectrogram και κοίτα πού σταματάει το χρώμα στο πάνω μέρος. MP3 320 ≈ 20 kHz, πραγματικό lossless ≈ 21–22 kHz. Μια επίπεδη γραμμή στα 16 kHz σημαίνει MP3 128.",
- sum:"How to read a spectrogram",
- traits:["<b>Time runs left to right, frequency bottom to top.</b> Brighter colour means more energy.","<b>Look at the top edge.</b> A hard, flat horizontal line is the lowpass filter of a lossy encoder.","<b>Real lossless</b> stays dense up to about 21–22 kHz and fades naturally.","<b>Check more than one moment.</b> A quiet intro may have no highs at all.","<b>Some producers filter the highs on purpose,</b> so a soft roll-off alone isn’t proof. A razor-sharp line is.","<b>Holes and blocks</b> above about 16 kHz are typical of low-bitrate MP3s, even after conversion."],
+{id:"check",name:"Έλεγχος ποιότητας",gr:"Check the quality",c:"--dnb",meta:"Spek, soniqtools.com",
+ step:["Έλεγξε","Check"],
+ lead:"Το bitrate που δηλώνει ένα αρχείο μπορεί να λέει ψέματα. Ένα MP3 128 ξανασωσμένο ως 320, ή ένα MP3 σωσμένο ως AIFF, κουβαλάει ακόμα το αρχικό του κόψιμο. Ένα spectrogram το δείχνει σε δευτερόλεπτα: κοίτα πού σταματάει το χρώμα στο πάνω μέρος. Το εργαλείο στην κορυφή της σελίδας δουλεύει με τον ίδιο τρόπο.",
+ tldr:"MP3 320 ≈ 20 kHz, αληθινό lossless ≈ 21–22 kHz, επίπεδη γραμμή στα 16 kHz = MP3 128.",
+ sum:"Πώς διαβάζεις ένα spectrogram",
+ traits:["<b>Ο χρόνος πάει από αριστερά προς τα δεξιά, η συχνότητα από κάτω προς τα πάνω.</b> Πιο φωτεινό χρώμα σημαίνει περισσότερη ενέργεια.","<b>Κοίτα την πάνω άκρη.</b> Μια απότομη, επίπεδη οριζόντια γραμμή είναι το lowpass φίλτρο ενός lossy encoder.","<b>Το αληθινό lossless</b> μένει πυκνό μέχρι περίπου τα 21–22 kHz και σβήνει φυσικά.","<b>Έλεγξε περισσότερα από ένα σημεία.</b> Ένα ήσυχο intro μπορεί να μην έχει καθόλου πρίμα.","<b>Κάποιοι παραγωγοί κόβουν τα πρίμα επίτηδες,</b> οπότε ένα ομαλό σβήσιμο από μόνο του δεν είναι απόδειξη. Μια γραμμή κοφτή σαν ξυράφι είναι.","<b>Τρύπες και «κουτάκια»</b> πάνω από τα 16 kHz περίπου είναι χαρακτηριστικά των MP3 χαμηλού bitrate, ακόμα και μετά από μετατροπή."],
  items:[
-  {n:"Spek",role:"Check",pill:"Free",url:"https://www.spek.cc/",f:["Mac","Windows","Linux"],note:"Drag a file onto the window and you get its spectrogram, plus the codec, sample rate and bitrate. Free, open source and fast: the tool most DJs use."},
-  {n:"soniqtools.com",role:"Check online",pill:"Free",url:"https://soniqtools.com/spectrogram/",f:["In the browser"],note:"A Spek-style Spectrogram Viewer in your browser, with adjustable FFT and colours. Your files never leave your device."}],
- tips:[["Train your eye","Encode a lossless track to MP3 320 yourself and compare both spectrograms. Five minutes and you’ll know the look."],["Check before you prep","Check new files before they enter your library, not the night before the gig."]]},
+  {n:"Spek",role:"Έλεγχος",pill:"Δωρεάν",url:"https://www.spek.cc/",f:["Mac","Windows","Linux"],note:"Σύρε ένα αρχείο στο παράθυρο και βλέπεις το spectrogram του, μαζί με codec, sample rate και bitrate. Δωρεάν, open source και γρήγορο: το εργαλείο που χρησιμοποιούν οι περισσότεροι DJ."},
+  {n:"soniqtools.com",role:"Έλεγχος online",pill:"Δωρεάν",url:"https://soniqtools.com/spectrogram/",f:["Στον browser"],note:"Spectrogram Viewer σαν το Spek μέσα στον browser, με ρυθμιζόμενο FFT και χρώματα. Τα αρχεία σου δεν φεύγουν ποτέ από τη συσκευή σου."}],
+ tips:[["Εκπαίδευσε το μάτι","Κάνε μόνος σου encode ένα lossless κομμάτι σε MP3 320 και σύγκρινε τα δύο spectrograms. Σε πέντε λεπτά θα αναγνωρίζεις τη διαφορά."],["Έλεγχος πριν την προετοιμασία","Έλεγχε τα νέα αρχεία πριν μπουν στη βιβλιοθήκη σου, όχι το βράδυ πριν το gig."]]},
 
-{id:"rekordbox",name:"Prepare in rekordbox",gr:"Προετοιμασία στο rekordbox",c:"--more",meta:"rekordbox 7 by AlphaTheta (Pioneer DJ)",
- step:["Prepare","Ετοίμασε"],
- lead:"rekordbox turns a folder of files into a DJ library. It analyses BPM, key and beatgrid, draws the waveforms, stores your cue points and playlists, and exports everything to a USB that any Pioneer DJ / AlphaTheta player reads.",
- tldr:"Εδώ αναλύεις BPM, key και beatgrid, βάζεις cues, φτιάχνεις playlists και κάνεις export στο USB. Το δωρεάν πλάνο αρκεί για να παίξεις σε CDJ.",
- sum:"Plans and prices (October 2026)",
- traits:["<b>Free:</b> manage your music and prepare USBs in Export mode. Enough for playing on CDJs.","<b>Core</b> ($10 a month paid yearly, $12 monthly) and <b>Creative</b> ($15 / $18): Performance mode with any controller, plus creative tools.","<b>Professional</b> ($30 / $36): cloud library with 5 TB of Dropbox and advanced analysis such as vocal detection.","<b>30-day free trial</b> of the paid features, once per account. Many Pioneer DJ controllers and mixers unlock Performance mode for free."],
+{id:"rekordbox",name:"Προετοιμασία στο rekordbox",gr:"Prepare in rekordbox",c:"--more",meta:"rekordbox 7 της AlphaTheta (Pioneer DJ)",
+ step:["Ετοίμασε","Prepare"],
+ lead:"Το rekordbox κάνει έναν φάκελο με αρχεία βιβλιοθήκη για DJ. Αναλύει BPM, key και beatgrid, σχεδιάζει τα waveforms, αποθηκεύει cue points και playlists, και κάνει export τα πάντα σε USB που διαβάζει κάθε player της Pioneer DJ / AlphaTheta.",
+ tldr:"Ανάλυση, cues, playlists, export σε USB. Το δωρεάν πλάνο αρκεί για CDJ.",
+ sum:"Πλάνα και τιμές (Οκτώβριος 2026)",
+ traits:["<b>Free:</b> οργάνωση της μουσικής και προετοιμασία USB σε Export mode. Αρκεί για να παίξεις σε CDJ.","<b>Core</b> ($10 τον μήνα με ετήσια χρέωση, $12 μηνιαία) και <b>Creative</b> ($15 / $18): Performance mode με οποιονδήποτε controller, και δημιουργικά εργαλεία.","<b>Professional</b> ($30 / $36): βιβλιοθήκη στο cloud με 5 TB Dropbox και προχωρημένη ανάλυση, όπως ανίχνευση φωνητικών.","<b>Δωρεάν δοκιμή 30 ημερών</b> για τις πληρωμένες λειτουργίες, μία φορά ανά λογαριασμό. Πολλοί controllers και mixers της Pioneer DJ ξεκλειδώνουν δωρεάν το Performance mode."],
  items:[
-  {n:"rekordbox",role:"Prepare",pill:"Free / paid",url:"https://rekordbox.com/en/download/",f:["Mac","Windows","iOS","Android"],note:"Imports MP3, AAC, WAV, AIFF, FLAC and ALAC. Beatport, SoundCloud, Spotify, Apple Music and TIDAL can stream inside the app, but streamed tracks can’t go on a USB stick like your own files. For a USB set, buy the file."}],
- tips:[["Don’t move your files","After importing, leave the music folder where it is. Moved or renamed files show up as missing; fix them with Relocate."],["Half or double tempo?","If a 122 BPM house track shows 61 or 244, narrow the BPM range in the analysis settings and analyse again."]]},
+  {n:"rekordbox",role:"Προετοιμασία",pill:"Δωρεάν / επί πληρωμή",url:"https://rekordbox.com/en/download/",f:["Mac","Windows","iOS","Android"],note:"Κάνει import MP3, AAC, WAV, AIFF, FLAC και ALAC. Beatport, SoundCloud, Spotify, Apple Music και TIDAL παίζουν με streaming μέσα στην εφαρμογή, αλλά τα κομμάτια από streaming δεν μπαίνουν σε USB όπως τα δικά σου αρχεία. Για set από USB, αγόρασε το αρχείο."}],
+ tips:[["Μη μετακινείς τα αρχεία","Μετά το import, άφησε τον φάκελο με τη μουσική εκεί που είναι. Τα αρχεία που μετακινείς ή μετονομάζεις εμφανίζονται ως missing· τα διορθώνεις με το Relocate."],["Μισό ή διπλό tempo;","Αν ένα house κομμάτι 122 BPM εμφανίζεται 61 ή 244, στένεψε το εύρος BPM στις ρυθμίσεις ανάλυσης και κάνε ξανά ανάλυση."]]},
 
-{id:"usb",name:"USB for the CDJs",gr:"USB για τα CDJ",c:"--techno",meta:"32 GB, USB 3.0, Type-A, FAT32",
- step:["Export","Πέρασε στο USB"],
- lead:"A good stick is cheap insurance. A 32 GB USB 3.0 stick with a Type-A plug is a safe default: it holds hundreds of lossless tracks, formats to FAT32 on any computer and works in every Pioneer DJ / AlphaTheta player.",
- tldr:"USB 3.0, Type-A, 32 GB, με format σε FAT32 (παίζει σε όλα τα CDJ). Και πάντα ένα δεύτερο, ίδιο USB για backup.",
- sum:"Format the stick (this erases everything)",
- traits:["<b>Mac:</b> Disk Utility → View → Show All Devices → select the stick itself → Erase → Format <i>MS-DOS (FAT)</i>, Scheme <i>Master Boot Record</i>.","<b>Windows:</b> File Explorer → right-click the stick → Format → File system <i>FAT32</i> → Start. Windows offers FAT32 only up to 32 GB; bigger sticks need a third-party tool.","<b>exFAT</b> works only on newer gear: CDJ-3000X, CDJ-3000, CDJ-1500X, OPUS-QUAD, OMNIS-DUO, XDJ-AZ, XDJ-AN, XDJ-XZ and XDJ-RX3.","<b>NTFS</b> isn’t read by the players."],
+{id:"usb",name:"USB για τα CDJ",gr:"USB for the CDJs",c:"--techno",meta:"32 GB, USB 3.0, Type-A, FAT32",
+ step:["Πέρασε σε USB","Export"],
+ lead:"Ένα καλό USB είναι φθηνή ασφάλεια. Ένα USB 3.0 των 32 GB με βύσμα Type-A είναι σίγουρη επιλογή: χωράει εκατοντάδες lossless κομμάτια, γίνεται format σε FAT32 σε οποιονδήποτε υπολογιστή και δουλεύει σε κάθε player της Pioneer DJ / AlphaTheta.",
+ tldr:"USB 3.0, Type-A, 32 GB, σε FAT32, και πάντα ένα δεύτερο ίδιο για backup.",
+ sum:"Format του USB (σβήνει τα πάντα)",
+ traits:["<b>Mac:</b> Disk Utility → View → Show All Devices → επίλεξε το ίδιο το USB → Erase → Format <i>MS-DOS (FAT)</i>, Scheme <i>Master Boot Record</i>.","<b>Windows:</b> File Explorer → δεξί κλικ στο USB → Format → File system <i>FAT32</i> → Start. Τα Windows δίνουν FAT32 μόνο μέχρι 32 GB· για μεγαλύτερα USB χρειάζεσαι εξωτερικό πρόγραμμα.","<b>exFAT:</b> δουλεύει μόνο σε νεότερο εξοπλισμό: CDJ-3000X, CDJ-3000, CDJ-1500X, OPUS-QUAD, OMNIS-DUO, XDJ-AZ, XDJ-AN, XDJ-XZ και XDJ-RX3.","<b>NTFS:</b> δεν το διαβάζουν τα players."],
  items:[
-  {n:"32 GB",role:"Capacity",pill:"≈ 400 AIFFs",note:"Room for roughly 400 seven-minute AIFFs or 1,800 MP3 320s. It’s also the biggest size Windows formats to FAT32 on its own, which is one reason it’s the classic DJ size."},
-  {n:"USB 3.0, Type-A",role:"Connector",pill:"Fast export",note:"Type-A is the classic rectangular plug every CDJ takes. USB 3.0 makes exporting from your laptop much faster and still works in USB 2.0 ports. A stick with both USB-A and USB-C plugs saves a dongle on newer laptops."}],
- tips:[["Before the gig","Plug the stick into another laptop or a player and load a few tracks. Fix problems at home, not in the booth. Carry a second stick with the same export."],["Eject properly","Always eject from the computer before pulling the stick out. Pulling it mid-write can corrupt the library on it."]]}
+  {n:"32 GB",role:"Χωρητικότητα",pill:"≈ 400 AIFF",note:"Χωράει περίπου 400 επτάλεπτα AIFF ή 1.800 MP3 320. Είναι επίσης το μεγαλύτερο μέγεθος που τα Windows κάνουν format σε FAT32 χωρίς έξτρα πρόγραμμα, ένας από τους λόγους που είναι το κλασικό μέγεθος για DJ."},
+  {n:"USB 3.0, Type-A",role:"Βύσμα",pill:"Γρήγορο export",note:"Το Type-A είναι το κλασικό ορθογώνιο βύσμα που δέχεται κάθε CDJ. Το USB 3.0 κάνει το export από το laptop πολύ πιο γρήγορο και δουλεύει κανονικά και σε θύρες USB 2.0. Ένα USB με βύσματα και USB-A και USB-C σε γλιτώνει από αντάπτορα στα νεότερα laptops."}],
+ tips:[["Πριν το gig","Βάλε το USB σε άλλο laptop ή σε player και φόρτωσε μερικά κομμάτια. Λύσε τα προβλήματα στο σπίτι, όχι στο booth. Έχε μαζί σου και δεύτερο USB με το ίδιο export."],["Σωστή αφαίρεση","Κάνε πάντα eject από τον υπολογιστή πριν βγάλεις το USB. Αν το βγάλεις την ώρα που γράφει, μπορεί να χαλάσει η βιβλιοθήκη του."]]}
 ];
 
 const FMT=[
- {n:"AIFF",t:"Lossless, uncompressed",c:"--house",v:"Best pick",size:"≈ 10.6 MB / min",tags:"Yes, with artwork",cdj:"Every model",note:"Apple’s uncompressed format. Identical sound to WAV, but it stores tags and artwork reliably, so your rekordbox library stays clean."},
- {n:"WAV",t:"Lossless, uncompressed",c:"--trance",v:"Good",size:"≈ 10.6 MB / min",tags:"Unreliable",cdj:"Every model",note:"Same audio as AIFF and plays everywhere. Store WAVs often come without tags or artwork; convert to AIFF if you want a tidy library."},
- {n:"FLAC",t:"Lossless, compressed",c:"--electro",v:"Archive",size:"≈ 5–7 MB / min",tags:"Yes, with artwork",cdj:"Newer models",note:"About half the size of AIFF with identical sound. Plays on the CDJ-3000, CDJ-2000NXS2 and newer, but not on the CDJ-2000NXS, CDJ-900NXS or XDJ-RX2. Convert to AIFF for older gear."},
- {n:"ALAC",t:"Lossless, compressed (Apple)",c:"--more",v:"Apple only",size:"≈ 5–7 MB / min",tags:"Yes, with artwork",cdj:"Fewer models",note:"Apple’s version of FLAC. Same idea, but fewer players read it (not the XDJ-RX3 or XDJ-XZ, nor any older model). Prefer FLAC or AIFF."},
- {n:"MP3",t:"Lossy, 320 kbps",c:"--disco",v:"Minimum",size:"2.4 MB / min",tags:"Yes, with artwork",cdj:"Every model",note:"Small and plays everywhere. Fine on small systems, but it can sound thinner on a big rig. Only 320 kbps: avoid 128–256 kbps files."},
- {n:"AAC",t:"Lossy, usually 256 kbps (.m4a)",c:"--techno",v:"Still lossy",size:"≈ 1.9 MB / min",tags:"Yes",cdj:"Every model",note:"Apple Music and iTunes purchases. Sounds better than an MP3 of the same bitrate, but it’s still lossy. Buy lossless if you’ll play it out."}
+ {n:"AIFF",t:"Lossless, χωρίς συμπίεση",c:"--house",v:"Η καλύτερη",size:"≈ 10.6 MB / λεπτό",tags:"Ναι, με artwork",cdj:"Όλα τα μοντέλα",note:"Το format της Apple χωρίς συμπίεση. Ίδιος ήχος με το WAV, αλλά κρατάει σωστά tags και artwork, οπότε η βιβλιοθήκη σου στο rekordbox μένει καθαρή."},
+ {n:"WAV",t:"Lossless, χωρίς συμπίεση",c:"--trance",v:"Καλό",size:"≈ 10.6 MB / λεπτό",tags:"Αναξιόπιστα",cdj:"Όλα τα μοντέλα",note:"Ίδιος ήχος με το AIFF και παίζει παντού. Τα WAV των stores συχνά δεν έχουν tags ή artwork· μετάτρεψέ τα σε AIFF για τακτοποιημένη βιβλιοθήκη."},
+ {n:"FLAC",t:"Lossless, με συμπίεση",c:"--electro",v:"Για αρχειοθέτηση",size:"≈ 5–7 MB / λεπτό",tags:"Ναι, με artwork",cdj:"Μόνο τα νεότερα",note:"Περίπου το μισό μέγεθος από το AIFF με ίδιο ήχο. Παίζει σε CDJ-3000, CDJ-2000NXS2 και νεότερα, αλλά όχι σε CDJ-2000NXS, CDJ-900NXS ή XDJ-RX2. Για παλιότερο εξοπλισμό, μετάτρεψέ το σε AIFF."},
+ {n:"ALAC",t:"Lossless, με συμπίεση (Apple)",c:"--more",v:"Μόνο Apple",size:"≈ 5–7 MB / λεπτό",tags:"Ναι, με artwork",cdj:"Λιγότερα μοντέλα",note:"Η εκδοχή της Apple για το FLAC. Ίδια λογική, αλλά το διαβάζουν λιγότερα players (όχι τα XDJ-RX3 και XDJ-XZ, ούτε κανένα παλιότερο). Προτίμησε FLAC ή AIFF."},
+ {n:"MP3",t:"Lossy, 320 kbps",c:"--disco",v:"Το ελάχιστο",size:"2.4 MB / λεπτό",tags:"Ναι, με artwork",cdj:"Όλα τα μοντέλα",note:"Μικρό και παίζει παντού. Καλό για μικρά ηχοσυστήματα, αλλά σε μεγάλο μπορεί να ακούγεται πιο «λεπτό». Μόνο 320 kbps: απόφυγε αρχεία 128–256 kbps."},
+ {n:"AAC",t:"Lossy, συνήθως 256 kbps (.m4a)",c:"--techno",v:"Παραμένει lossy",size:"≈ 1.9 MB / λεπτό",tags:"Ναι",cdj:"Όλα τα μοντέλα",note:"Αγορές από Apple Music και iTunes. Ακούγεται καλύτερα από MP3 ίδιου bitrate, αλλά παραμένει lossy. Αν θα το παίξεις, αγόρασε lossless."}
 ];
 
-const CUTS=[["MP3 128 kbps","≈ 16 kHz","Not for club use. If it claims to be 320 or lossless, it’s fake."],["MP3 192 kbps","≈ 19 kHz","Below club standard."],["MP3 256 kbps or V0","≈ 19.5 kHz","Decent, but not lossless."],["MP3 320 kbps","≈ 20–20.5 kHz","The best an MP3 can look."],["AAC 256 kbps","≈ 19–20 kHz","Typical of Apple Music and iTunes files."],["Lossless, 44.1 kHz","up to 22.05 kHz","Half of 44.1 kHz. Most music."],["Lossless, 48 kHz","up to 24 kHz","Only 48 kHz files can reach 24 kHz."]];
+const CUTS=[["MP3 128 kbps","≈ 16 kHz","Όχι για club. Αν δηλώνει 320 ή lossless, είναι ψεύτικο."],["MP3 192 kbps","≈ 19 kHz","Κάτω από το επίπεδο για club."],["MP3 256 kbps ή V0","≈ 19.5 kHz","Αξιοπρεπές, αλλά όχι lossless."],["MP3 320 kbps","≈ 20–20.5 kHz","Το καλύτερο που μπορεί να δείξει ένα MP3."],["AAC 256 kbps","≈ 19–20 kHz","Συνηθισμένο στα αρχεία Apple Music και iTunes."],["Lossless, 44.1 kHz","έως 22.05 kHz","Το μισό των 44.1 kHz. Η περισσότερη μουσική."],["Lossless, 48 kHz","έως 24 kHz","Μόνο τα αρχεία 48 kHz φτάνουν τα 24 kHz."]];
 
-const GRADES=[["M","Mint","Perfect, usually still sealed. Rarely used for second-hand records.","Top price"],["NM / M−","Near Mint","Looks and plays like new; hardly played. The highest grade most used records get.","Full value"],["VG+","Very Good Plus","Light signs of play, maybe faint scuffs, but they don’t affect the sound. The sweet spot for DJs.","≈ 50% of NM"],["VG","Very Good","Visible marks and some surface noise in quiet passages. Still playable, but not for a club.","≈ 25% of NM"],["G+ / G","Good","Heavily played with clear noise, but it plays through without skipping. Only for very rare records.","≈ 10–15% of NM"],["F / P","Fair / Poor","Damaged, may skip. Avoid unless it’s the only copy you can find.","≈ 0–5% of NM"]];
+const GRADES=[["M","Mint","Τέλειος, συνήθως ακόμα σφραγισμένος. Σπάνια για μεταχειρισμένους δίσκους.","η υψηλότερη τιμή"],["NM / M−","Near Mint","Μοιάζει και παίζει σαν καινούργιος· σχεδόν δεν έχει παιχτεί. Ο υψηλότερος βαθμός που παίρνουν οι περισσότεροι μεταχειρισμένοι.","πλήρης αξία"],["VG+","Very Good Plus","Ελαφριά σημάδια χρήσης, ίσως αχνές γρατζουνιές, που όμως δεν επηρεάζουν τον ήχο. Η ιδανική επιλογή για DJ.","≈ 50% της τιμής NM"],["VG","Very Good","Ορατά σημάδια και λίγος θόρυβος στα ήσυχα σημεία. Παίζει, αλλά όχι για club.","≈ 25% της τιμής NM"],["G+ / G","Good","Πολυπαιγμένος με εμφανή θόρυβο, αλλά παίζει χωρίς να πηδάει. Μόνο για πολύ σπάνιους δίσκους.","≈ 10–15% της τιμής NM"],["F / P","Fair / Poor","Κατεστραμμένος, μπορεί να πηδάει. Απόφυγέ τον, εκτός αν είναι το μόνο αντίτυπο που βρίσκεις.","≈ 0–5% της τιμής NM"]];
 
 const PLAYERS=[
  ["CDJ-3000X","A",1],["CDJ-3000","A",1],["CDJ-2000NXS2","A",0],["CDJ-TOUR1","A",0],["OPUS-QUAD","A",1],["XDJ-AZ","A",1],
  ["CDJ-1500X","B",1],["XDJ-1000MK2","B",0],["OMNIS-DUO","B",1],["XDJ-AN","B",1],
  ["XDJ-RX3","C",1],["XDJ-XZ","C",1],
  ["CDJ-2000NXS","D",0],["CDJ-900NXS","D",0],["XDJ-1000","D",0],["XDJ-700","D",0],["XDJ-RX2","D",0],
- ["Laptop with a controller","L",1]];
-const PG={A:["All formats, even hi-res","Reads AIFF, WAV, FLAC and ALAC up to 96 kHz, plus MP3 and AAC.","--house"],
- B:["All formats at 44.1 / 48 kHz","Reads AIFF, WAV, FLAC, ALAC, MP3 and AAC at 44.1 or 48 kHz. 88.2 / 96 kHz files won’t load.","--trance"],
- C:["No ALAC, no hi-res","Reads AIFF, WAV, FLAC, MP3 and AAC at 44.1 or 48 kHz. ALAC and 88.2 / 96 kHz files won’t load.","--electro"],
- D:["No FLAC, no ALAC","Reads only AIFF, WAV, MP3 and AAC at 44.1 or 48 kHz. FLAC and ALAC won’t load: convert them to AIFF.","--disco"],
- L:["Whatever rekordbox reads","rekordbox plays MP3, AAC, WAV, AIFF, FLAC and ALAC from your laptop, but bring a USB too in case you need to play on CDJs.","--more"]};
+ ["Laptop με controller","L",1]];
+const PG={A:["Όλα τα formats, ακόμα και hi-res","Διαβάζει AIFF, WAV, FLAC και ALAC έως 96 kHz, καθώς και MP3 και AAC.","--house"],
+ B:["Όλα τα formats στα 44.1 / 48 kHz","Διαβάζει AIFF, WAV, FLAC, ALAC, MP3 και AAC στα 44.1 ή 48 kHz. Αρχεία 88.2 / 96 kHz δεν φορτώνουν.","--trance"],
+ C:["Χωρίς ALAC, χωρίς hi-res","Διαβάζει AIFF, WAV, FLAC, MP3 και AAC στα 44.1 ή 48 kHz. ALAC και αρχεία 88.2 / 96 kHz δεν φορτώνουν.","--electro"],
+ D:["Χωρίς FLAC, χωρίς ALAC","Διαβάζει μόνο AIFF, WAV, MP3 και AAC στα 44.1 ή 48 kHz. Τα FLAC και ALAC δεν φορτώνουν: μετάτρεψέ τα σε AIFF.","--disco"],
+ L:["Ό,τι διαβάζει το rekordbox","Το rekordbox παίζει MP3, AAC, WAV, AIFF, FLAC και ALAC από το laptop, αλλά έχε μαζί σου και USB σε περίπτωση που χρειαστεί να παίξεις σε CDJ.","--more"]};
 
 const CONV=["MP3","AAC","WAV","AIFF","FLAC","ALAC"], LOSSY={MP3:1,AAC:1};
 
-const PL=[["Hear it, then Shazam it or note the time in the set.","Άκου το και κάνε Shazam"],["Identify the exact version, label and distributor (Google, Discogs, YouTube “Topic”, Spotify ℗ line).","Βρες εκδοχή, label, distributor"],["Preview and compare prices on Beatport, Traxsource and Bandcamp.","Σύγκρινε τιμές"],["Buy the lossless file: AIFF, or WAV / FLAC if that’s all there is.","Αγόρασε lossless"],["Check it in Spek or soniqtools.com: the colour should reach about 21–22 kHz.","Έλεγξε στο spectrogram"],["Convert to AIFF if needed with MediaHuman, keeping the sample rate and bit depth.","Μετάτρεψε αν χρειάζεται"],["Import into rekordbox, analyse, check the grid, set cues and tag it.","Ανάλυση και cues στο rekordbox"],["Add it to a playlist and export to your FAT32 USB.","Playlist και export"],["Export the same playlist to your backup stick.","Backup σε δεύτερο USB"]];
+const PL=["Άκου το κομμάτι και κάνε Shazam ή σημείωσε το λεπτό μέσα στο set.","Βρες την ακριβή εκδοχή, το label και τον distributor (Google, Discogs, YouTube «Topic», γραμμή ℗ στο Spotify).","Άκου το preview και σύγκρινε τιμές σε Beatport, Traxsource και Bandcamp.","Αγόρασε το lossless αρχείο: AIFF, ή WAV / FLAC αν μόνο αυτά υπάρχουν.","Έλεγξέ το στο Spek ή στο soniqtools.com: το χρώμα πρέπει να φτάνει περίπου τα 21–22 kHz.","Μετάτρεψέ το σε AIFF αν χρειάζεται με το MediaHuman, με ίδιο sample rate και bit depth.","Κάνε import στο rekordbox, ανάλυση, έλεγχο beatgrid, cues και tags.","Πρόσθεσέ το σε playlist και κάνε export στο USB (FAT32).","Κάνε export το ίδιο playlist και στο USB του backup."];
 
 /* helpers */
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
@@ -483,28 +483,28 @@ S.forEach(s=>{
   const sec=document.createElement("section");sec.className="genre";sec.id=s.id;sec.style.setProperty("--c",`var(${s.c})`);
   sec.innerHTML=`<div class="ghead"><h2>${esc(s.name)}</h2><div class="grsub">${esc(s.gr)}</div><div class="meta">${esc(s.meta)}</div></div>
     <p class="lead">${s.lead}</p>
-    <div class="tldr"><span class="lang">ΕΛ</span><div>${esc(s.tldr)}</div></div>
+    <div class="tldr"><span class="lang">Με λίγα λόγια</span><div>${esc(s.tldr)}</div></div>
     <details class="traits"><summary>${esc(s.sum)}</summary><ul>${s.traits.map(x=>`<li>${x}</li>`).join("")}</ul></details>
     ${s.items.length?`<div class="cards">${s.items.map(it=>`<article class="card">
       <div class="chead"><div><div class="cname">${esc(it.n)}</div><div class="crole">${esc(it.role)}</div></div>${it.pill?`<span class="price">${esc(it.pill)}</span>`:""}</div>
       ${it.f?`<div class="chips">${it.f.map(f=>`<span class="sub">${esc(f)}</span>`).join("")}</div>`:""}
       <div class="note">${it.note}</div>
       ${it.warn?`<div class="warn">⚠ ${esc(it.warn)}</div>`:""}
-      ${it.url?`<a class="go" href="${esc(it.url)}" target="_blank" rel="noopener">Open ${esc(it.n.replace(/ search$/,""))}${arrow}</a>`:`<span class="spacer"></span>`}
+      ${it.url?`<a class="go" href="${esc(it.url)}" target="_blank" rel="noopener">Άνοιξε το ${esc(it.n)}${arrow}</a>`:`<span class="spacer"></span>`}
     </article>`).join("")}</div>`:""}
     <div class="xslot"></div>
     <div class="tips">${s.tips.map(([h,t])=>`<div class="tip"><h3>${esc(h)}</h3>${t}</div>`).join("")}</div>`;
   host.appendChild(sec);
   const x=$("x-"+s.id); if(x) sec.querySelector(".xslot").appendChild(x);
 });
-nav.insertAdjacentHTML("beforeend",`<a class="chip" href="#routine" data-id="routine">Routine</a>`);
+nav.insertAdjacentHTML("beforeend",`<a class="chip" href="#routine" data-id="routine">Ρουτίνα</a>`);
 if("IntersectionObserver" in window){const chips=[...nav.querySelectorAll(".chip")];
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){chips.forEach(c=>{const on=c.dataset.id===e.target.id;c.classList.toggle("on",on);if(on){const w=nav;w.scrollTo({left:c.offsetLeft-w.clientWidth/2+c.offsetWidth/2,behavior:"smooth"});}});}}),{rootMargin:"-30% 0px -60% 0px"});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){chips.forEach(c=>{const on=c.dataset.id===e.target.id;c.classList.toggle("on",on);if(on){nav.scrollTo({left:c.offsetLeft-nav.clientWidth/2+c.offsetWidth/2,behavior:"smooth"});}});}}),{rootMargin:"-30% 0px -60% 0px"});
   [...S.map(s=>$(s.id)),$("routine")].forEach(el=>io.observe(el));}
 
 $("fmts").innerHTML=FMT.map(f=>`<div class="fm" style="--fc:var(${f.c})">
   <h4>${esc(f.n)}<small>${esc(f.v)}</small></h4><div class="ty">${esc(f.t)}</div>
-  <dl><dt>Size</dt><dd>${esc(f.size)}</dd><dt>Tags</dt><dd>${esc(f.tags)}</dd><dt>CDJs</dt><dd>${esc(f.cdj)}</dd></dl>
+  <dl><dt>Μέγεθος</dt><dd>${esc(f.size)}</dd><dt>Tags</dt><dd>${esc(f.tags)}</dd><dt>CDJ</dt><dd>${esc(f.cdj)}</dd></dl>
   <p>${f.note}</p></div>`).join("");
 $("cuts").innerHTML=CUTS.map(r=>`<tr><td>${esc(r[0])}</td><td class="num">${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join("");
 $("print").addEventListener("click",()=>{document.querySelectorAll("details").forEach(d=>d.open=true);try{window.print()}catch(e){}});
@@ -522,36 +522,36 @@ const psel=$("player");
 PLAYERS.forEach((p,i)=>psel.insertAdjacentHTML("beforeend",`<option value="${i}">${esc(p[0])}</option>`));
 function showPlayer(){const [name,g,ex]=PLAYERS[+psel.value],[h,t,c]=PG[g];
   $("pout").style.setProperty("--v",`var(${c})`);
-  $("pout").innerHTML=`<b>${esc(h)}</b>${esc(t)}<br><span style="font-size:14px"><strong>Best pick:</strong> AIFF at 44.1 or 48 kHz. <strong>USB:</strong> ${g==="L"?"FAT32, for the CDJs you might meet":ex?"FAT32, or exFAT (this model supports it)":"FAT32 only (no exFAT on this model)"}.</span>`;}
+  $("pout").innerHTML=`<b>${esc(h)}</b>${esc(t)}<br><span style="font-size:14px"><strong>Καλύτερη επιλογή:</strong> AIFF στα 44.1 ή 48 kHz. <strong>USB:</strong> ${g==="L"?"FAT32, για τα CDJ που μπορεί να βρεις":ex?"FAT32 ή exFAT (το υποστηρίζει αυτό το μοντέλο)":"μόνο FAT32 (χωρίς exFAT σε αυτό το μοντέλο)"}.</span>`;}
 psel.addEventListener("change",showPlayer);psel.value="12";showPlayer();
 
 /* converter */
 const cf=$("cfrom"),ct=$("cto");
 CONV.forEach(c=>{cf.insertAdjacentHTML("beforeend",`<option>${c}</option>`);ct.insertAdjacentHTML("beforeend",`<option>${c}</option>`)});
 cf.value="FLAC";ct.value="AIFF";
-function showConv(){const a=cf.value,b=ct.value,o=$("cout");let v,h,t,g;
-  if(a===b){v="--quiet";h="Nothing to convert";t="It’s already in that format.";g="Είναι ήδη σε αυτό το format.";}
-  else if(LOSSY[a]&&!LOSSY[b]){v="--dnb";h="No gain, don’t do it";t=`A ${a} saved as ${b} is several times bigger but sounds exactly like the ${a}, and a spectrogram will still show the lossy cut. Keep the original, or buy the lossless file.`;g="Κανένα κέρδος: μεγαλύτερο αρχείο, ίδιος ήχος.";}
-  else if(LOSSY[a]&&LOSSY[b]){v="--dnb";h="Avoid";t="Every lossy re-encode throws away a little more. Play the original file instead.";g="Αποφύγε το: χάνεις κι άλλη ποιότητα.";}
-  else if(!LOSSY[a]&&LOSSY[b]){v="--disco";h="You lose quality";t=`Fine for a phone or a quick share, never for your gig library. Keep the ${a}.`;g="Χάνεις ποιότητα. Μόνο για κινητό.";}
-  else{v="--house";h="Perfect, identical audio";t=`Lossless to lossless keeps every bit.${b==="WAV"?" Note that WAV tags are unreliable: AIFF is the safer target.":b==="FLAC"||b==="ALAC"?` Check that your players read ${b}.`:""} Match the sample rate and bit depth, and convert before you set cue points.`;g="Τέλειο: ο ήχος μένει ίδιος.";}
-  o.style.setProperty("--v",`var(${v})`);o.innerHTML=`<b>${esc(h)}</b>${esc(t)}<i>${esc(g)}</i>`;}
+function showConv(){const a=cf.value,b=ct.value,o=$("cout");let v,h,t;
+  if(a===b){v="--quiet";h="Τίποτα για μετατροπή";t="Είναι ήδη σε αυτό το format.";}
+  else if(LOSSY[a]&&!LOSSY[b]){v="--dnb";h="Κανένα κέρδος, μην το κάνεις";t=`Ένα ${a} σωσμένο ως ${b} είναι πολλές φορές μεγαλύτερο, αλλά ακούγεται ακριβώς σαν το ${a}, και το spectrogram θα δείχνει ακόμα το κόψιμο. Κράτα το πρωτότυπο ή αγόρασε το lossless αρχείο.`;}
+  else if(LOSSY[a]&&LOSSY[b]){v="--dnb";h="Απόφυγέ το";t="Κάθε νέο lossy encode πετάει λίγη ακόμα πληροφορία. Παίξε το πρωτότυπο αρχείο.";}
+  else if(!LOSSY[a]&&LOSSY[b]){v="--disco";h="Χάνεις ποιότητα";t=`Εντάξει για το κινητό ή για να το στείλεις γρήγορα, ποτέ για τη βιβλιοθήκη που παίζεις. Κράτα το ${a}.`;}
+  else{v="--house";h="Τέλειο, ίδιος ήχος";t=`Από lossless σε lossless μένει κάθε bit.${b==="WAV"?" Τα tags στο WAV είναι αναξιόπιστα: το AIFF είναι πιο σίγουρη επιλογή.":b==="FLAC"||b==="ALAC"?` Έλεγξε ότι τα players σου διαβάζουν ${b}.`:""} Κράτα ίδιο sample rate και bit depth, και κάνε τη μετατροπή πριν βάλεις cue points.`;}
+  o.style.setProperty("--v",`var(${v})`);o.innerHTML=`<b>${esc(h)}</b>${esc(t)}`;}
 cf.addEventListener("change",showConv);ct.addEventListener("change",showConv);showConv();
 
 /* USB calculator */
 function showUsb(){const cap=+$("ucap").value,mb=+$("ufmt").value,len=+$("ulen").value;$("ulenv").textContent=len;
-  const n=Math.floor(cap*1000*0.96/(mb*len)),hrs=n*len/60;
-  $("uout").textContent=`≈ ${n.toLocaleString("en-GB")} tracks`;
-  $("uout2").textContent=`About ${Math.round(hrs).toLocaleString("en-GB")} hours of music (περίπου ${Math.round(hrs)} ώρες). Real sticks hold a little less than the label says, so this already leaves some room.`;}
+  const n=Math.floor(cap*1000*0.96/(mb*len)),hrs=Math.round(n*len/60);
+  $("uout").textContent=`≈ ${n.toLocaleString("el-GR")} κομμάτια`;
+  $("uout2").textContent=`Περίπου ${hrs.toLocaleString("el-GR")} ${hrs===1?"ώρα":"ώρες"} μουσικής. Τα USB χωράνε λίγο λιγότερο απ’ όσο γράφει η συσκευασία, οπότε ο υπολογισμός ήδη αφήνει λίγο περιθώριο.`;}
 ["ucap","ufmt","ulen"].forEach(id=>$(id).addEventListener("input",showUsb));showUsb();
 
 /* search */
 const norm=x=>strip(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 const ALL=[];
-S.forEach(s=>s.items.forEach(it=>ALL.push({c:s.c,sec:s.id,secn:s.name,n:it.n,sub:it.role+(it.f?" · "+it.f.join(", "):""),url:it.url,hay:norm([it.n,it.role,it.pill,(it.f||[]).join(" "),it.note,s.name].join(" "))})));
-FMT.forEach(f=>ALL.push({c:f.c,sec:"formats",secn:"File formats",n:f.n,sub:f.t+" · "+f.size,hay:norm([f.n,f.t,f.note,f.cdj,"format"].join(" "))}));
-CUTS.forEach(r=>ALL.push({c:"--dnb",sec:"check",secn:"Check the quality",n:r[0]+": "+r[1],sub:r[2],hay:norm(r.join(" ")+" khz cutoff spectrogram")}));
-PLAYERS.forEach(p=>ALL.push({c:"--electro",sec:"formats",secn:"File formats",n:p[0],sub:PG[p[1]][1],hay:norm(p[0]+" "+PG[p[1]][1]+" cdj player")}));
+S.forEach(s=>s.items.forEach(it=>ALL.push({c:s.c,sec:s.id,secn:s.name,n:it.n,sub:it.role+(it.f?" · "+it.f.join(", "):""),url:it.url,hay:norm([it.n,it.role,it.pill,(it.f||[]).join(" "),it.note,s.name,s.gr].join(" "))})));
+FMT.forEach(f=>ALL.push({c:f.c,sec:"formats",secn:"Τύποι αρχείων",n:f.n,sub:f.t+" · "+f.size,hay:norm([f.n,f.t,f.note,f.cdj,"format"].join(" "))}));
+CUTS.forEach(r=>ALL.push({c:"--dnb",sec:"check",secn:"Έλεγχος ποιότητας",n:r[0]+": "+r[1],sub:r[2],hay:norm(r.join(" ")+" khz cutoff spectrogram")}));
+PLAYERS.forEach(p=>ALL.push({c:"--electro",sec:"formats",secn:"Τύποι αρχείων",n:p[0],sub:PG[p[1]][1],hay:norm(p[0]+" "+PG[p[1]][1]+" cdj player")}));
 S.forEach(s=>ALL.push({c:s.c,sec:s.id,secn:s.name,n:s.name,sub:s.gr,hay:norm([s.name,s.gr,s.meta,s.lead,s.tldr,s.traits.join(" ")].join(" "))}));
 const qIn=$("q"),qClr=$("qclear"),res=$("results");
 function hl(text,terms){const raw=strip(text),low=norm(raw);for(const w of terms){const i=low.indexOf(w);if(i>=0)return esc(raw.slice(0,i))+"<mark>"+esc(raw.slice(i,i+w.length))+"</mark>"+esc(raw.slice(i+w.length));}return esc(raw);}
@@ -561,8 +561,8 @@ function search(){
   const terms=norm(v).split(/\s+/).filter(Boolean);
   const hits=ALL.filter(x=>terms.every(w=>x.hay.includes(w))).sort((a,b)=>(terms.some(w=>norm(b.n).includes(w))?1:0)-(terms.some(w=>norm(a.n).includes(w))?1:0));
   res.classList.add("on");
-  if(!hits.length){res.innerHTML=`<div class="rempty">Nothing found for “${esc(v)}”. Try a platform, a format, a tool or a player model.</div>`;return;}
-  res.innerHTML=`<div class="rhead">${hits.length} ${hits.length===1?"result":"results"}</div>`+hits.slice(0,30).map(x=>`<div class="rrow"><i class="rdot" style="background:var(${x.c})"></i><div class="rmain"><b>${hl(x.n,terms)}</b><span>${esc(x.sub)} · <a href="#${x.sec}">${esc(x.secn)}</a></span></div>${x.url?`<div class="rlinks"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="background:var(${x.c})">Open</a></div>`:""}</div>`).join("");
+  if(!hits.length){res.innerHTML=`<div class="rempty">Δεν βρέθηκε τίποτα για «${esc(v)}». Δοκίμασε πλατφόρμα, format, εργαλείο ή μοντέλο player.</div>`;return;}
+  res.innerHTML=`<div class="rhead">${hits.length} ${hits.length===1?"αποτέλεσμα":"αποτελέσματα"}</div>`+hits.slice(0,30).map(x=>`<div class="rrow"><i class="rdot" style="background:var(${x.c})"></i><div class="rmain"><b>${hl(x.n,terms)}</b><span>${esc(x.sub)} · <a href="#${x.sec}">${esc(x.secn)}</a></span></div>${x.url?`<div class="rlinks"><a href="${esc(x.url)}" target="_blank" rel="noopener" style="background:var(${x.c})">Άνοιγμα</a></div>`:""}</div>`).join("");
 }
 qIn.addEventListener("input",search);
 qIn.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qIn.blur();}});
@@ -571,8 +571,8 @@ qClr.addEventListener("click",()=>{qIn.value="";search();qIn.focus();});
 /* routine */
 let plan=store.get("dig-routine",{});
 const pl=$("planlist");
-function drawPlan(){pl.innerHTML=PL.map(([t,g],i)=>`<li class="${plan[i]?"ok":""}"><input type="checkbox" id="p${i}" ${plan[i]?"checked":""}><label for="p${i}"><strong>${i+1}.</strong> ${esc(t)}<small>${esc(g)}</small></label></li>`).join("");
-  const n=Object.keys(plan).length;$("pbar").style.width=(100*n/PL.length)+"%";$("ptext").textContent=n===PL.length?"Done: the track is ready to play.":`${n} of ${PL.length} steps done`;}
+function drawPlan(){pl.innerHTML=PL.map((t,i)=>`<li class="${plan[i]?"ok":""}"><input type="checkbox" id="p${i}" ${plan[i]?"checked":""}><label for="p${i}"><strong>${i+1}.</strong> ${esc(t)}</label></li>`).join("");
+  const n=Object.keys(plan).length;$("pbar").style.width=(100*n/PL.length)+"%";$("ptext").textContent=n===PL.length?"Τέλος: το κομμάτι είναι έτοιμο να παιχτεί.":`${n} από ${PL.length} βήματα`;}
 drawPlan();
 pl.addEventListener("change",e=>{const i=e.target.id.slice(1);if(e.target.checked)plan[i]=1;else delete plan[i];store.set("dig-routine",plan);drawPlan();});
 $("planreset").addEventListener("click",()=>{plan={};store.set("dig-routine",plan);drawPlan();});
@@ -584,11 +584,11 @@ const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).tri
 const STOPS=[[0,[5,4,10]],[.18,[40,11,84]],[.38,[120,28,109]],[.58,[200,48,64]],[.76,[244,130,40]],[.9,[252,205,80]],[1,[252,255,190]]];
 function cmap(t){t=Math.max(0,Math.min(1,t));for(let i=1;i<STOPS.length;i++){if(t<=STOPS[i][0]){const[a,ca]=STOPS[i-1],[b,cb]=STOPS[i],f=(t-a)/(b-a);return[ca[0]+(cb[0]-ca[0])*f,ca[1]+(cb[1]-ca[1])*f,ca[2]+(cb[2]-ca[2])*f];}}return STOPS[STOPS.length-1][1];}
 function verdict(cut,nyq,full){
-  if(full||cut>=21)return["--house","Full range: consistent with a real lossless file.","The colour reaches the top, as a real AIFF, WAV or FLAC should.","Πραγματικό lossless."];
-  if(cut>=19.6)return["--trance","MP3 320 / V0 level.","Fine as an MP3. If the file claims to be lossless, it’s a converted MP3.","Επίπεδο MP3 320. Αν λέει lossless, είναι ψεύτικο."];
-  if(cut>=18.3)return["--disco","About 192–256 kbps.","Below club standard. Look for a better copy.","Κάτω από το επίπεδο για club."];
-  if(cut>=15)return["--dnb","About 128 kbps.","Don’t play this out. If it claims 320 or lossless, it’s fake.","Περίπου 128 kbps: μην το παίξεις."];
-  return["--dnb","Very low quality, or a heavily filtered track.","Check a few other moments, then look for a better copy.","Πολύ χαμηλή ποιότητα."];
+  if(full||cut>=21)return["--house","Πλήρες εύρος: αληθινό lossless αρχείο.","Το χρώμα φτάνει μέχρι πάνω, όπως πρέπει σε αληθινό AIFF, WAV ή FLAC."];
+  if(cut>=19.6)return["--trance","Επίπεδο MP3 320 / V0.","Καλό για MP3. Αν το αρχείο δηλώνει lossless, είναι MP3 που μετατράπηκε."];
+  if(cut>=18.3)return["--disco","Περίπου 192–256 kbps.","Κάτω από το επίπεδο για club. Ψάξε καλύτερο αρχείο."];
+  if(cut>=15)return["--dnb","Περίπου 128 kbps.","Μην το παίξεις. Αν δηλώνει 320 ή lossless, είναι ψεύτικο."];
+  return["--dnb","Πολύ χαμηλή ποιότητα ή κομμάτι με πολύ φιλτράρισμα.","Έλεγξε κι άλλα σημεία του κομματιού και ψάξε καλύτερο αρχείο."];
 }
 function draw(){
   if(!cur)return;const d=Math.min(window.devicePixelRatio||1,2),r=box.getBoundingClientRect();
@@ -600,14 +600,14 @@ function draw(){
   oc.putImageData(im,0,0);g.imageSmoothingEnabled=true;g.drawImage(off,0,0,W,H);
   const yOf=k=>H*(1-k/cur.nyq);g.font=`600 ${11*d}px Commissioner, system-ui, sans-serif`;g.textBaseline="middle";
   for(let k=5;k<cur.nyq;k+=5){const y=yOf(k);g.fillStyle="rgba(255,255,255,.75)";g.fillText(k+" kHz",6*d,y);g.fillStyle="rgba(255,255,255,.18)";g.fillRect(48*d,y,W,1);}
-  [[16,"MP3 128"],[20,"MP3 320"]].forEach(([k,l])=>{if(k>=cur.nyq)return;const y=yOf(k);g.setLineDash([5*d,5*d]);g.strokeStyle="rgba(255,255,255,.55)";g.lineWidth=d;g.beginPath();g.moveTo(48*d,y);g.lineTo(W,y);g.stroke();g.setLineDash([]);g.fillStyle="rgba(255,255,255,.85)";g.textAlign="right";g.fillText(l+" stops here",W-8*d,y-8*d);g.textAlign="left";});
+  [[16,"MP3 128"],[20,"MP3 320"]].forEach(([k,l])=>{if(k>=cur.nyq)return;const y=yOf(k);g.setLineDash([5*d,5*d]);g.strokeStyle="rgba(255,255,255,.55)";g.lineWidth=d;g.beginPath();g.moveTo(48*d,y);g.lineTo(W,y);g.stroke();g.setLineDash([]);g.fillStyle="rgba(255,255,255,.85)";g.textAlign="right";g.fillText("εδώ κόβει το "+l,W-8*d,y-8*d);g.textAlign="left";});
   if(!cur.full){const y=yOf(cur.cut);g.fillStyle="#ffffff";g.fillRect(0,y-1.5*d,W,3*d);}
 }
 function show(c){
   cur=c;msg.classList.remove("on");draw();
-  const[v,h,t,gk]=verdict(c.cut,c.nyq,c.full);
-  $("khz").innerHTML=c.full?`${c.nyq.toFixed(2).replace(/0$/,"")} kHz<small>reaches the top</small>`:`≈ ${c.cut.toFixed(1)} kHz<small>colour stops here</small>`;
-  const vd=$("verdict");vd.style.setProperty("--v",`var(${v})`);vd.innerHTML=`<b>${esc(h)}</b>${esc(t)}<i>${esc(gk)}</i>`;
+  const[v,h,t]=verdict(c.cut,c.nyq,c.full);
+  $("khz").innerHTML=c.full?`${c.nyq.toFixed(2).replace(/0$/,"")} kHz<small>φτάνει μέχρι πάνω</small>`:`≈ ${c.cut.toFixed(1)} kHz<small>εδώ σταματά το χρώμα</small>`;
+  const vd=$("verdict");vd.style.setProperty("--v",`var(${v})`);vd.innerHTML=`<b>${esc(h)}</b>${esc(t)}`;
   $("finfo").textContent=c.info||"";
 }
 function rnd(seed){let s=seed>>>0;return()=>((s=Math.imul(s^s>>>15,1|s)+0x6D2B79F5|0,(s^s>>>7)>>>0)/4294967296);}
@@ -621,7 +621,7 @@ function demo(kind){
         if(kind==="lossless"&&f>nyq-.4)L-=8*(f-(nyq-.4))/.4;
         if(kind==="fake"&&f>13.5&&R()<.4)L-=28;}
       grid[y*GW+x]=L;}}
-  const info={lossless:"Example: a real lossless track at 44.1 kHz. Dense right up to the top, with a natural fade.",mp3:"Example: a real MP3 320. Everything above about 20 kHz is gone.",fake:"Example: an MP3 128 re-saved as AIFF. The label says lossless, the hard line at 16 kHz and the holes below it say otherwise."}[kind];
+  const info={lossless:"Παράδειγμα: αληθινό lossless κομμάτι στα 44.1 kHz. Πυκνό μέχρι πάνω, με φυσικό σβήσιμο.",mp3:"Παράδειγμα: αληθινό MP3 320. Ό,τι υπάρχει πάνω από τα 20 kHz περίπου έχει κοπεί.",fake:"Παράδειγμα: MP3 128 ξανασωσμένο ως AIFF. Η κατάληξη λέει lossless, αλλά η κοφτή γραμμή στα 16 kHz και οι τρύπες από κάτω λένε το αντίθετο."}[kind];
   show({grid,top:-12,nyq,cut,full:kind==="lossless",info});
 }
 document.querySelectorAll(".demo").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".demo").forEach(x=>x.classList.toggle("on",x===b));demo(b.dataset.demo);}));
@@ -635,17 +635,17 @@ function fft(re,im){for(let i=0;i<N;i++){const j=rev[i];if(j>i){let t=re[i];re[i
 function busy(t){msg.textContent=t;msg.classList.add("on");}
 async function analyse(file){
   document.querySelectorAll(".demo").forEach(x=>x.classList.remove("on"));
-  busy("Reading "+file.name+"…");
+  busy("Διαβάζω το "+file.name+"…");
   const AC=window.AudioContext||window.webkitAudioContext;
-  if(!AC){busy("This browser can’t analyse audio. Use Spek or soniqtools.com instead.");return;}
+  if(!AC){busy("Αυτός ο browser δεν μπορεί να αναλύσει ήχο. Χρησιμοποίησε το Spek ή το soniqtools.com.");return;}
   let ab,ctx;
-  try{const buf=await file.arrayBuffer();ctx=new AC();busy("Decoding…");
+  try{const buf=await file.arrayBuffer();ctx=new AC();busy("Αποκωδικοποίηση…");
     ab=await new Promise((res,rej)=>{const p=ctx.decodeAudioData(buf,res,rej);if(p&&p.then)p.then(res,rej);});}
-  catch(e){busy("This browser couldn’t read “"+file.name+"”. Some browsers can’t open AIFF: try Safari, or use Spek or soniqtools.com.");return;}
+  catch(e){busy("Ο browser δεν μπόρεσε να διαβάσει το «"+file.name+"». Κάποιοι browsers δεν ανοίγουν AIFF: δοκίμασε Safari ή χρησιμοποίησε το Spek ή το soniqtools.com.");return;}
   finally{try{ctx&&ctx.close()}catch(e){}}
-  busy("Drawing the spectrogram…");await new Promise(r=>setTimeout(r,20));
+  busy("Σχεδιάζω το spectrogram…");await new Promise(r=>setTimeout(r,20));
   const sr=ab.sampleRate,nyq=sr/2000,len=ab.length,ch=[ab.getChannelData(0)];if(ab.numberOfChannels>1)ch.push(ab.getChannelData(1));
-  if(len<N){busy("This file is too short to analyse.");return;}
+  if(len<N){busy("Το αρχείο είναι πολύ μικρό για ανάλυση.");return;}
   const half=N/2,avg=new Float64Array(half),grid=new Float32Array(GW*GH),re=new Float64Array(N),im=new Float64Array(N),pw=new Float64Array(half);
   const per=half/GH;let top=-200;
   for(let x=0;x<GW;x++){const o=Math.floor(x*(len-N)/(GW-1));
@@ -662,7 +662,7 @@ async function analyse(file){
   const full=!(best>=18&&bk>0&&bk*bin<sr/2-400);
   const cut=full?nyq:bk*bin/1000;
   const mins=Math.floor(ab.duration/60),secs=Math.round(ab.duration%60);
-  show({grid,top,nyq,cut,full,info:`${file.name} · ${mins}:${String(secs).padStart(2,"0")} · ${ab.numberOfChannels===1?"mono":"stereo"} · analysed at ${sr/1000} kHz by your browser, so the picture can’t go above ${nyq} kHz. This is an estimate: always look at the picture yourself.`});
+  show({grid,top,nyq,cut,full,info:`${file.name} · ${mins}:${String(secs).padStart(2,"0")} · ${ab.numberOfChannels===1?"mono":"stereo"} · ο browser το ανέλυσε στα ${sr/1000} kHz, οπότε η εικόνα δεν μπορεί να ξεπεράσει τα ${nyq} kHz. Είναι εκτίμηση: κοίτα πάντα και την εικόνα μόνος σου.`});
 }
 $("pick").addEventListener("click",()=>$("file").click());
 $("file").addEventListener("change",e=>{const f=e.target.files[0];if(f)analyse(f);e.target.value="";});
