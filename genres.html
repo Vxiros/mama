@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genres Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0F4; --panel:#FFFFFF; --ink:#18202E; --quiet:#5D6676; --rule:#D5DAE2;
+  --mark:#FFE45C; --mark-ink:#18202E;
+  --disco:#B8862A; --house:#1F8A70; --electro:#5B47D6; --techno:#46506A; --trance:#1F7FBF; --dnb:#C23B2A; --more:#8A5A9E;
+  --yt:#D9302A; --sp:#1B9E51;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121722; --panel:#1B2230; --ink:#E9EDF4; --quiet:#9AA3B4; --rule:#2C3546;
+    --mark:#E8C93A; --mark-ink:#121722;
+    --disco:#E0AE4C; --house:#3DC29C; --electro:#9585FF; --techno:#9CA8C4; --trance:#4FB0EE; --dnb:#F06A55; --more:#C79BDB;
+    --yt:#FF5A50; --sp:#3CCB78;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121722; --panel:#1B2230; --ink:#E9EDF4; --quiet:#9AA3B4; --rule:#2C3546;
+  --mark:#E8C93A; --mark-ink:#121722;
+  --disco:#E0AE4C; --house:#3DC29C; --electro:#9585FF; --techno:#9CA8C4; --trance:#4FB0EE; --dnb:#F06A55; --more:#C79BDB;
+  --yt:#FF5A50; --sp:#3CCB78;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Commissioner","Noto Sans","Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--trance);outline-offset:2px;border-radius:6px}
+
+/* hero */
+header.hero{padding-top:40px;padding-bottom:24px}
+h1{font-weight:900;font-size:clamp(34px,8vw,58px);line-height:1;letter-spacing:-.03em;margin:0 0 12px}
+.lede{color:var(--quiet);max-width:60ch;margin:0 0 26px}
+.ruler{background:var(--panel);border-radius:18px;padding:18px 18px 14px;border:1px solid var(--rule)}
+.ruler-top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.ruler-top h2{font-size:17px;margin:0;font-weight:800}
+.tap{display:flex;align-items:center;gap:10px}
+.tapbtn{border:0;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:800;padding:12px 22px;cursor:pointer;touch-action:manipulation;transition:transform .06s}
+.tapbtn:active{transform:scale(.95)}
+.bpmread{font-weight:900;font-size:26px;min-width:4.5ch;text-align:right;font-variant-numeric:tabular-nums}
+.bpmread small{font-size:12px;font-weight:600;color:var(--quiet);margin-left:3px}
+.scale{position:relative;margin:4px 0 0}
+.lane{position:relative;height:34px;margin:6px 0}
+.band{position:absolute;top:0;height:34px;border-radius:9px;border:0;cursor:pointer;color:#fff;font-weight:800;font-size:13px;text-align:left;padding:0 10px;white-space:nowrap;overflow:visible;display:flex;align-items:center;transition:opacity .2s, box-shadow .2s}
+.band span{position:absolute;left:calc(100% + 8px);color:var(--ink);font-weight:800}
+.band.r span{left:auto;right:calc(100% + 8px)}
+.scale.dim .band{opacity:.25}
+.scale.dim .band.hit{opacity:1;box-shadow:0 0 0 3px var(--mark)}
+.needle{position:absolute;top:-4px;bottom:22px;width:2px;background:var(--ink);display:none;pointer-events:none}
+.needle.on{display:block}
+.ticks{position:relative;height:20px;border-top:1px solid var(--rule);margin-top:4px}
+.ticks span{position:absolute;top:3px;transform:translateX(-50%);font-size:11.5px;color:var(--quiet);font-variant-numeric:tabular-nums}
+.hint{font-size:13.5px;color:var(--quiet);margin:8px 0 0}
+
+/* nav */
+nav.genres{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--rule)}
+nav.genres .wrap{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.genres .wrap::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1.5px solid var(--rule);background:var(--panel);border-radius:999px;padding:6px 13px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:7px}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+/* toolbar */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 6px}
+.search{flex:1 1 220px;border:1.5px solid var(--rule);background:var(--panel);border-radius:12px;padding:10px 14px;font:inherit;color:var(--ink);min-width:0}
+.toggle{display:flex;align-items:center;gap:8px;border:1.5px solid var(--rule);background:var(--panel);border-radius:12px;padding:9px 13px;cursor:pointer;font-size:14.5px;font-weight:600}
+.toggle[aria-pressed="true"]{background:var(--mark);color:var(--mark-ink);border-color:var(--mark)}
+.legend{font-size:13.5px;color:var(--quiet);margin:4px 0 0;display:flex;gap:14px;flex-wrap:wrap}
+.legend b{background:var(--mark);color:var(--mark-ink);padding:0 5px;border-radius:3px;font-weight:700}
+.legend u{text-decoration:none;border-bottom:2px dotted var(--quiet)}
+
+/* how to listen */
+.howto{background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:20px 22px;margin:26px 0}
+.howto h2{margin:0 0 6px;font-size:22px;font-weight:800}
+.howto ol{margin:8px 0 0;padding-left:22px}
+.howto li{margin:5px 0}
+
+/* genre */
+section.genre{margin:46px 0 0;scroll-margin-top:70px}
+.ghead{border-left:8px solid var(--c);padding:2px 0 2px 16px;margin-bottom:14px}
+.ghead h2{margin:0;font-size:clamp(28px,6vw,40px);font-weight:900;letter-spacing:-.02em;line-height:1.05}
+.meta{color:var(--quiet);font-weight:600;font-size:15px;margin-top:4px}
+.progress{height:6px;border-radius:3px;background:var(--rule);margin-top:10px;overflow:hidden;max-width:320px}
+.progress div{height:100%;background:var(--c);width:0;transition:width .3s}
+.ptext{font-size:12.5px;color:var(--quiet);margin-top:4px}
+.genre p.lead{margin:0 0 14px;max-width:68ch}
+details.traits{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:0 18px;margin:0 0 16px}
+details.traits summary{cursor:pointer;font-weight:700;padding:13px 0;list-style:none;display:flex;justify-content:space-between}
+details.traits summary::-webkit-details-marker{display:none}
+details.traits summary::after{content:"+";font-weight:800;color:var(--c)}
+details.traits[open] summary::after{content:"–"}
+details.traits ul{margin:0 0 14px;padding-left:20px}
+details.traits li{margin:6px 0}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 0}
+.tip{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:14px 16px;font-size:15px}
+.tip h3{margin:0 0 4px;font-size:15px;color:var(--c);font-weight:800}
+.extra{font-size:14.5px;color:var(--quiet);margin:12px 0 0}
+.vids{margin:12px 0 0;font-size:14.5px}
+.vids a{display:inline-block;margin:4px 6px 0 0;padding:4px 11px;border-radius:999px;background:var(--mark);color:var(--mark-ink);text-decoration:none;font-weight:700;font-size:13.5px}
+
+/* tracks */
+ol.tracks{list-style:none;margin:0;padding:0;background:var(--panel);border:1px solid var(--rule);border-radius:16px;overflow:hidden}
+.trk{display:grid;grid-template-columns:auto 100px 1fr auto;gap:12px;align-items:start;padding:13px 14px;border-top:1px solid var(--rule)}
+.trk:first-child{border-top:0}
+.trk.orig{background:color-mix(in srgb,var(--mark) 26%,var(--panel));box-shadow:inset 5px 0 0 var(--mark)}
+.trk.done .title{text-decoration:line-through;text-decoration-color:var(--c);text-decoration-thickness:2px}
+.chk{width:24px;height:24px;margin-top:2px;accent-color:var(--c);cursor:pointer}
+.year{font-weight:900;font-size:17px;color:var(--c);font-variant-numeric:tabular-nums;padding-top:1px}
+.title{font-weight:800;font-size:16.5px;line-height:1.3}
+.artist{font-weight:600;color:var(--quiet);font-size:14.5px}
+.artist u{text-decoration:none;border-bottom:2px dotted var(--quiet)}
+.sub{display:inline-block;font-size:12px;font-weight:700;border:1.5px solid var(--c);color:var(--c);border-radius:999px;padding:0 8px;margin:5px 6px 0 0}
+.flag{display:inline-block;font-size:12px;font-weight:800;background:var(--mark);color:var(--mark-ink);border-radius:999px;padding:1px 8px;margin:5px 0 0}
+.note{font-size:14.5px;margin-top:5px;max-width:60ch}
+.links{display:flex;flex-direction:column;gap:6px}
+.links a{display:flex;align-items:center;gap:6px;text-decoration:none;font-size:13px;font-weight:800;border-radius:9px;padding:7px 11px;color:#fff;white-space:nowrap}
+.links a.yt{background:var(--yt)}
+.links a.sp{background:var(--sp)}
+.links svg{width:14px;height:14px;fill:currentColor}
+.empty{padding:16px;color:var(--quiet);font-size:14.5px}
+
+/* map + table */
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:20px 22px;margin:46px 0 0}
+.panel h2{margin:0 0 6px;font-size:26px;font-weight:900;letter-spacing:-.02em}
+.scrollx{overflow-x:auto}
+.tree{width:100%;height:auto;min-width:520px;display:block;margin:10px 0}
+table.cmp{border-collapse:collapse;width:100%;min-width:620px;font-size:14.5px;margin-top:10px}
+.cmp th,.cmp td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.cmp th{font-size:13px;color:var(--quiet)}
+.cmp td:first-child{font-weight:800}
+
+/* quiz */
+.q{border-top:1px solid var(--rule);padding:14px 0}
+.q:first-of-type{border-top:0}
+.q p{margin:0 0 8px;font-weight:600}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opt{border:1.5px solid var(--rule);background:transparent;border-radius:999px;padding:6px 13px;cursor:pointer;font-size:14px;font-weight:600}
+.opt.right{background:var(--house);border-color:var(--house);color:#fff}
+.opt.wrong{background:var(--dnb);border-color:var(--dnb);color:#fff}
+.qres{font-size:14px;color:var(--quiet);margin-top:7px;min-height:1em}
+.score{font-weight:800;margin-top:6px}
+ul.plan{list-style:none;padding:0;margin:6px 0 0}
+ul.plan li{display:flex;gap:10px;align-items:flex-start;padding:7px 0}
+ul.plan input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--house)}
+footer{color:var(--quiet);font-size:13.5px;padding:40px 0 60px}
+@media (max-width:620px){
+  .trk{grid-template-columns:auto 1fr;gap:4px 12px}
+  .trk .year{grid-column:2;grid-row:1}
+  .trk .body{grid-column:2}
+  .trk .chk{grid-row:1 / span 3}
+  .links{grid-column:2;flex-direction:row}
+  .links a{flex:1;justify-content:center;padding:9px}
+  .tips{grid-template-columns:1fr}
+  .yb{flex-direction:row;align-items:center;gap:10px}
+  .subs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+  .subs .sg{flex:0 0 80%;scroll-snap-align:start}
+  .artists{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+  .artists .ar{flex:0 0 80%;scroll-snap-align:start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+.yb{display:flex;flex-direction:column;gap:4px}
+.bpmp{font-size:12px;font-weight:800;border-radius:6px;padding:2px 8px;align-self:flex-start;line-height:1.4;background:var(--c);color:#fff;white-space:nowrap;text-align:center}
+.subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin:0 0 16px}
+.sg{background:var(--panel);border:1px solid var(--rule);border-top:4px solid var(--c);border-radius:12px;padding:11px 13px;font-size:14.5px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.sg.on{box-shadow:0 0 0 3px var(--c)}
+.sg h4{margin:0;font-size:15.5px;font-weight:800;display:flex;justify-content:space-between;gap:8px}
+.sg h4 small{color:var(--c);font-weight:800;font-size:12.5px;white-space:nowrap}
+.sg p{margin:4px 0 0;font-size:14px}
+.sg .cnt{font-size:12px;color:var(--quiet);margin-top:4px}
+h3.sec{font-size:17px;font-weight:800;margin:18px 0 8px}
+.artists{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 4px}
+.ar{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:11px 13px;font-size:14px}
+.ar b{display:block;font-size:15px;margin-bottom:2px}
+.ar a{font-size:12.5px;font-weight:700;color:var(--c);margin-right:10px}
+select.sel{border:1.5px solid var(--rule);background:var(--panel);border-radius:12px;padding:9px 12px;font:inherit;font-size:14.5px;font-weight:600;color:var(--ink)}
+.pbtn{border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:12px;padding:9px 14px;font-weight:700;font-size:14.5px;cursor:pointer}
+.bpmchip{display:none;border:0;background:var(--trance);color:#fff;border-radius:12px;padding:9px 13px;font-weight:700;font-size:14.5px;cursor:pointer}
+.bpmchip.on{display:inline-block}
+.showbpm{margin-top:8px;border:0;background:var(--trance);color:#fff;border-radius:999px;padding:7px 14px;font-weight:700;cursor:pointer;display:none}
+.showbpm.on{display:inline-block}
+.subfilter{font-size:13.5px;color:var(--quiet);margin:-6px 0 10px;display:none}
+.subfilter.on{display:block}
+.subfilter button{border:0;background:none;color:var(--c);font-weight:800;cursor:pointer;text-decoration:underline;padding:0;font-size:13.5px}
+@media print{
+  nav.genres,.tools,.tapzone,.steps,.hint,.chk,.pbtn,.showbpm,.opts,.progress,.ptext,.subfilter{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .trk{break-inside:avoid}
+  section.genre{break-before:page}
+  .links a{color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .trk.orig,.flag,.band,.bpmp,.sg,.vids a{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media (max-width:620px){.yb{flex-direction:row;align-items:center;gap:10px}.subs,.artists{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}.subs .sg,.artists .ar{flex:0 0 80%;scroll-snap-align:start}}
+
+.rt{font-size:20px;font-weight:900;margin:0 0 10px;letter-spacing:-.01em}
+.steps{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;padding:0;margin:0 0 16px;font-size:14px;font-weight:600;color:var(--quiet)}
+.steps li{display:flex;align-items:center;gap:7px}
+.steps span{width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:800;display:grid;place-items:center}
+.tapzone{display:flex;align-items:center;gap:20px;margin:0 0 18px}
+.pad{flex:none;width:128px;height:128px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);cursor:pointer;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative;user-select:none;-webkit-user-select:none;transition:transform .07s}
+.pad:active{transform:scale(.94)}
+.pad b{font-size:34px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.pad small{font-size:12.5px;font-weight:700;opacity:.8}
+.pad::after{content:"";position:absolute;inset:0;border-radius:50%;border:3px solid var(--trance);opacity:0}
+.pad.beat::after{animation:ring .45s ease-out}
+@keyframes ring{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.25)}}
+.tapside{flex:1;min-width:0}
+.dots{display:flex;gap:7px;margin-bottom:8px}
+.dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--quiet)}
+.dots i.on{background:var(--trance);border-color:var(--trance)}
+.ruler .hint{font-size:15px;color:var(--ink);margin:0;font-weight:600}
+.ruler .hint strong{color:var(--trance)}
+.tapacts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tapacts .showbpm{margin:0;white-space:nowrap;font-size:14px}
+.reset{border:1.5px solid var(--rule);background:transparent;border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer;font-size:14px;display:none}
+.reset.on{display:inline-block}
+.scalenote{font-size:13px;color:var(--quiet);margin:6px 0 0}
+@media (max-width:480px){.pad{width:108px;height:108px}.pad b{font-size:30px}.tapzone{gap:14px}}
+@media (prefers-reduced-motion:reduce){.pad.beat::after{animation:none}}
+.flag.deep{background:var(--c);color:#fff;margin-left:6px}
+.legend b.dp{background:var(--electro);color:#fff}
+.toggle.deep[aria-pressed="true"]{background:var(--electro);border-color:var(--electro);color:#fff}
+
+.sbox{position:relative;flex:1 1 260px;min-width:0;display:flex}
+.sbox .search{flex:1;padding-right:40px;font-size:16px}
+.sclear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:var(--rule);color:var(--ink);width:28px;height:28px;border-radius:50%;cursor:pointer;display:none;font-size:13px}
+.sclear.on{display:block}
+.search::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.results{display:none;background:var(--panel);border:1.5px solid var(--trance);border-radius:16px;margin:12px 0 0;overflow:hidden}
+.results.on{display:block}
+.rhead{padding:10px 14px;font-weight:800;font-size:14.5px;border-bottom:1px solid var(--rule)}
+.rrow{display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--rule)}
+.rrow:first-of-type{border-top:0}
+.rdot{width:10px;height:10px;border-radius:50%;flex:none}
+.rmain{flex:1;min-width:0}
+.rmain b{display:block;font-size:15px;line-height:1.3}
+.rmain span{font-size:13px;color:var(--quiet)}
+.rmain mark{background:var(--mark);color:var(--mark-ink);border-radius:2px;padding:0 1px}
+.rlinks{display:flex;gap:6px;flex:none}
+.rlinks a{font-size:12px;font-weight:800;color:#fff;text-decoration:none;border-radius:8px;padding:6px 9px}
+.rlinks a.yt{background:var(--yt)} .rlinks a.sp{background:var(--sp)}
+.rempty{padding:14px;color:var(--quiet);font-size:14.5px}
+@media print{.results,.sbox{display:none!important}}
+</style>
+</head>
+<body>
+<header class="hero wrap">
+  <h1>Genres Exploration</h1>
+  <p class="lede">Ο οδηγός ακρόασης για disco, house, electro, techno, trance, drum &amp; bass και τα συγγενικά τους είδη: υποείδη, καλλιτέχνες-κλειδιά, BPM και κομμάτια για να ακούσεις στο YouTube ή στο Spotify.</p>
+  <div class="ruler">
+    <h2 class="rt">Μάντεψε το είδος από το tempo</h2>
+    <ol class="steps"><li><span>1</span>Βάλε ένα κομμάτι να παίζει</li><li><span>2</span>Πάτα τον κύκλο σε κάθε kick</li><li><span>3</span>Δες ποιο είδος ταιριάζει</li></ol>
+    <div class="tapzone">
+      <button class="pad" id="tapbtn" aria-label="Πάτα στον ρυθμό"><b id="bpm">Tap</b><small id="padsub">στον ρυθμό</small></button>
+      <div class="tapside">
+        <div class="dots" id="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <p class="hint" id="hint" aria-live="polite">Χρειάζονται 4 πατήματα για να μετρήσω.</p>
+        <div class="tapacts"><button class="showbpm" id="showbpm"></button><button class="reset" id="reset">Ξανά</button></div>
+      </div>
+    </div>
+    <div class="scale" id="scale"><div class="needle" id="needle"></div></div>
+    <p class="scalenote">Κάθε μπάρα είναι το εύρος BPM ενός είδους. Πάτα μία για να πας στη λίστα του.</p>
+  </div>
+</header>
+
+<nav class="genres" aria-label="Είδη"><div class="wrap" id="nav"></div></nav>
+
+<main class="wrap">
+  <div class="tools">
+    <div class="sbox"><input class="search" id="q" type="search" placeholder="Αναζήτηση: κομμάτι, καλλιτέχνης, υποείδος, χρονιά" aria-label="Αναζήτηση" autocomplete="off"><button class="sclear" id="qclear" aria-label="Καθαρισμός">✕</button></div>
+    <button class="toggle" id="onlyOrig" aria-pressed="false">Μόνο Αρχικό Υλικό</button>
+    <select class="sel" id="sort" aria-label="Ταξινόμηση"><option value="year">Χρονολογικά</option><option value="bpm">Κατά BPM</option></select>
+    <button class="bpmchip" id="bpmchip"></button>
+    <button class="pbtn" id="print">Εκτύπωση / PDF</button>
+  </div>
+  <div class="results" id="results" aria-live="polite"></div>
+  <div class="legend"><span><b>Αρχικό Υλικό</b> = το κομμάτι υπάρχει στο αρχείο σου</span><span><u>Τελείες</u> κάτω από τον καλλιτέχνη = ο καλλιτέχνης αναφέρεται στο αρχείο</span><span>Τα BPM είναι κατά προσέγγιση: επιβεβαίωσέ τα στο DJ software σου.</span></div>
+
+  <section class="howto">
+    <h2>Πώς ακούμε σαν DJ και παραγωγός</h2>
+    Ένα είδος το αναγνωρίζεις από 5 πράγματα. Σε κάθε κομμάτι, άκου με αυτή τη σειρά:
+    <ol>
+      <li><strong>Tempo (BPM):</strong> χτύπα το πόδι σου ή χρησιμοποίησε το Tap πιο πάνω.</li>
+      <li><strong>Kick:</strong> χτυπάει σε κάθε χτύπο (four-on-the-floor, 4/4) ή σπάει (breakbeat);</li>
+      <li><strong>Hi-hats και snare:</strong> το ανοιχτό hi-hat στο off-beat είναι το DNA της disco και της house.</li>
+      <li><strong>Μπάσο:</strong> μελωδικό (disco), υπνωτικό (techno), «τσιριχτό» (acid/303) ή βαθύ sub (DnB);</li>
+      <li><strong>Ήχος και δομή:</strong> ζωντανά όργανα ή μηχανές; Μεγάλα breakdowns (trance) ή σταθερή ροή (techno);</li>
+    </ol>
+  </section>
+
+  <div id="genres"></div>
+
+  <section class="panel" id="map">
+    <h2>Δέντρο επιρροών</h2>
+    <p style="margin:0;max-width:66ch">Η ηλεκτρονική μουσική δεν είναι λίστα ειδών αλλά αλυσίδα επιρροών. Αριστερά η οικογένεια του 4/4, δεξιά η οικογένεια του breakbeat.</p>
+    <div class="scrollx">
+    <svg class="tree" viewBox="0 0 760 500" role="img" aria-label="Δέντρο επιρροών των ειδών">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--quiet)"/></marker></defs>
+      <g fill="none" stroke="var(--quiet)" stroke-width="1.4" marker-end="url(#ar)">
+        <path d="M100 116V174" marker-end="url(#ar)"/><path d="M140 116V148H255V174" marker-end="url(#ar)"/><path d="M285 116V174" marker-end="url(#ar)"/>
+        <path d="M440 116V200H365" marker-end="url(#ar)"/><path d="M500 116V420H570" marker-end="url(#ar)"/><path d="M650 116V394" marker-end="url(#ar)"/>
+        <path d="M100 226V284" marker-end="url(#ar)"/><path d="M285 226V284" marker-end="url(#ar)"/><path d="M180 310H205" marker-end="url(#ar)"/>
+        <path d="M100 336V394" marker-end="url(#ar)"/><path d="M180 420H205" marker-end="url(#ar)"/><path d="M285 336V394" marker-end="url(#ar)"/>
+        <path d="M100 446V478H650V446" marker-end="url(#ar)"/>
+      </g>
+      <g font-size="13" text-anchor="middle" font-family="inherit">
+        <g><rect x="20" y="64" width="160" height="52" rx="8" fill="none" stroke="var(--quiet)" stroke-dasharray="4 3"/><text x="100" y="86" font-weight="700" fill="var(--ink)">Funk και Soul</text><text x="100" y="104" font-size="11.5" fill="var(--quiet)">ΗΠΑ, 1960s–70s</text></g>
+        <g><rect x="205" y="64" width="160" height="52" rx="8" fill="none" stroke="var(--quiet)" stroke-dasharray="4 3"/><text x="285" y="86" font-weight="700" fill="var(--ink)">Kraftwerk</text><text x="285" y="104" font-size="11.5" fill="var(--quiet)">Γερμανία, 1970s</text></g>
+        <g><rect x="390" y="64" width="160" height="52" rx="8" fill="none" stroke="var(--quiet)" stroke-dasharray="4 3"/><text x="470" y="86" font-weight="700" fill="var(--ink)">Hip hop</text><text x="470" y="104" font-size="11.5" fill="var(--quiet)">Νέα Υόρκη, 1970s</text></g>
+        <g><rect x="570" y="64" width="160" height="52" rx="8" fill="none" stroke="var(--quiet)" stroke-dasharray="4 3"/><text x="650" y="86" font-weight="700" fill="var(--ink)">Reggae, Dancehall</text><text x="650" y="104" font-size="11.5" fill="var(--quiet)">Τζαμάικα</text></g>
+        <a href="#disco"><rect x="20" y="174" width="160" height="52" rx="8" fill="var(--disco)"/><text x="100" y="196" font-weight="800" fill="#fff">Disco</text><text x="100" y="214" font-size="11.5" fill="#fff">ΗΠΑ, 1970s</text></a>
+        <a href="#electro"><rect x="205" y="174" width="160" height="52" rx="8" fill="var(--electro)"/><text x="285" y="196" font-weight="800" fill="#fff">Electro</text><text x="285" y="214" font-size="11.5" fill="#fff">Νέα Υόρκη, 1982</text></a>
+        <a href="#house"><rect x="20" y="284" width="160" height="52" rx="8" fill="var(--house)"/><text x="100" y="306" font-weight="800" fill="#fff">House</text><text x="100" y="324" font-size="11.5" fill="#fff">Σικάγο, 1984</text></a>
+        <a href="#techno"><rect x="205" y="284" width="160" height="52" rx="8" fill="var(--techno)"/><text x="285" y="306" font-weight="800" fill="#fff">Techno</text><text x="285" y="324" font-size="11.5" fill="#fff">Ντιτρόιτ, 1985</text></a>
+        <g><rect x="20" y="394" width="160" height="52" rx="8" fill="var(--panel)" stroke="var(--house)" stroke-width="1.5"/><text x="100" y="416" font-weight="700" fill="var(--ink)">Acid house</text><text x="100" y="434" font-size="11.5" fill="var(--quiet)">Σικάγο / UK, 1987–88</text></g>
+        <a href="#trance"><rect x="205" y="394" width="160" height="52" rx="8" fill="var(--trance)"/><text x="285" y="416" font-weight="800" fill="#fff">Trance</text><text x="285" y="434" font-size="11.5" fill="#fff">Γερμανία, 1990</text></a>
+        <a href="#dnb"><rect x="570" y="394" width="160" height="52" rx="8" fill="var(--dnb)"/><text x="650" y="416" font-weight="800" fill="#fff">Drum &amp; Bass</text><text x="650" y="434" font-size="11.5" fill="#fff">Λονδίνο, 1992</text></a>
+        <text x="508" y="300" text-anchor="start" font-size="11.5" fill="var(--quiet)">breakbeats</text>
+        <text x="642" y="300" text-anchor="end" font-size="11.5" fill="var(--quiet)">μπάσο, MC</text>
+        <text x="470" y="470" font-size="11.5" fill="var(--quiet)">rave, breakbeat hardcore</text>
+      </g>
+    </svg>
+    </div>
+    <h2 style="font-size:20px;margin-top:14px">Πίνακας αναγνώρισης</h2>
+    <div class="scrollx">
+    <table class="cmp">
+      <tr><th>Είδος</th><th>BPM</th><th>Kick</th><th>Μπάσο</th><th>Ο ήχος-κλειδί</th></tr>
+      <tr><td style="color:var(--disco)">Disco</td><td>110–130</td><td>4/4</td><td>Ζωντανό, μελωδικό, πηδάει οκτάβες</td><td>Έγχορδα, ανοιχτό hi-hat στο off-beat</td></tr>
+      <tr><td style="color:var(--house)">House</td><td>118–128</td><td>4/4</td><td>Synth bass, απλό και επαναλαμβανόμενο</td><td>Piano chords, 909 clap, soulful φωνές</td></tr>
+      <tr><td style="color:var(--electro)">Electro</td><td>110–130</td><td>Breakbeat</td><td>808 μπάσο με μακριά ουρά</td><td>Vocoder, 808 claps, sci-fi</td></tr>
+      <tr><td style="color:var(--techno)">Techno</td><td>125–150</td><td>4/4, δυνατό</td><td>Υπνωτικό, συχνά «rumble»</td><td>Loop που εξελίσσεται, 909 hats</td></tr>
+      <tr><td style="color:var(--trance)">Trance</td><td>130–140</td><td>4/4</td><td>Rolling στο off-beat</td><td>Supersaw, μεγάλο breakdown και drop</td></tr>
+      <tr><td style="color:var(--dnb)">Drum &amp; Bass</td><td>160–178</td><td>Breakbeat</td><td>Τεράστιο sub ή reese, «μισή ταχύτητα»</td><td>Κομμένο Amen break, δυνατό snare</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>Τεστάρισε το αυτί σου</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="plan">
+    <h2>Πλάνο μιας εβδομάδας</h2>
+    <ul class="plan" id="planlist"></ul>
+  </section>
+</main>
+<footer class="wrap">Τα κουμπιά ανοίγουν αναζήτηση του κομματιού στο YouTube και στο Spotify. Τα BPM είναι τυπικά εύρη, όχι αυστηροί κανόνες. Τα κομμάτια που τσεκάρεις αποθηκεύονται σε αυτή τη συσκευή.</footer>
+
+<script>
+const G=[
+{id:"disco",name:"Disco",c:"--disco",lo:110,hi:130,meta:"ΗΠΑ, 1970s · ~110–130 BPM",
+ lead:"Η «μητέρα» όλης της χορευτικής ηλεκτρονικής μουσικής: από εδώ βγαίνει ο ρυθμός 4/4 και ο DJ που δεν σταματά ποτέ τη μουσική. Γεννήθηκε σε clubs της Νέας Υόρκης και της Φιλαδέλφειας, χώρους ελευθερίας για Black, Latino και LGBTQ+ κοινότητες. Το 1977 το Saturday Night Fever την κάνει παγκόσμια, και το 1979 η «Disco Demolition Night» στο Σικάγο σηματοδοτεί την εμπορική της πτώση. Η μουσική όμως δεν πέθανε: πήγε underground και έγινε house.",
+ traits:["<b>Four-on-the-floor kick</b> με ανοιχτό hi-hat στο off-beat: «ντουμ-τσι-ντουμ-τσι».","<b>Μπάσο που κινείται:</b> πηδάει οκτάβες και παίζει μελωδία.","<b>Ζωντανή ορχήστρα:</b> έγχορδα, πνευστά, funk κιθάρα «chicken scratch», μεγάλα φωνητικά.","<b>Breaks:</b> μόνο τύμπανα και μπάσο, ιδανικά για μίξη.","<b>Μεγάλη διάρκεια:</b> 12-ιντσες εκδοχές 6–17 λεπτών, φτιαγμένες για την πίστα."],
+ subs:[["Philly disco","100–120","Η πηγή: soul της Φιλαδέλφειας με πλούσια έγχορδα (Gamble &amp; Huff, MFSB, Salsoul)."],
+  ["Disco pop","100–120","Η εμπορική κορυφή με μεγάλες φωνές και ρεφρέν (Bee Gees, Gloria Gaynor, ABBA)."],
+  ["Euro disco","120–132","Ευρωπαϊκή, πιο μηχανική, με synths και sequencers (Giorgio Moroder, Cerrone, Boney M)."],
+  ["Space disco","118–125","Disco με «διαστημικά» synths και sci-fi ατμόσφαιρα (Space, Didier Marouani)."],
+  ["New York disco","110–125","Η κλασική disco των clubs της Νέας Υόρκης: groove, funk κιθάρα, μελωδικό μπάσο (Chic, Sister Sledge)."],
+  ["Hi-NRG","125–135","Γρήγορη, synth-heavy, η μουσική των gay clubs στα late ’70s–’80s (Sylvester, Patrick Cowley)."],
+  ["Italo disco","110–125","Ιταλική, με drum machines και synths. Επηρέασε άμεσα το Σικάγο και το Ντιτρόιτ (Klein + M.B.O.)."],
+  ["Post-disco / Boogie","100–118","Η disco των ’80s: λιγότερη ορχήστρα, περισσότερα synths και funk (Shannon, D-Train)."],
+  ["Nu-disco","110–125","Η σύγχρονη αναβίωση με edits και ζεστά synths (Lindstrøm, Todd Terje, Purple Disco Machine)."]],
+ artists:[["Giorgio Moroder","Ιταλός παραγωγός, ο «πατέρας της disco». Με το «I Feel Love» έδειξε ότι η χορευτική μουσική μπορεί να γίνει μόνο με μηχανές."],
+  ["Nile Rodgers &amp; Bernard Edwards","Η καρδιά των Chic: η κιθάρα και το μπάσο που ορίζουν το disco groove. Ο Rodgers δούλεψε αργότερα με Daft Punk στο «Get Lucky»."],
+  ["Donna Summer","Η «Queen of Disco». Οι συνεργασίες της με τον Moroder είναι η γέφυρα από την ορχηστρική στην ηλεκτρονική disco."],
+  ["Larry Levan","Ο θρυλικός DJ του Paradise Garage στη Νέα Υόρκη. Από το club του πήρε το όνομα το είδος «garage»."],
+  ["Tom Moulton","Ο άνθρωπος που εφηύρε το remix, το extended mix και το 12-ιντσο single."]],
+ dj:"Οι DJs της disco (π.χ. Tom Moulton, Larry Levan) εφηύραν το extended mix και το 12-ιντσο, για μεγάλα intros και breaks. Η λογική του σημερινού DJing ξεκινά εδώ.",
+ pr:"Το «disco edit» (κόβεις και επαναλαμβάνεις τα breaks ενός κομματιού) είναι ακόμα ζωντανή τεχνική, και αυτό ακριβώς οδήγησε στη house.",
+ extra:"",
+ vids:["https://www.youtube.com/watch?v=e6GB04zeDeQ","https://www.youtube.com/watch?v=vQn4fFd8p-8","https://www.youtube.com/watch?v=fNFzfwLM72c","https://www.youtube.com/watch?v=6dYWe1c3OyU"],
+ t:[
+ [1973,"MFSB","Love Is the Message","Philly disco",116,"Τα έγχορδα της Φιλαδέλφειας: από τα πιο παιγμένα κομμάτια στα πρώτα clubs.",0],
+ [1975,"KC and the Sunshine Band","That's the Way (I Like It)","Disco pop",110,"Πνευστά και funk ενέργεια.",1],
+ [1975,"Donna Summer","Love to Love You Baby","Euro disco",98,"Η 17λεπτη εκδοχή: η disco γίνεται «ταξίδι» για την πίστα.",1],
+ [1977,"Bee Gees","Stayin' Alive","Disco pop",104,"Falsetto φωνές, το soundtrack του Saturday Night Fever.",1],
+ [1977,"Donna Summer","I Feel Love","Euro disco",128,"Ο Giorgio Moroder το έφτιαξε σχεδόν όλο με synth και sequenced μπάσο. Το πιο σημαντικό disco κομμάτι για έναν παραγωγό.",1],
+ [1977,"Cerrone","Supernature","Euro disco",128,"Synths και σκοτεινή sci-fi ατμόσφαιρα από τη Γαλλία.",0],
+ [1977,"Space","Magic Fly","Space disco",122,"Σχεδόν instrumental, με «διαστημικά» synth leads.",0],
+ [1978,"Chic","Le Freak","New York disco",120,"Το μπάσο του Bernard Edwards και η κιθάρα του Nile Rodgers: ο ορισμός του groove.",1],
+ [1978,"Gloria Gaynor","I Will Survive","Disco pop",117,"Έγχορδα και ανοιχτά hi-hats που «σπρώχνουν» το κομμάτι.",1],
+ [1978,"Sylvester","You Make Me Feel (Mighty Real)","Hi-NRG",130,"Γρήγορο synth μπάσο και φωνή-ύμνος της LGBTQ+ σκηνής.",0],
+ [1978,"Giorgio Moroder","Chase","Euro disco",128,"Sequenced synths από την αρχή ως το τέλος: σχεδόν ήδη techno.",0],
+ [1979,"Chic","Good Times","New York disco",112,"Η bassline που έγινε το «Rapper's Delight»: η γέφυρα disco → hip hop.",1],
+ [1979,"Sister Sledge","He's the Greatest Dancer","New York disco",114,"Παραγωγή των Chic: άκου πόσο «καθαρό» είναι το groove.",0],
+ [1980,"Diana Ross","Upside Down","Post-disco / Boogie",108,"Παραγωγή Chic, λιγότερη ορχήστρα, περισσότερο funk.",0],
+ [1982,"Klein + M.B.O.","Dirty Talk","Italo disco",120,"Drum machine και synth bass: οι DJs του Σικάγο το έπαιζαν σαν πρώιμη house.",0],
+ [1983,"Shannon","Let the Music Play","Post-disco / Boogie",118,"Drum machine «ηχώ» και synths: η disco μπαίνει στα ’80s.",0],
+ [2008,"Lindstrøm","I Feel Space","Nu-disco",120,"Νορβηγική space disco αναβίωση: synths που χτίζονται αργά.",0],
+ [2013,"Daft Punk feat. Pharrell Williams &amp; Nile Rodgers","Get Lucky","Nu-disco",116,"Ο Nile Rodgers ξανά στην κιθάρα: η disco στο Νο1 μετά από 35 χρόνια.",1]
+ ]},
+{id:"house",name:"House",c:"--house",lo:118,hi:128,meta:"Σικάγο, 1984– · ~118–128 BPM",
+ lead:"Η house είναι η disco χωρίς ορχήστρα: ίδιος ρυθμός 4/4, αλλά με φθηνές drum machines (Roland TR-808, TR-909) και synths. Το όνομα βγαίνει από το club The Warehouse, όπου ο Frankie Knuckles έκανε edits σε disco κομμάτια. Το 1987–88 φτάνει στη Βρετανία και γεννά το «Second Summer of Love» και την κουλτούρα των raves. Σήμερα είναι το πιο διαδεδομένο χορευτικό είδος στον κόσμο.",
+ traits:["<b>Roland TR-808 / TR-909:</b> kick σε κάθε χτύπο, clap στο 2 και 4, ανοιχτό hat στο off-beat.","<b>Synth bassline</b> αντί για μπασίστα, απλό και επαναλαμβανόμενο.","<b>Piano chords, pads, soulful φωνητικά</b> από gospel και soul.","<b>Πιο minimal και ωμή</b> από τη disco: λίγα στοιχεία που μπαίνουν και βγαίνουν.","<b>Samples:</b> disco και soul κομμάτια κομμένα σε loops."],
+ subs:[["Proto-house / Balearic","110–122","Πριν και γύρω από τη house: ευρωπαϊκοί πειραματισμοί και ο ήχος της Ίμπιζα (Manuel Göttsching, Sueño Latino)."],
+  ["Chicago house","118–125","Η αρχή: ωμά drum machines, απλό μπάσο, συχνά χωρίς φωνή (Jesse Saunders, Chip E.)."],
+  ["Acid house","120–125","Το Roland TB-303 με το cutoff και το resonance να «τσιρίζουν» (Phuture, DJ Pierre). Έγινε ο ήχος των UK raves."],
+  ["Deep house","115–124","Ζεστά pads, jazz chords, soul φωνές, πιο αργό συναίσθημα (Larry Heard, Kerri Chandler)."],
+  ["Garage / NY house","118–125","House της Νέας Υόρκης με gospel φωνές, από το Paradise Garage (Masters at Work, Crystal Waters)."],
+  ["Italo house","118–124","Ιταλικά piano riffs και μεγάλες φωνές (Black Box)."],
+  ["Hip house","120–126","Rap πάνω σε house beat (Technotronic, Fast Eddie)."],
+  ["Progressive house","124–130","Μεγάλα κομμάτια που χτίζονται αργά, με layers (Sasha, John Digweed, Eric Prydz, Deadmau5)."],
+  ["French / Filter house","118–126","Disco samples με φίλτρα που ανοιγοκλείνουν (Daft Punk, Stardust, Cassius)."],
+  ["Tech house","124–128","House groove με techno ήχους, μπάσο που «κυλάει» (Green Velvet, Fisher, Chris Lake)."],
+  ["Electro house","126–130","Παραμορφωμένα synth basslines (Benny Benassi, Deadmau5)."],
+  ["Big room / EDM","126–130","Festival δομή με μεγάλο build και drop (Swedish House Mafia, Martin Garrix)."],
+  ["Afro house","118–124","Αφρικανικά κρουστά και φωνές πάνω σε house (Black Coffee, Keinemusik)."],
+  ["Amapiano","108–115","Νοτιοαφρικανικό: αργό, με το χαρακτηριστικό «log drum» μπάσο (Kabza De Small, Tyla)."],
+  ["Σύγχρονη house","118–130","Νέοι παραγωγοί που ανακατεύουν house με pop, breaks και προσωπικές ηχογραφήσεις (Fred again.., Peggy Gou)."],
+  ["Lo-fi house","118–124","Θολός, «βρώμικος» ήχος σαν παλιά κασέτα (DJ Boring, Ross From Friends)."]],
+ artists:[["Frankie Knuckles","Ο «νονός της house». Resident στο The Warehouse (1977–82), έκανε edits με reel-to-reel και drum machines."],
+  ["Larry Heard (Mr. Fingers)","Ο πατέρας της deep house. Έφερε συναίσθημα και ατμόσφαιρα σε μια μουσική για μηχανές."],
+  ["DJ Pierre (Phuture)","Πείραξε τυχαία τα κουμπιά του TB-303 και γεννήθηκε το acid house."],
+  ["Masters at Work","Louie Vega και Kenny «Dope» Gonzalez: οι μάστορες του NY house, με latin, jazz και soul."],
+  ["Daft Punk","Thomas Bangalter και Guy-Manuel de Homem-Christo: το filter house του Παρισιού έγινε παγκόσμια pop."],
+  ["Black Coffee","Νοτιοαφρικανός DJ/παραγωγός που έφερε το afro house στα μεγαλύτερα clubs και festivals."]],
+ dj:"Η house έχει phrasing σε 8, 16 και 32 χτύπους. Ξεκίνα τη μίξη στην αρχή μιας φράσης και οι αλλαγές θα πέφτουν «σωστά».",
+ pr:"909 kick σε κάθε χτύπο, clap στο 2 και 4, ανοιχτό hat ανάμεσα στα kicks. Βάλε swing 55–60% στα hats για groove.",
+ extra:"Ψάξε επίσης: Ron Hardy, Ten City, Cassius, Chris Lake, Purple Disco Machine, Keinemusik.",
+ vids:[],
+ t:[
+ [1984,"Jesse Saunders","On and On","Chicago house",120,"Από τα πρώτα καταγεγραμμένα house tracks: σχεδόν μόνο drum machine και μπάσο.",2],
+ [1985,"Chip E.","Like This","Chicago house",120,"Ξερά drum machine patterns και κομμένα, επαναλαμβανόμενα φωνητικά.",2],
+ [1986,"Farley \"Jackmaster\" Funk","Love Can't Turn Around","Chicago house",120,"Gospel φωνή (Darryl Pandy) πάνω σε drum machine: από τα πρώτα house hits στο UK.",2],
+ [1986,"Marshall Jefferson","Move Your Body","Chicago house",122,"Τα piano chords που έγιναν σήμα κατατεθέν της house.",0],
+ [1986,"Mr. Fingers","Can You Feel It","Deep house",120,"Ζεστά pads, αργή εξέλιξη, συναίσθημα: η γέννηση της deep house.",2],
+ [1987,"Frankie Knuckles &amp; Jamie Principle","Your Love","Chicago house",120,"Το arpeggio synth που «τρέχει» από κάτω, ο ήχος του «νονού».",1],
+ [1987,"Phuture","Acid Tracks","Acid house",120,"Το Roland TB-303: άκου πώς αλλάζει ο ήχος με το cutoff και το resonance.",2],
+ [1989,"Lil Louis","French Kiss","Chicago house",122,"Το tempo σταματά σχεδόν στη μέση και ξαναξεκινά: θέατρο στην πίστα.",0],
+ [1989,"Black Box","Ride on Time","Italo house",118,"Ιταλικό piano riff και τεράστια φωνή: house στα charts.",0],
+ [1991,"Crystal Waters","Gypsy Woman (She's Homeless)","Garage / NY house",123,"Το «la da dee» hook και ένα κοφτό organ: NY house.",0],
+ [1993,"Robin S","Show Me Love (StoneBridge remix)","Garage / NY house",125,"Το organ bass (Korg M1) που ακούς ακόμα παντού.",0],
+ [1997,"Daft Punk","Around the World","French / Filter house",121,"Ένα loop που αλλάζει μόνο με φίλτρα και προσθαφαιρέσεις στοιχείων.",2],
+ [1998,"Kerri Chandler","Rain","Deep house",125,"Βαθύ, στρογγυλό μπάσο και jazzy chords.",1],
+ [1998,"Stardust","Music Sounds Better With You","French / Filter house",124,"Disco sample που «ανοιγοκλείνει» με low-pass φίλτρο.",0],
+ [1999,"Armand Van Helden","You Don't Know Me","Garage / NY house",125,"Disco strings και βαρύ, κοφτό μπάσο.",1],
+ [2000,"Daft Punk","One More Time","French / Filter house",123,"Vocoder φωνή, disco sample και ένα τεράστιο breakdown.",2],
+ [2001,"Green Velvet","La La Land","Tech house",125,"Μινιμαλιστικό groove και φωνή που επαναλαμβάνεται εμμονικά.",1],
+ [2002,"Benny Benassi","Satisfaction","Electro house",130,"Το παραμορφωμένο synth bass που γέννησε το electro house.",0],
+ [2009,"Deadmau5","Strobe","Progressive house",128,"10 λεπτά αργό build: μάθημα υπομονής στη δομή.",1],
+ [2012,"Disclosure","Latch","Deep house",122,"Swing στα hats, UK garage επιρροές, pop φωνή.",1],
+ [2015,"Eric Prydz","Opus","Progressive house",126,"Ένα arpeggio που προσθέτει layers για 9 λεπτά.",1],
+ [2016,"DJ Boring","Winona","Lo-fi house",120,"Θολά pads και «κασετένιος» ήχος.",0],
+ [2018,"Fisher","Losing It","Tech house",125,"Μπάσο που «κυλάει», τεράστιο build χωρίς μελωδία.",1]
+ ]},
+{id:"electro",name:"Electro",c:"--electro",lo:110,hi:130,meta:"ΗΠΑ, αρχές 1980s · ~110–130 BPM",
+ lead:"Ο «ρομποτικός» ξάδερφος της house: ίδια εποχή και μηχανές, αλλά με σπασμένο ρυθμό αντί για 4/4. Γεννήθηκε όταν ο ψυχρός ήχος των Kraftwerk συνάντησε το funk και το hip hop της Νέας Υόρκης, και έγινε η μουσική των breakdancers. Προσοχή: η λέξη «electro» σήμερα σημαίνει και άλλα πράγματα (electro house, French electro), που είναι διαφορετικά είδη.",
+ traits:["<b>Breakbeat στο TR-808:</b> το kick πέφτει συγκοπτικά, το snare/clap στο 2 και 4.","<b>808 μπάσο-kick</b> με μακριά ουρά, κοφτά claps και cowbells.","<b>Vocoder:</b> η φωνή περνάει από synth και ακούγεται σαν ρομπότ.","<b>Sci-fi αισθητική:</b> διάστημα, μηχανές, μέλλον."],
+ subs:[["Πρόγονοι","100–130","Η ευρωπαϊκή synth-pop και ηλεκτρονική των ’70s (Kraftwerk, Yellow Magic Orchestra)."],
+  ["Old school electro / Electro-funk","110–130","Ο κλασικός ήχος 1982–86 της Νέας Υόρκης (Afrika Bambaataa, Man Parrish, Newcleus)."],
+  ["West Coast electro","120–135","Γρηγορότερο, ξερό 808 από το Λος Άντζελες (Egyptian Lover, World Class Wreckin' Cru)."],
+  ["Miami bass","120–135","Electro με τεράστιο 808 μπάσο, πιο «πάρτι» (2 Live Crew)."],
+  ["Detroit electro","120–135","Σκοτεινό, sci-fi, κοντά στο techno (Drexciya, Aux 88, Dopplereffekt)."],
+  ["Electroclash","120–130","Late ’90s–2000s: electro με punk και pop στάση (Miss Kittin &amp; The Hacker, Fischerspooner, Peaches)."],
+  ["French electro","110–128","Γαλλικός ήχος των 2000s με παραμορφωμένα synths, άλλο από το κλασικό electro (Justice, Ed Banger)."],
+  ["Σύγχρονο electro","120–135","Η underground αναβίωση (Helena Hauff, The Exaltics, DMX Krew, Jensen Interceptor)."]],
+ artists:[["Kraftwerk","Γερμανοί πρωτοπόροι από το Ντίσελντορφ. Χωρίς αυτούς δεν θα υπήρχαν ούτε electro ούτε techno."],
+  ["Afrika Bambaataa","Ιδρυτής της Zulu Nation και DJ του Bronx. Με το «Planet Rock» ένωσε Kraftwerk και funk."],
+  ["Arthur Baker","Ο παραγωγός πίσω από το «Planet Rock», που έδωσε τον ήχο του 808 στο electro."],
+  ["Juan Atkins","Ως Cybotron ήταν electro, ως Model 500 έγινε ο «νονός του techno»."],
+  ["Drexciya","Μυστηριώδες ντουέτο από το Ντιτρόιτ με concept για έναν υποβρύχιο πολιτισμό. Ορίζουν το Detroit electro."],
+  ["Helena Hauff","DJ και παραγωγός από το Αμβούργο, η πιο γνωστή φωνή του σημερινού electro."]],
+ dj:"Ο ρυθμός είναι σπασμένος, οπότε το beatmatching είναι πιο δύσκολο. Συγχρόνισε με βάση το snare στο 2 και 4, όχι το kick.",
+ pr:"Snare στο 2 και 4, και τα kicks εκτός χτύπου (π.χ. στο 1 και στο «και» του 2). Κούρδισε το 808 μπάσο στο τονικό κέντρο του κομματιού.",
+ extra:"Ψάξε επίσης: Anthony Rother, Carl Finlow, Aux 88, Dopplereffekt, Peaches.",
+ vids:["https://www.youtube.com/watch?v=zFADf3CW8zI","https://www.youtube.com/watch?v=ykK0uEjSsqY","https://www.youtube.com/watch?v=00Hc9awDXww","https://www.youtube.com/watch?v=uAEw_sX7CFA","https://www.youtube.com/watch?v=YT4qqZHN8no","https://www.youtube.com/watch?v=QuUjaG1mvL4","https://www.youtube.com/watch?v=HHkSZnRG_qg","https://www.youtube.com/watch?v=SLAf4i1lml4","https://www.youtube.com/watch?v=GF1KI2UlU8o"],
+ t:[
+ [1977,"Kraftwerk","Trans-Europe Express","Πρόγονοι",120,"Η μελωδία που δανείστηκε το Planet Rock.",1],
+ [1978,"Yellow Magic Orchestra","Computer Game","Πρόγονοι",126,"Ιαπωνικός πειραματισμός με synths και ήχους video games.",1],
+ [1981,"Kraftwerk","Numbers","Πρόγονοι",112,"Ρομποτικές φωνές και μηχανικός ρυθμός, πριν υπάρξει electro.",1],
+ [1982,"Afrika Bambaataa &amp; The Soulsonic Force","Planet Rock","Old school electro / Electro-funk",127,"Η γέννηση του electro: 808 beat και μελωδία Kraftwerk.",2],
+ [1982,"Man Parrish","Hip Hop, Be Bop (Don't Stop)","Old school electro / Electro-funk",120,"Σχεδόν instrumental: καθαρό 808 και synths.",2],
+ [1983,"Hashim","Al-Naafiysh (The Soul)","Old school electro / Electro-funk",115,"Μινιμαλιστικό, υπνωτικό, σχεδόν μόνο ρυθμός.",2],
+ [1983,"Herbie Hancock","Rockit","Old school electro / Electro-funk",103,"Scratching και electro beat από έναν jazz θρύλο.",0],
+ [1983,"Kraftwerk","Tour de France","Πρόγονοι",123,"Οι ανάσες του ποδηλάτη γίνονται ρυθμός.",1],
+ [1984,"Newcleus","Jam On It","Old school electro / Electro-funk",117,"Ο «παιδικός» vocoder, ο ήχος του δρόμου και του breakdance.",2],
+ [1984,"Egyptian Lover","Egypt, Egypt","West Coast electro",130,"Γρήγορο, ξερό 808.",1],
+ [1993,"Drexciya","Bubble Metropolis","Detroit electro",128,"Σκοτεινό, υποβρύχιο concept, πιο κοντά στο techno.",1],
+ [1998,"Miss Kittin &amp; The Hacker","Frank Sinatra","Electroclash",125,"Electro με punk-pop στάση και ψυχρή φωνή.",1],
+ [2001,"Fischerspooner","Emerge","Electroclash",125,"Electro beats πάνω σε pop δομή.",1],
+ [2005,"Justice","Waters of Nazareth","French electro",120,"Παραμορφωμένα synths: «electro» με εντελώς άλλο νόημα από το 1982.",0]
+ ]},
+{id:"techno",name:"Techno",c:"--techno",lo:125,hi:150,meta:"Ντιτρόιτ, 1985– · ~125–150 BPM",
+ lead:"Το techno κρατά το 4/4 της house αλλά αφαιρεί τη soul: πιο μηχανικό, πιο σκοτεινό, πιο επαναληπτικό, για ύπνωση στην πίστα. Το δημιούργησαν οι «Belleville Three» (Juan Atkins, Derrick May, Kevin Saunderson) στο βιομηχανικό Ντιτρόιτ, εμπνευσμένοι από Kraftwerk και funk. Μετά την πτώση του Τείχους (1989) το Βερολίνο γίνεται η δεύτερη πατρίδα του, με clubs όπως το Tresor (1991) και αργότερα το Berghain (2004).",
+ traits:["<b>Δυνατό, σταθερό kick</b>, συχνά με «rumble» (παραμορφωμένη ουρά μπάσου).","<b>Επανάληψη και μικρές αλλαγές:</b> ένα loop εξελίσσεται με φίλτρα και layers.","<b>Λίγες ή καθόλου φωνές</b>: ο ήχος (texture) είναι το θέμα.","<b>Γρήγορα 909 hi-hats</b> σε 16ths."],
+ subs:[["Detroit techno","125–135","Η αρχή: μηχανές με soul, strings και μελωδία (Belleville Three, Underground Resistance)."],
+  ["UK bleep techno","120–130","Sheffield, Warp Records: «bleeps» και βαθύ sub-bass (LFO, Sweet Exorcist)."],
+  ["Acid techno","130–145","Το TB-303 πιο σκληρό και γρήγορο (Josh Wink, Hardfloor, Chris Liebing)."],
+  ["Minimal techno","120–130","Ελάχιστα στοιχεία, έμφαση στον ρυθμό και στις λεπτομέρειες (Robert Hood, Richie Hawtin, Ricardo Villalobos)."],
+  ["Dub techno","115–125","Chords που «σβήνουν» σε reverb και delay, σαν dub reggae (Basic Channel, Deepchord)."],
+  ["UK techno","125–140","Το βρετανικό techno των raves και των μεγάλων clubs, συχνά με φωνές και μελωδία (Underworld, Orbital)."],
+  ["Berlin techno","128–135","Ψυχρό, βαθύ, υπνωτικό, ο ήχος Tresor και Berghain (Ben Klock, Marcel Dettmann)."],
+  ["Industrial techno","130–140","Μεταλλικοί, θορυβώδεις ήχοι (Surgeon, Regis, Perc)."],
+  ["Peak-time / Hard techno","130–155","Ενέργεια για festivals, σκληρό kick (Adam Beyer, Charlotte de Witte, Amelie Lens)."],
+  ["Melodic techno","120–126","Μεγάλα synth θέματα και συναίσθημα (Stephan Bodzin, Tale Of Us, Afterlife)."],
+  ["Gabber / Hardcore","150–200+","Ρότερνταμ: παραμορφωμένο kick που ακούγεται σαν σφυρί (Rotterdam Termination Source, Euromasters)."]],
+ artists:[["Belleville Three","Juan Atkins, Derrick May, Kevin Saunderson: τρεις φίλοι από το Belleville του Μίσιγκαν που εφηύραν το techno."],
+  ["Jeff Mills","«The Wizard». Μέλος των Underground Resistance, παίζει με τρία decks και μια TR-909 live. Θρύλος της ταχύτητας στο mixing."],
+  ["Underground Resistance","Συλλογικότητα του Ντιτρόιτ (Mad Mike Banks) με πολιτική στάση: το techno ως αντίσταση."],
+  ["Richie Hawtin","Ως Plastikman ορίζει το minimal techno· πρωτοπόρος και στη χρήση τεχνολογίας στο DJing."],
+  ["Ben Klock","Resident του Berghain: ο ήχος του σημερινού Berlin techno."],
+  ["Charlotte de Witte &amp; Amelie Lens","Βελγίδες headliners της νέας γενιάς, ο ήχος του hard/peak-time techno στα festivals."]],
+ dj:"Μακριές μίξεις (1–3 λεπτά) με το EQ να «ανταλλάσσει» τα μπάσα: κόβεις το low του ενός καθώς φέρνεις του άλλου. Δύο kicks μαζί = λάσπη.",
+ pr:"Φτιάξε ένα 8-bar loop και κάνε το να ζει 6 λεπτά μόνο με automation σε φίλτρα, reverb, delay και ένταση.",
+ extra:"Ψάξε επίσης: Robert Hood, Basic Channel, Surgeon, Nina Kraviz, Sven Väth.",
+ vids:["https://www.youtube.com/watch?v=QMkIHLJkirE","https://www.youtube.com/watch?v=s94ZzLZcX2E"],
+ t:[
+ [1983,"Cybotron","Clear","Detroit techno",125,"Ο Juan Atkins πριν το techno: η γέφυρα electro → techno.",2],
+ [1985,"Model 500","No UFOs","Detroit techno",132,"Ακόμα μισό electro, αλλά ήδη «μηχανή».",2],
+ [1987,"Rhythim Is Rhythim","Strings of Life","Detroit techno",125,"Piano και strings χωρίς σταθερή δομή: το Detroit techno είχε συναίσθημα.",2],
+ [1987,"Rhythim Is Rhythim","The Dance","Detroit techno",120,"Ο Derrick May πιο μηχανικός και πολυρυθμικός.",2],
+ [1988,"Inner City","Big Fun","Detroit techno",120,"Ο Kevin Saunderson δείχνει πως το techno γίνεται και hit.",2],
+ [1989,"808 State","Pacific State","UK bleep techno",122,"Σαξόφωνο και πουλιά πάνω σε 808: το Manchester των raves.",2],
+ [1990,"LFO","LFO","UK bleep techno",125,"Βαθύ sub-bass και «bleeps».",2],
+ [1990,"Joey Beltram","Energy Flash","Peak-time / Hard techno",128,"Σκοτεινή ατμόσφαιρα και επαναλαμβανόμενη φωνή: ο ήχος του rave.",2],
+ [1992,"Rotterdam Termination Source","Poing","Gabber / Hardcore",160,"Παραμορφωμένο kick: η πιο σκληρή πλευρά.",0],
+ [1993,"Plastikman","Spastik","Minimal techno",130,"Μόνο κρουστά για 9 λεπτά: ο Richie Hawtin με ελάχιστα μέσα.",1],
+ [1995,"Josh Wink","Higher State of Consciousness","Acid techno",137,"Ένα 303 που ανοίγει όλο και πιο πολύ μέχρι να «ουρλιάξει».",0],
+ [1996,"Underworld","Born Slippy .NUXX","UK techno",138,"Το τεράστιο UK anthem από το Trainspotting, με ψιθυριστή φωνή.",0],
+ [1997,"Jeff Mills","The Bells","Detroit techno",140,"Καμπανιστό riff και hi-hats που δεν σταματούν.",2],
+ [1999,"DJ Rolando","Knights of the Jaguar","Detroit techno",132,"Underground Resistance: Detroit με μελωδία και ένταση.",0],
+ [2009,"Ben Klock","Subzero","Berlin techno",130,"Ο ήχος του Berghain: βαθύ, ψυχρό, υπνωτικό.",0],
+ [2015,"Stephan Bodzin","Singularity","Melodic techno",122,"Μεγάλα synth arpeggios και συναισθηματικά breakdowns.",0],
+ [2017,"Amelie Lens","Feel It","Peak-time / Hard techno",130,"Σκληρό kick, acid στοιχεία, ο ήχος των σημερινών festivals.",1]
+ ]},
+{id:"trance",name:"Trance",c:"--trance",lo:130,hi:140,meta:"Γερμανία / Ολλανδία, 1990– · ~130–140 BPM",
+ lead:"Η trance παίρνει την επανάληψη του techno και της προσθέτει μελωδία και δράμα: όλο το κομμάτι χτίζεται γύρω από ένα μεγάλο breakdown και την «έκρηξη» μετά. Γεννήθηκε στη Φρανκφούρτη και το Βερολίνο (labels Harthouse, Eye Q), ενώ παράλληλα στη Γκόα της Ινδίας αναπτύσσεται η ψυχεδελική εκδοχή της. Στα late ’90s–2000s η Ολλανδία και το UK την κάνουν τη μουσική των μεγαλύτερων festivals.",
+ traits:["<b>Rolling bass στο off-beat</b> ή σε 16ths: συνεχής κίνηση.","<b>Supersaw leads και arpeggios:</b> φαρδιοί, λαμπεροί synth ήχοι.","<b>Ατμοσφαιρικά pads</b> και gated effects.","<b>Δομή-ταξίδι:</b> intro → groove → breakdown χωρίς kick → build-up με snare roll → drop."],
+ subs:[["Early / German trance","130–140","Η αρχή: acid, ατμόσφαιρα, υπνωτικότητα (Sven Väth, Jam &amp; Spoon, Cosmic Baby)."],
+  ["Goa trance","135–150","Γκόα της Ινδίας: ψυχεδελικές μελωδίες και ανατολίτικες κλίμακες (Hallucinogen, Astral Projection)."],
+  ["Psytrance","138–148","Η εξέλιξη της Goa: γρήγορο «καλπάζον» μπάσο και ψυχεδελικά effects (Infected Mushroom, Vini Vici)."],
+  ["Progressive trance","128–134","Πιο αργή εξέλιξη και layering (Sasha, John Digweed)."],
+  ["Dream trance","130–138","Piano μελωδίες και απαλότητα (Robert Miles)."],
+  ["Balearic trance","120–132","Χαλαρή, καλοκαιρινή, από την Ίμπιζα (Energy 52, Chicane)."],
+  ["Uplifting / Epic","136–140","Τεράστια breakdowns, supersaws, συναίσθημα (Push, Ferry Corsten)."],
+  ["Vocal trance","132–138","Τραγούδια με γυναικείες φωνές πάνω σε trance (Delerium, Above &amp; Beyond)."]],
+ artists:[["Sven Väth","Ο Γερμανός «papa» της trance και του techno, ιδρυτής του label Harthouse και των Cocoon."],
+  ["Paul van Dyk","Βερολινέζος παραγωγός, το «For an Angel» είναι ο ορισμός της γερμανικής trance."],
+  ["Armin van Buuren","Ολλανδός, πέντε φορές Νο1 DJ στον κόσμο. Η εκπομπή του A State of Trance παίζει από το 2001."],
+  ["Tiësto","Ο πρώτος DJ που έπαιξε στην τελετή έναρξης Ολυμπιακών Αγώνων (Αθήνα 2004)."],
+  ["Sasha &amp; John Digweed","Το βρετανικό δίδυμο που όρισε το progressive, με τα θρυλικά mix CDs «Northern Exposure»."],
+  ["Infected Mushroom","Ισραηλινό δίδυμο, οι πιο γνωστοί του psytrance."]],
+ dj:"Μέτρα φράσεις για να ξέρεις πότε έρχεται το drop. Μη μιξάρεις δύο κύριες μελωδίες μαζί· χρησιμοποίησε harmonic mixing (Camelot wheel).",
+ pr:"Μπάσο στα off-beats με sidechain από το kick. Για supersaw, στοίβαξε 7 sawtooth oscillators ελαφρά ξεκουρδισμένους (detune).",
+ extra:"Ψάξε επίσης: Cosmic Baby, Ferry Corsten, Above &amp; Beyond, Vini Vici.",
+ vids:[],
+ t:[
+ [1990,"Age of Love","The Age of Love","Early / German trance",130,"Η μετάβαση από techno σε trance (άκου και το Jam &amp; Spoon remix).",2],
+ [1993,"Energy 52","Café del Mar","Balearic trance",132,"Η μελωδία του ηλιοβασιλέματος στην Ίμπιζα.",0],
+ [1994,"Cygnus X","The Orange Theme","Early / German trance",136,"Ένα κλασικό θέμα (Κουρδιστό Πορτοκάλι) γίνεται anthem.",2],
+ [1994,"Paul van Dyk","For an Angel","Uplifting / Epic",138,"Η γερμανική trance: arpeggios και αισιοδοξία (remix 1998).",2],
+ [1995,"Faithless","Insomnia","Progressive trance",127,"Το riff που περιμένει στο breakdown: μάθημα build-up.",2],
+ [1995,"Robert Miles","Children","Dream trance",137,"Piano μελωδία πάνω σε trance ρυθμό.",0],
+ [1995,"Hallucinogen","LSD","Goa trance",140,"Ψυχεδελική Goa trance από τον Simon Posford.",0],
+ [1996,"Chicane","Offshore","Balearic trance",128,"Χαλαρό, κιθάρες και καλοκαιρινή ατμόσφαιρα.",0],
+ [1998,"Push","Universal Nation","Uplifting / Epic",138,"Τεράστιο breakdown και supersaws.",2],
+ [1998,"Binary Finary","1998","Uplifting / Epic",138,"Ένα από τα πιο αναγνωρίσιμα uplifting leads.",0],
+ [1999,"Sasha","Xpander","Progressive trance",132,"Σκοτεινό και αργό: ιδανικό για να ακούσεις layering.",2],
+ [1999,"Armin van Buuren","Communication","Uplifting / Epic",137,"Το ξεκίνημα ενός από τους μεγαλύτερους trance DJs.",1],
+ [2000,"Delerium feat. Sarah McLachlan","Silence (Tiësto remix)","Vocal trance",135,"Ο ορισμός της vocal trance: γυναικεία φωνή και επικό breakdown.",0],
+ [2007,"Infected Mushroom","Becoming Insane","Psytrance",140,"«Καλπάζον» μπάσο σε 16ths, ψυχεδελικοί ήχοι, ηλεκτρικές κιθάρες.",0]
+ ]},
+{id:"dnb",name:"Drum & Bass",c:"--dnb",lo:160,hi:178,meta:"Λονδίνο, 1992– · ~160–178 BPM",
+ lead:"Το πιο γρήγορο είδος: τα τύμπανα τρέχουν στα ~174 BPM, ενώ το μπάσο κινείται «μισό tempo» (σαν 87). Ξεκίνησε ως jungle στα βρετανικά raves και τα pirate radio, όταν τα breakbeats του hip hop και του breakbeat hardcore συνάντησαν το μπάσο της reggae και του sound system. Γύρω στο 1996 τα breaks γίνονται πιο «καθαρά» και το είδος παίρνει το όνομα drum &amp; bass.",
+ traits:["<b>Κομμένα breakbeats:</b> snare δυνατά στο 2 και 4, kicks συγκοπτικά.","<b>Amen Break:</b> 6 δευτερόλεπτα drums από το «Amen, Brother», σε χιλιάδες tracks.","<b>Τεράστιο sub-bass</b> ή «γρυλίζον» reese bass.","<b>MC κουλτούρα</b> από το dancehall."],
+ subs:[["Jungle / Ragga jungle","160–170","Η αρχή: κομμένα Amen breaks, reggae φωνές, βαρύ sub (Shy FX, M-Beat)."],
+  ["Atmospheric / Intelligent","165–172","Jazzy, ήρεμη ατμόσφαιρα πάνω σε γρήγορα breaks (LTJ Bukem, Good Looking Records)."],
+  ["Darkside / Techstep","170–175","Σκοτεινό, βιομηχανικό, με λιγότερα breaks και περισσότερο μπάσο (Dillinja, Photek, Ed Rush &amp; Optical)."],
+  ["Jazzy DnB","168–174","Ζωντανά όργανα και jazz επιρροές (Roni Size / Reprazent)."],
+  ["Neurofunk","172–176","Τεχνικά, «μεταλλικά» μπάσα με πολύπλοκο sound design (Noisia, Ed Rush &amp; Optical, Phace)."],
+  ["Liquid","172–175","Μελωδικό, soulful, με piano και φωνές (High Contrast, Calibre, London Elektricity)."],
+  ["Jump up","172–176","Παιχνιδιάρικα, «χοροπηδηχτά» μπάσα για το πάρτι (DJ Hazard, Macky Gee)."],
+  ["Dancefloor / Mainstream","172–176","Καθαρή παραγωγή, για festivals και charts (Pendulum, Sub Focus, Chase &amp; Status, DJ Fresh)."]],
+ artists:[["Goldie","Ιδρυτής της Metalheadz. Το άλμπουμ «Timeless» (1995) έδειξε ότι το jungle μπορεί να είναι και τέχνη."],
+  ["LTJ Bukem","Ο πατέρας του atmospheric DnB και του label Good Looking."],
+  ["Roni Size / Reprazent","Κέρδισαν το Mercury Prize το 1997 με το «New Forms», φέρνοντας τη DnB στο ευρύ κοινό."],
+  ["Andy C","Ιδρυτής της Ram Records, ο πιο γνωστός DnB DJ, φημισμένος για τις γρήγορες μίξεις του."],
+  ["Noisia","Ολλανδικό τρίο, οι μάστορες του neurofunk και του sound design."],
+  ["Shy FX","Από τα πρώτα jungle hits ως σήμερα, ένας από τους πιο σημαντικούς παραγωγούς του είδους."]],
+ dj:"Συνήθως 172–175 BPM, με γρήγορες μίξεις και «double drops». Μην κρατάς δύο μπάσα μαζί για πολύ.",
+ pr:"Two-step beat: kick στο 1, snare στο 2, kick στο «και» του 3, snare στο 4. Μετά κόψε ένα break σε slices και ξαναστήσε τα.",
+ extra:"Ψάξε επίσης: Calibre, London Elektricity, Sub Focus, Ed Rush &amp; Optical, DJ Hazard.",
+ vids:[],
+ t:[
+ [1969,"The Winstons","Amen, Brother","Η πηγή",137,"Πήγαινε στο ~1:26: το drum break που άλλαξε τη μουσική. Επιταχυμένο γίνεται jungle.",2],
+ [1993,"Origin Unknown","Valley of the Shadows","Jungle / Ragga jungle",165,"Η φωνή για το «long dark tunnel» και κυλιόμενα breaks.",0],
+ [1994,"M-Beat feat. General Levy","Incredible","Jungle / Ragga jungle",165,"Ragga φωνή πάνω σε jungle: το jungle στα charts.",0],
+ [1994,"Shy FX &amp; UK Apachi","Original Nuttah","Jungle / Ragga jungle",165,"Κομμένο Amen, reggae φωνή, βαρύ sub.",1],
+ [1994,"Goldie","Inner City Life","Atmospheric / Intelligent",165,"Soul φωνή και έγχορδα πάνω σε γρήγορα breaks.",2],
+ [1994,"Dillinja","The Angels Fell","Darkside / Techstep",165,"Το τεράστιο, παραμορφωμένο μπάσο του Dillinja (Metalheadz).",2],
+ [1995,"LTJ Bukem","Horizons","Atmospheric / Intelligent",165,"Γρήγορα τύμπανα, ήρεμη jazzy ατμόσφαιρα: ακούς τις δύο ταχύτητες.",2],
+ [1997,"Roni Size / Reprazent","Brown Paper Bag","Jazzy DnB",172,"Ζωντανό κοντραμπάσο πάνω σε breakbeat.",1],
+ [1997,"Photek","Ni Ten Ichi Ryu","Darkside / Techstep",170,"Μινιμαλιστικά, χειρουργικά κομμένα drums.",0],
+ [2004,"High Contrast","If We Ever","Liquid",174,"Μελωδικό, soulful, με piano: η «φιλική» πλευρά.",0],
+ [2005,"Pendulum","Tarantula","Dancefloor / Mainstream",174,"Καθαρό, δυνατό, κιθάρες: η DnB των festivals.",2]
+ ]},
+{id:"more",name:"Συγγενικά είδη",c:"--more",lo:100,hi:140,meta:"Μπόνους · ~100–140 BPM",
+ lead:"Όταν ξεκινήσεις να μιξάρεις, θα συναντήσεις και είδη που γεννήθηκαν ανάμεσα στα έξι βασικά. Αυτά είναι τα πιο σημαντικά για να ολοκληρώσεις τον χάρτη σου.",
+ traits:["<b>Breakbeat hardcore</b> (UK, 1990–92): ο «γονιός» του jungle.","<b>UK garage</b>: η house της Νέας Υόρκης γίνεται βρετανική, με swing και σπασμένα kicks.","<b>Dubstep</b>: γεννιέται από το UK garage, με μπάσο σε μισό tempo.","<b>Big beat</b>: breakbeats και rock ενέργεια στα late ’90s.","<b>Ambient / IDM</b>: ηλεκτρονική για ακρόαση, όχι μόνο για χορό."],
+ subs:[["UK bass / Breakbeat","125–135","Το σύγχρονο βρετανικό κράμα breakbeat, garage και techno (Bicep, Overmono, Jamie xx, Four Tet)."],
+  ["Breakbeat hardcore","130–145","Rave breakbeats, piano stabs, sped-up φωνές (The Prodigy, SL2). Από εδώ βγήκε το jungle."],
+  ["UK garage / 2-step","128–135","Swing hats, kicks που «λείπουν», R&amp;B φωνές (Artful Dodger, MJ Cole, Craig David)."],
+  ["Dubstep","138–142","Half-time ρυθμός, sub-bass, χώρος και σκοτάδι (Skream, Benga, Burial)."],
+  ["Big beat","100–140","Breakbeats, rock samples, ενέργεια (The Chemical Brothers, Fatboy Slim, The Prodigy)."],
+  ["Ambient / IDM","μεταβλητό","«Intelligent» ηλεκτρονική για ακρόαση (Aphex Twin, Autechre, Boards of Canada)."]],
+ artists:[["The Prodigy","Από το breakbeat hardcore στο big beat: η πιο επιθετική μπάντα της ηλεκτρονικής."],
+  ["Aphex Twin","Richard D. James: ο πιο επιδραστικός πειραματιστής της ηλεκτρονικής μουσικής."],
+  ["Burial","Ανώνυμος για χρόνια, έκανε το dubstep ατμοσφαιρικό και μελαγχολικό."]],
+ dj:"Αυτά τα είδη μπαίνουν εύκολα σε sets: το UK garage κολλάει με house, το dubstep στα 140 με γρήγορο techno, τα breaks με electro.",
+ pr:"Για 2-step: κράτα clap στο 2 και 4, αλλά βγάλε τα kicks από το 2 και το 4 και βάλε έντονο swing στα hats.",
+ extra:"",
+ vids:[],
+ t:[
+ [1991,"The Prodigy","Charly","Breakbeat hardcore",135,"Rave breakbeats και ένα sample από παιδικό κινούμενο σχέδιο.",0],
+ [1992,"Aphex Twin","Xtal","Ambient / IDM",120,"Απαλό ambient techno: ηλεκτρονική για ακρόαση.",0],
+ [1997,"The Chemical Brothers","Block Rockin' Beats","Big beat",111,"Breakbeat, μπάσο και rock ενέργεια.",0],
+ [1998,"Fatboy Slim","Praise You","Big beat",110,"Samples από gospel και piano σε breakbeat.",0],
+ [1999,"Artful Dodger feat. Craig David","Re-Rewind","UK garage / 2-step",132,"Ο ήχος του 2-step: swing hats και R&amp;B φωνή.",0],
+ [2005,"Skream","Midnight Request Line","Dubstep",140,"Από τα πρώτα dubstep anthems: wobble και half-time.",0],
+ [2007,"Burial","Archangel","Dubstep",139,"Κομμένες φωνές, βροχή, μελαγχολία: dubstep για ακρόαση.",0]
+ ]}
+];
+
+/* deep cuts */
+const EXTRA={
+ disco:[
+  [2020,"Jessie Ware","Spotlight","Nu-disco",119,"Κομψή, συναισθηματική disco: από τα καλύτερα disco άλμπουμ της δεκαετίας («What's Your Pleasure?»).",0],
+  [2020,"Róisín Murphy","Murphy's Law","Nu-disco",120,"Disco-house με παραγωγή του Crooked Man: ζεστό μπάσο και θεατρική φωνή.",0],
+  [1976,"Cloud One","Atmosphere Strut","Space disco",120,"Ο Patrick Adams σε ατμοσφαιρικό, κοσμικό disco: θησαυρός για DJs.",0],
+  [1976,"Cerrone","Love in C Minor","Euro disco",120,"Το πρώτο μεγάλο έργο του Cerrone: 16 λεπτά groove με τύμπανα στο κέντρο.",0],
+  [1977,"Peter Brown","Do Ya Wanna Get Funky with Me","Post-disco / Boogie",112,"Drum machine και synths σε home studio πριν γίνει μόδα.",0],
+  [1979,"Gino Soccio","Dancer","Euro disco",126,"Καναδικό synth disco με υπνωτικό, μηχανικό groove.",0],
+  [1983,"Alexander Robotnick","Problèmes d'amour","Italo disco",120,"Italo με ψυχρά synths: έπαιζε σε Chicago και Detroit.",0],
+  [2012,"Todd Terje","Inspector Norse","Nu-disco",120,"Χαρούμενα, παιχνιδιάρικα synths: ο ήχος του σύγχρονου nu-disco.",0],
+  [1980,"Kano","I'm Ready","Italo disco",122,"Synth bass και vocoder: Italo που οι Chicago DJs λάτρευαν.",0],
+  [1980,"Loose Joints","Is It All Over My Face?","Post-disco / Boogie",120,"Του Arthur Russell, σε mix του Larry Levan: ωμό, παράξενο, θρυλικό στο Paradise Garage.",0],
+  [1981,"Patrick Cowley","Menergy","Hi-NRG",130,"Sequenced synth bass που «τρέχει»: ο ήχος των gay clubs του Σαν Φρανσίσκο.",0],
+  [1981,"Lime","Your Love","Hi-NRG",125,"Καναδικό synth disco με vocoder, αγαπημένο των crate diggers.",0],
+  [1982,"Dinosaur L","Go Bang! (François K mix)","Post-disco / Boogie",118,"Ο Arthur Russell ξανά: avant-garde disco με dub effects.",0]],
+ house:[
+  [2014,"Floating Points","Nuits Sonores","Deep house",122,"Jazz αρμονίες και ζωντανή αίσθηση από έναν παραγωγό με κλασική παιδεία.",0],
+  [2015,"Ross From Friends","Talk to Me You'll Understand","Lo-fi house",122,"Θολό, «κασετένιο» groove: το πρότυπο του lo-fi house.",0],
+  [2017,"Bicep","Glue","Σύγχρονη house",130,"Breakbeat, rave νοσταλγία και μελαγχολικά pads: ένα από τα κομμάτια της δεκαετίας.",0],
+  [2018,"Channel Tres","Controller","Σύγχρονη house",120,"Βαθιά φωνή από το Compton πάνω σε minimal Detroit/Chicago groove.",0],
+  [2019,"Kaytranada feat. GoldLink","10%","Σύγχρονη house",120,"Funky, «λαστιχένιο» μπάσο: house με hip hop και R&amp;B αισθητική.",0],
+  [2020,"Four Tet","Baby","Σύγχρονη house",128,"Κομμένη φωνή και ευφορικό build από έναν από τους πιο σεβαστούς παραγωγούς.",0],
+  [1988,"Fast Eddie","Yo Yo Get Funky!","Hip house",120,"Ο Fast Eddie κάνει rap πάνω σε Chicago drum machines: η αρχή του hip house.",0],
+  [2009,"Black Coffee feat. Bucie","Superman","Afro house",124,"Νοτιοαφρικανική deep/afro house με soul φωνή: το κομμάτι που έκανε γνωστό τον Black Coffee.",1],
+  [2011,"Avicii","Levels","Big room / EDM",126,"Το riff που όρισε την EDM εποχή, με sample από Etta James.",0],
+  [2020,"Focalistic &amp; Vigro Deep","Ke Star","Amapiano",113,"Το log drum μπάσο και το χαλαρό groove που έκαναν το amapiano παγκόσμιο.",0],
+  [1987,"Joe Smooth","Promised Land","Chicago house",120,"Ύμνος ελπίδας με gospel φωνή: η πνευματική πλευρά του Σικάγο.",0],
+  [1989,"Ten City","That's the Way Love Is","Garage / NY house",120,"Falsetto soul φωνή πάνω σε house: η τέλεια ένωση.",0],
+  [1991,"Frankie Knuckles","The Whistle Song","Deep house",122,"Μια φλογέρα και pads: κομψή, απλή, διαχρονική.",1],
+  [1995,"St Germain","Alabama Blues","French / Filter house",122,"Blues samples και jazz πάνω σε deep house, από το Παρίσι.",0],
+  [2008,"DJ Sprinkles","Ball'r (Madonna-Free Zone)","Deep house",116,"Μελαγχολική, προσωπική deep house με λόγο για την ιστορία της ballroom κουλτούρας.",0],
+  [2018,"Peggy Gou","It Makes You Forget (Itgehane)","Σύγχρονη house",124,"Κορεάτικοι στίχοι πάνω σε 90s house groove: το κομμάτι που την καθιέρωσε.",1],
+  [2021,"Fred again..","Marea (We've Lost Dancing)","Σύγχρονη house",123,"Συναισθηματική house με φωνή από βίντεο: το lockdown σε μουσική.",1],
+  [1984,"Manuel Göttsching","E2-E4","Proto-house / Balearic",120,"Ένα αυτοσχεδιαστικό ταξίδι 58 λεπτών με κιθάρα και sequencer: έμπνευση για house και ambient.",0],
+  [1985,"Fingers Inc.","Mystery of Love","Deep house",120,"Larry Heard και Robert Owens: η πιο συναισθηματική πρώιμη house.",1],
+  [1986,"Adonis","No Way Back","Chicago house",120,"Σκοτεινό, υπνωτικό synth bass: Chicago με «βρώμικη» ατμόσφαιρα.",0],
+  [1986,"Sleezy D","I've Lost Control","Acid house",120,"Από τα πρώτα κομμάτια με 303 και τρομακτική φωνή.",0],
+  [1986,"Mr. Fingers","Washing Machine","Acid house",122,"Ο Larry Heard σε πιο μηχανικό, acid mode.",1],
+  [1989,"Sueño Latino","Sueño Latino","Italo house",118,"Balearic house πάνω σε sample από το E2-E4.",0],
+  [1990,"Ron Trent","Altered States","Deep house",122,"Βαθιά, πνευματική Chicago house, κλασικό των DJs.",0],
+  [1998,"Moodymann","I Can't Kick This Feelin When It Hits","Deep house",116,"Detroit deep house με κομμένο disco sample και «βρώμικο» groove.",0]],
+ electro:[
+  [1987,"Dynamix II","Just Give the DJ a Break","Miami bass",125,"Κοφτά samples και τεράστιο 808: ο ήχος της Φλόριντα.",0],
+  [2018,"Helena Hauff","Qualm (album)","Σύγχρονο electro",128,"Ωμό, αναλογικό electro και acid: ο ήχος του σημερινού underground.",1],
+  [1983,"Jonzun Crew","Space Is the Place","Old school electro / Electro-funk",115,"Vocoder και sci-fi φαντασία από τη Βοστώνη.",0],
+  [1988,"Mantronix","King of the Beats","Old school electro / Electro-funk",104,"Κοφτά samples και 808: electro που γίνεται hip hop.",0],
+  [1981,"Cybotron","Alleys of Your Mind","Old school electro / Electro-funk",125,"Το πρώτο single του Juan Atkins: electro πριν γίνει techno.",1],
+  [2001,"The Other People Place","Sorrow &amp; A Cup of Joe","Detroit electro",110,"Ο James Stinson των Drexciya σε πιο μελαγχολικό, τρυφερό electro.",1]],
+ techno:[
+  [2005,"Âme","Rej","Melodic techno",122,"Το κομμάτι που καθιέρωσε το Innervisions: υπνωτικό, μελωδικό, διαχρονικό.",0],
+  [2011,"Nina Kraviz","Ghetto Kraviz","Minimal techno",125,"Minimal groove και ψιθυριστή φωνή: το κομμάτι που την έκανε γνωστή.",1],
+  [2013,"Daniel Avery","Drone Logic","Acid techno",128,"Acid γραμμή που χτίζεται αργά, με ψυχεδελική αίσθηση.",0],
+  [2013,"Paula Temple","Colonized","Industrial techno",140,"Ένα από τα πιο σκληρά και επιδραστικά industrial κομμάτια της δεκαετίας.",0],
+  [2014,"Kiasmos","Blurred","Melodic techno",122,"Piano και έγχορδα πάνω σε minimal beat, από τον Ólafur Arnalds.",0],
+  [2014,"Perc","Look What Your Love Has Done to Me","Industrial techno",135,"Παραμορφωμένη φωνή και μεταλλικά κρουστά: industrial techno για την πίστα.",0],
+  [1990,"Orbital","Chime","UK bleep techno",125,"Φτιαγμένο σε ένα home studio: ένα από τα πρώτα UK rave anthems.",0],
+  [1992,"Aphex Twin","Digeridoo","Acid techno",145,"Γραμμένο για rave στην Κορνουάλη: ωμό, γρήγορο, παράξενο.",0],
+  [1993,"Basic Channel","Phylyps Trak","Dub techno",125,"Το θεμέλιο του dub techno: chords που χάνονται στο delay.",0],
+  [2006,"Ricardo Villalobos","Fizheuer Zieheuer","Minimal techno",125,"37 λεπτά υπνωτικού minimal πάνω σε ένα loop πνευστών.",1],
+  [1989,"Model 500","The Chase","Detroit techno",128,"Ο Juan Atkins σε πιο μουσική, μελωδική φάση.",1],
+  [1993,"Galaxy 2 Galaxy","Hi-Tech Jazz","Detroit techno",126,"Underground Resistance με jazz μελωδία: ύμνος του Detroit.",0],
+  [2009,"Oni Ayhun","OAR003-B","Berlin techno",125,"Ανώνυμο cult κομμάτι με πλάγια, υπνωτική μελωδία.",0]],
+ trance:[
+  [2011,"Above &amp; Beyond feat. Richard Bedford","Sun &amp; Moon","Vocal trance",132,"Ένα από τα πιο αγαπημένα vocal trance τραγούδια της σύγχρονης εποχής.",0],
+  [2015,"Vini Vici","The Tribe","Psytrance",138,"Ο ήχος του σύγχρονου festival psytrance, με ethnic φωνή.",0],
+  [1991,"Moby","Go","Early / German trance",130,"Το θέμα από το Twin Peaks σε rave: πρώιμο, επιδραστικό.",0],
+  [1996,"Way Out West","The Gift","Progressive trance",128,"Βρετανικό progressive με ζεστή φωνή και αργό χτίσιμο.",0],
+  [1996,"Salt Tank","Eugina","Progressive trance",135,"Μελωδικό lead που αγαπήθηκε στα UK clubs.",0],
+  [1997,"BT","Flaming June","Uplifting / Epic",136,"Μελωδία και ένταση από τον πιο «μουσικό» παραγωγό της trance.",0],
+  [1991,"Dance 2 Trance","We Came in Peace","Early / German trance",128,"Από τους πρώτους που είπαν τη μουσική τους «trance».",0],
+  [1992,"Hardfloor","Acperience 1","Early / German trance",133,"Τρία 303 που εξελίσσονται για 10 λεπτά: acid trance αριστούργημα.",0],
+  [1992,"Jam &amp; Spoon","Stella","Early / German trance",130,"Ατμοσφαιρικό, κινηματογραφικό: το πρότυπο της πρώιμης trance.",0],
+  [1993,"Sven Väth","L'Esperanza","Early / German trance",128,"Η trance της Φρανκφούρτης από τον «papa» του είδους.",1]],
+ dnb:[
+  [2010,"Netsky","Memory Lane","Liquid",174,"Βελγική liquid DnB: ζεστά chords και καθαρή παραγωγή.",0],
+  [2022,"Nia Archives","Forbidden Feelingz","Jungle / Ragga jungle",170,"Η νέα γενιά του jungle: κομμένα breaks με soul φωνή.",0],
+  [1998,"Ed Rush &amp; Optical","The Medicine","Neurofunk",172,"Η πρώτη κυκλοφορία της Virus: εδώ ξεκινά το neurofunk.",0],
+  [2016,"Macky Gee","Tour","Jump up",174,"Το «χοροπηδηχτό» μπάσο που κάνει τις πίστες να τρελαίνονται.",0],
+  [1995,"Hidden Agenda","The Flute Tune","Jazzy DnB",165,"Φλάουτο και jazz ατμόσφαιρα: κλασικό της Metalheadz εποχής.",0],
+  [1996,"Photek","The Hidden Camera","Atmospheric / Intelligent",170,"Λεπτοδουλεμένα breaks και κινηματογραφική ένταση.",0],
+  [1992,"Rufige Kru","Terminator","Jungle / Ragga jungle",150,"Ο Goldie πριν το Timeless: time-stretched breaks, σκοτάδι, darkcore.",0],
+  [1993,"Omni Trio","Renegade Snares","Jungle / Ragga jungle",160,"Piano και κομμένα snares: η γέφυρα hardcore → jungle.",0],
+  [1995,"Alex Reece","Pulp Fiction","Jazzy DnB",168,"Το πρώτο «two-step» beat: εδώ η DnB αφήνει το Amen.",0]],
+ more:[
+  [2015,"Jamie xx","Gosh","UK bass / Breakbeat",130,"Μια φωνή pirate radio και ένα τεράστιο synth: ωδή στη βρετανική rave κουλτούρα.",0],
+  [2022,"Overmono","So U Kno","UK bass / Breakbeat",130,"Κομμένα R&amp;B vocals και breakbeat: ο ήχος του σημερινού UK.",0],
+  [1997,"Roy Davis Jr. feat. Peven Everett","Gabriel","UK garage / 2-step",128,"Soul φωνή και σπασμένο groove: το κομμάτι που έδειξε τον δρόμο στο UK garage.",0],
+  [1990,"4hero","Mr Kirk's Nightmare","Breakbeat hardcore",140,"Σκοτεινό rave breakbeat από τους μετέπειτα πρωτοπόρους της DnB.",0],
+  [1998,"Boards of Canada","Roygbiv","Ambient / IDM",90,"Νοσταλγικά, «ξεθωριασμένα» synths: IDM για ακρόαση.",0],
+  [2006,"Digital Mystikz","Anti War Dub","Dubstep",140,"Το ριζικό dubstep του DMZ: sub-bass, χώρος, μήνυμα.",0]]
+};
+Object.entries(EXTRA).forEach(([id,arr])=>G.find(g=>g.id===id).t.push(...arr.map(x=>[...x,1])));
+const esc=s=>s.replace(/&(?!amp;)/g,"&amp;").replace(/</g,"&lt;");
+const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+const sp=q=>"https://open.spotify.com/search/"+encodeURIComponent(q);
+const ytIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+const spIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 9.5c3.5-1 7-.6 10 1M7.6 12.6c2.9-.8 5.7-.4 8.2.9M8.3 15.5c2.2-.5 4.3-.3 6.2.7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+
+let done={};
+try{done=JSON.parse(localStorage.getItem("cd-done")||"{}")}catch(e){done={}}
+const save=()=>{try{localStorage.setItem("cd-done",JSON.stringify(done))}catch(e){}};
+
+const nav=document.getElementById("nav"), host=document.getElementById("genres");
+const dec=x=>x.replace(/&amp;/g,"&");
+const subSel={}; let bpmF=null;
+G.forEach(g=>{
+  nav.insertAdjacentHTML("beforeend",`<a class="chip" href="#${g.id}"><i style="background:var(${g.c})"></i>${esc(g.name)}</a>`);
+  const sec=document.createElement("section");
+  sec.className="genre"; sec.id=g.id; sec.style.setProperty("--c",`var(${g.c})`);
+  const cnt=n=>g.t.filter(t=>t[3]===n).length;
+  sec.innerHTML=`<div class="ghead"><h2>${esc(g.name)}</h2><div class="meta">${g.meta}</div>
+    <div class="progress"><div></div></div><div class="ptext"></div></div>
+    <p class="lead">${g.lead}</p>
+    <details class="traits"><summary>Χαρακτηριστικά που ακούς</summary><ul>${g.traits.map(x=>`<li>${x}</li>`).join("")}</ul></details>
+    <h3 class="sec">Υποείδη</h3>
+    <div class="subs">${g.subs.map(([n,b,d])=>{const k=dec(n), c=g.t.filter(t=>dec(t[3])===k).length; return `<button class="sg" data-sub="${esc(k)}"><h4>${n}<small>${b} BPM</small></h4><p>${d}</p>${c?`<div class="cnt">${c} ${c===1?"κομμάτι":"κομμάτια"} στη λίστα · πάτα για φίλτρο</div>`:""}</button>`}).join("")}</div>
+    <h3 class="sec">Άκουσε</h3>
+    <p class="subfilter">Φίλτρο: <strong class="sfname"></strong> · <button class="sfclear">Δείξε όλα</button></p>
+    <ol class="tracks"></ol>
+    ${g.vids.length?`<div class="vids">Τα video από το Αρχικό Υλικό: ${g.vids.map((v,i)=>`<a href="${v}" target="_blank" rel="noopener">Video ${i+1}</a>`).join("")}</div>`:""}
+    <h3 class="sec">Καλλιτέχνες-κλειδιά</h3>
+    <div class="artists">${g.artists.map(([n,d])=>`<div class="ar"><b>${n}</b>${d}<div style="margin-top:6px"><a href="${yt(dec(n))}" target="_blank" rel="noopener">YouTube</a><a href="${sp(dec(n))}" target="_blank" rel="noopener">Spotify</a></div></div>`).join("")}</div>
+    ${g.extra?`<p class="extra">${g.extra}</p>`:""}
+    <div class="tips"><div class="tip"><h3>Για τον DJ</h3>${g.dj}</div><div class="tip"><h3>Για τον παραγωγό</h3>${g.pr}</div></div>`;
+  host.appendChild(sec);
+  sec.querySelector(".subs").addEventListener("click",e=>{const b=e.target.closest(".sg"); if(!b) return; subSel[g.id]=subSel[g.id]===b.dataset.sub?null:b.dataset.sub; render(); sec.querySelector(".tracks").scrollIntoView({behavior:"smooth",block:"start"});});
+  sec.querySelector(".sfclear").addEventListener("click",()=>{subSel[g.id]=null;render();});
+});
+nav.insertAdjacentHTML("beforeend",`<a class="chip" href="#map">Δέντρο</a><a class="chip" href="#quiz">Quiz</a><a class="chip" href="#plan">Πλάνο</a>`);
+
+const origBtn=document.getElementById("onlyOrig"), sortEl=document.getElementById("sort"), bpmChip=document.getElementById("bpmchip");
+function render(){
+  const term="", only=origBtn.getAttribute("aria-pressed")==="true", byBpm=sortEl.value==="bpm";
+  bpmChip.classList.toggle("on",bpmF!==null); if(bpmF!==null) bpmChip.textContent=`${bpmF} ±5 BPM ✕`;
+  G.forEach(g=>{
+    const sec=document.getElementById(g.id), list=sec.querySelector(".tracks"), sf=subSel[g.id];
+    sec.querySelectorAll(".sg").forEach(b=>b.classList.toggle("on",b.dataset.sub===sf));
+    sec.querySelector(".subfilter").classList.toggle("on",!!sf); sec.querySelector(".sfname").textContent=sf||"";
+    let rows=g.t.filter(t=>{
+      if(only && t[6]!==2) return false;
+      if(sf && dec(t[3])!==sf) return false;
+      if(bpmF!==null && Math.abs(t[4]-bpmF)>5) return false;
+      if(!term) return true;
+      return dec(t[0]+" "+t[1]+" "+t[2]+" "+t[3]+" "+t[4]).toLowerCase().includes(term);
+    });
+    rows=rows.slice().sort((x,y)=>byBpm?(x[4]-y[4]||x[0]-y[0]):(x[0]-y[0]));
+    list.innerHTML=rows.length?rows.map(t=>{
+      const [y,a,ti,sub,bpm,note,o,dp]=t, key=g.id+"|"+a+"|"+ti, q=dec(a+" "+ti);
+      const flag=(o===2?`<span class="flag">Αρχικό Υλικό</span>`:"");
+      const art=o===1?`<u title="Ο καλλιτέχνης αναφέρεται στο Αρχικό Υλικό">${esc(a)}</u>`:esc(a);
+      return `<li class="trk${o===2?" orig":""}${done[key]?" done":""}">
+        <input type="checkbox" class="chk" data-k="${esc(key)}" ${done[key]?"checked":""} aria-label="Το άκουσα: ${esc(ti)}">
+        <div class="year yb">${y}<span class="bpmp">≈${bpm} BPM</span></div>
+        <div class="body"><div class="title">${esc(ti)}</div><div class="artist">${art}</div>
+          <span class="sub">${sub}</span>${flag}<div class="note">${note}</div></div>
+        <div class="links"><a class="yt" href="${yt(q)}" target="_blank" rel="noopener">${ytIcon}YouTube</a><a class="sp" href="${sp(q)}" target="_blank" rel="noopener">${spIcon}Spotify</a></div>
+      </li>`}).join(""):`<li class="empty">Κανένα κομμάτι δεν ταιριάζει σε αυτά τα φίλτρα.</li>`;
+    const n=g.t.filter(t=>done[g.id+"|"+t[1]+"|"+t[2]]).length;
+    sec.querySelector(".progress div").style.width=(100*n/g.t.length)+"%";
+    sec.querySelector(".ptext").textContent=`Άκουσες ${n} από ${g.t.length}`;
+  });
+}
+host.addEventListener("change",e=>{
+  if(!e.target.classList.contains("chk")) return;
+  const k=e.target.dataset.k; if(e.target.checked) done[k]=1; else delete done[k];
+  save(); render();
+});
+sortEl.addEventListener("change",render);
+bpmChip.addEventListener("click",()=>{bpmF=null;render();});
+origBtn.addEventListener("click",()=>{origBtn.setAttribute("aria-pressed",origBtn.getAttribute("aria-pressed")==="true"?"false":"true");render();});
+document.getElementById("print").addEventListener("click",()=>{document.querySelectorAll("details").forEach(d=>d.open=true); try{window.print()}catch(e){}});
+window.addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
+render();
+
+/* search */
+const norm=x=>dec(String(x)).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const ALL=[]; G.forEach(g=>g.t.forEach(t=>ALL.push({g,t,hay:norm([t[0],t[1],t[2],t[3],g.name].join(" "))})));
+const qIn=document.getElementById("q"), qClr=document.getElementById("qclear"), res=document.getElementById("results");
+function hl(text,terms){let h=esc(dec(text));terms.forEach(w=>{if(!w)return;const n=norm(dec(text));let i=n.indexOf(w);if(i<0)return;const raw=dec(text);h=esc(raw.slice(0,i))+"<mark>"+esc(raw.slice(i,i+w.length))+"</mark>"+esc(raw.slice(i+w.length));});return h;}
+function search(){
+  const v=qIn.value.trim(); qClr.classList.toggle("on",!!v);
+  if(v.length<2){res.classList.remove("on");res.innerHTML="";return;}
+  const terms=norm(v).split(/\s+/).filter(Boolean);
+  const hits=ALL.filter(x=>terms.every(w=>x.hay.includes(w))).sort((a,b)=>a.t[0]-b.t[0]);
+  res.classList.add("on");
+  if(!hits.length){res.innerHTML=`<div class="rempty">Δεν βρέθηκε κάτι για «${esc(v)}». Δοκίμασε όνομα καλλιτέχνη, τίτλο ή υποείδος.</div>`;return;}
+  const show=hits.slice(0,40);
+  res.innerHTML=`<div class="rhead">${hits.length} ${hits.length===1?"αποτέλεσμα":"αποτελέσματα"}${hits.length>40?" (δείχνω τα 40 πρώτα)":""}</div>`+show.map(({g,t})=>{const q=dec(t[1]+" "+t[2]);return `<div class="rrow"><i class="rdot" style="background:var(${g.c})"></i><div class="rmain"><b>${hl(t[2],terms)}</b><span>${hl(t[1],terms)} · ${t[0]} · ≈${t[4]} BPM · <a href="#${g.id}">${esc(g.name)}</a> · ${dec(t[3])}${t[6]===2?" · Αρχικό Υλικό":""}</span></div><div class="rlinks"><a class="yt" href="${yt(q)}" target="_blank" rel="noopener">YT</a><a class="sp" href="${sp(q)}" target="_blank" rel="noopener">Spotify</a></div></div>`}).join("");
+}
+qIn.addEventListener("input",search);
+qIn.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();qIn.blur();}});
+qClr.addEventListener("click",()=>{qIn.value="";search();qIn.focus();});
+
+/* BPM ruler */
+const MIN=100,MAX=185, pct=v=>(v-MIN)/(MAX-MIN)*100;
+const scale=document.getElementById("scale");
+G.slice(0,6).forEach(g=>{
+  const lane=document.createElement("div"); lane.className="lane";
+  lane.innerHTML=`<button class="band${g.hi>150?" r":""}" data-g="${g.id}" aria-label="${esc(g.name)} ${g.lo} έως ${g.hi} BPM" style="left:${pct(g.lo)}%;width:${pct(g.hi)-pct(g.lo)}%;background:var(${g.c})"><span>${esc(g.name)}</span></button>`;
+  scale.appendChild(lane);
+});
+const ticks=document.createElement("div"); ticks.className="ticks";
+[100,120,140,160,180].forEach(v=>ticks.insertAdjacentHTML("beforeend",`<span style="left:${pct(v)}%">${v}</span>`));
+scale.appendChild(ticks);
+scale.addEventListener("click",e=>{const b=e.target.closest(".band"); if(b) document.getElementById(b.dataset.g).scrollIntoView({behavior:"smooth"});});
+
+let taps=[], resetT;
+const pad=document.getElementById("tapbtn"), bpmEl=document.getElementById("bpm"), padsub=document.getElementById("padsub"), needle=document.getElementById("needle"), hint=document.getElementById("hint"), dots=[...document.querySelectorAll("#dots i")], sb=document.getElementById("showbpm"), rs=document.getElementById("reset");
+function resetTap(){taps=[];bpmEl.textContent="Tap";padsub.textContent="στον ρυθμό";dots.forEach(d=>d.classList.remove("on"));hint.textContent="Χρειάζονται 4 πατήματα για να μετρήσω.";needle.classList.remove("on");scale.classList.remove("dim");scale.querySelectorAll(".band").forEach(b=>b.classList.remove("hit"));sb.classList.remove("on");rs.classList.remove("on");}
+rs.addEventListener("click",resetTap);
+pad.addEventListener("click",()=>{
+  const now=performance.now();
+  if(taps.length && now-taps[taps.length-1]>2000) taps=[];
+  taps.push(now); if(taps.length>12) taps.shift();
+  pad.classList.remove("beat"); void pad.offsetWidth; pad.classList.add("beat");
+  rs.classList.add("on");
+  dots.forEach((d,i)=>d.classList.toggle("on",i<taps.length));
+  clearTimeout(resetT); resetT=setTimeout(()=>{taps=[]},2500);
+  if(taps.length<4){bpmEl.textContent=taps.length+"/4";padsub.textContent="συνέχισε";hint.textContent=`Ωραία, άλλα ${4-taps.length} πατήματα.`;return;}
+  const bpm=Math.round(60000/((taps[taps.length-1]-taps[0])/(taps.length-1)));
+  bpmEl.textContent=bpm; padsub.textContent="BPM";
+  const shown=Math.min(Math.max(bpm,MIN),MAX);
+  needle.style.left=pct(shown)+"%"; needle.classList.add("on"); scale.classList.add("dim");
+  const hits=[];
+  scale.querySelectorAll(".band").forEach(b=>{const g=G.find(x=>x.id===b.dataset.g); const hit=bpm>=g.lo-2&&bpm<=g.hi+2; b.classList.toggle("hit",hit); if(hit) hits.push(g.name);});
+  sb.textContent="Δείξε κομμάτια σε αυτό το BPM"; sb.classList.add("on"); sb.onclick=()=>{bpmF=bpm;render();document.getElementById("genres").scrollIntoView({behavior:"smooth"});};
+  hint.innerHTML=hits.length?`Ταιριάζει: <strong>${hits.map(esc).join(", ")}</strong>. Συνέχισε να πατάς για πιο ακριβή μέτρηση.`:(bpm<100?"Πολύ αργό. Μήπως πατάς κάθε δεύτερο kick;":"Κανένα είδος εδώ. Μήπως πατάς διπλά ή μισά;");
+});
+
+/* quiz */
+const QZ=[
+ ["4/4 kick, ~124 BPM, piano chords, soulful γυναικεία φωνή.","House"],
+ ["Σπασμένο 808 beat, ~120 BPM, ρομποτική φωνή για το διάστημα.","Electro"],
+ ["~174 BPM, κομμένα breakbeats, βαθύ sub σε «μισή ταχύτητα».","Drum & Bass"],
+ ["4/4 kick, ~132 BPM, 2 λεπτά breakdown χωρίς kick και μετά τεράστια μελωδία.","Trance"],
+ ["4/4 kick, ~118 BPM, ζωντανό μπάσο που πηδάει οκτάβες, έγχορδα, πνευστά.","Disco"],
+ ["4/4 kick, ~135 BPM, σκοτεινό loop που αλλάζει μόνο με φίλτρα για 7 λεπτά.","Techno"],
+ ["~125 BPM, ένα «τσιριχτό» μπάσο που αλλάζει χροιά συνέχεια (TB-303).","House"],
+ ["Kick σε κάθε χτύπο, ~150+ BPM, παραμορφωμένο σαν «σφυρί», από το Ρότερνταμ.","Techno"]
+];
+const names=G.slice(0,6).map(g=>g.name); let score=0, answered=0;
+const qb=document.getElementById("quizbox");
+QZ.forEach((q,i)=>{
+  const d=document.createElement("div"); d.className="q";
+  d.innerHTML=`<p>${i+1}. ${esc(q[0])}</p><div class="opts">${names.map(n=>`<button class="opt">${esc(n)}</button>`).join("")}</div><div class="qres"></div>`;
+  d.querySelector(".opts").addEventListener("click",e=>{
+    const b=e.target.closest(".opt"); if(!b||d.dataset.done) return; d.dataset.done=1; answered++;
+    const ok=b.textContent===q[1]; if(ok) score++;
+    b.classList.add(ok?"right":"wrong");
+    if(!ok) [...d.querySelectorAll(".opt")].find(x=>x.textContent===q[1]).classList.add("right");
+    d.querySelector(".qres").textContent=ok?"Σωστά!":`Η σωστή απάντηση: ${q[1]}.`;
+    document.getElementById("score").textContent=`Σκορ: ${score} / ${answered}`+(answered===QZ.length?(score===QZ.length?" — τέλειο αυτί!":" — ξανάκου τα είδη που μπέρδεψες."):"");
+  });
+  qb.appendChild(d);
+});
+
+/* plan */
+const PL=["Μέρα 1 – Disco: άκου τη λίστα και σημείωσε σε ποιο σημείο υπάρχει break (μόνο τύμπανα και μπάσο).",
+"Μέρα 2 – House: άκου διαδοχικά Stardust και Chic. Τι κοινό έχουν και τι λείπει από το house;",
+"Μέρα 3 – Electro: άκου Planet Rock και μετά Frankie Knuckles. Χτύπα το kick με το χέρι: πού διαφέρει;",
+"Μέρα 4 – Techno: άκου The Bells για 3 λεπτά και γράψε κάθε αλλαγή που ακούς.",
+"Μέρα 5 – Trance: άκου Universal Nation και χρονομέτρησε το breakdown.",
+"Μέρα 6 – DnB: άκου το Amen break και μετά Original Nuttah. Βρες πού είναι κομμένο.",
+"Μέρα 7 – Τυφλό τεστ: shuffle σε όλες τις λίστες, μάντεψε είδος σε 15 δευτερόλεπτα."];
+let plan={}; try{plan=JSON.parse(localStorage.getItem("cd-plan")||"{}")}catch(e){plan={}}
+const pl=document.getElementById("planlist");
+PL.forEach((t,i)=>pl.insertAdjacentHTML("beforeend",`<li><input type="checkbox" id="p${i}" ${plan[i]?"checked":""}><label for="p${i}">${esc(t)}</label></li>`));
+pl.addEventListener("change",e=>{const i=e.target.id.slice(1); if(e.target.checked) plan[i]=1; else delete plan[i]; try{localStorage.setItem("cd-plan",JSON.stringify(plan))}catch(err){}});
+
+/* count in title */
+const total=G.reduce((s,g)=>s+g.t.length,0);
+document.querySelector(".lede").insertAdjacentText("beforeend",` ${total} κομμάτια: τα θεμέλια κάθε είδους, τα κλασικά της εποχής τους και λιγότερο γνωστά διαμάντια.`);
+</script>
+</body>
+</html>
